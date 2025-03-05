@@ -14,7 +14,10 @@ const config: Config = {
 
   // GitHub pages deployment config.
   organizationName: 'dhenara', // Your GitHub org/user name
-  projectName: 'dhenara-ai', // Your repo name
+  projectName: 'dhenara-docs', // Your repo name
+  deploymentBranch: 'gh-pages', // The branch to deploy to
+  trailingSlash: false,
+
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
