@@ -1,0 +1,95 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #ebb429;
+  --ifm-color-primary-dark: #e0a815;
+  --ifm-color-primary-darker: #d39e14;
+  --ifm-color-primary-darkest: #ae8310;
+  --ifm-color-primary-light: #edc045;
+  --ifm-color-primary-lighter: #efc962;
+  --ifm-color-primary-lightest: #f3d88c;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(235, 180, 41, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #f2c24a;
+  --ifm-color-primary-dark: #f0b92c;
+  --ifm-color-primary-darker: #efb51c;
+  --ifm-color-primary-darkest: #ca9710;
+  --ifm-color-primary-light: #f4cb68;
+  --ifm-color-primary-lighter: #f5d078;
+  --ifm-color-primary-lightest: #f8df9f;
+  --docusaurus-highlighted-code-line-bg: rgba(242, 194, 74, 0.3);
+}
+
+/* Additional styling for better visibility */
+.navbar {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar__brand {
+  font-weight: 700;
+}
+
+.footer {
+  --ifm-footer-background-color: #25262b;
+}
+
+.menu {
+  font-weight: 500;
+}
+
+code {
+  border: 1px solid var(--ifm-color-primary-lightest);
+  background-color: rgba(235, 180, 41, 0.05);
+}
+
+[data-theme='dark'] code {
+  background-color: rgba(242, 194, 74, 0.05);
+}
+
+.theme-doc-sidebar-item-category-level-1 {
+  font-weight: 600;
+}
+
+.theme-doc-sidebar-item-link-level-1 {
+  font-weight: 600;
+}
+
+.pagination-nav__link {
+  border-color: var(--ifm-color-primary-lighter);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* Reduce the size of the theme toggle button */
+.navbar__items--right .clean-btn[class*='toggleButton_'] {
+  padding: 0.3rem;
+  margin: 0 0.5rem;
+}
+
+/* Reduce the size of the toggle icon */
+.navbar__items--right .clean-btn[class*='toggleButton_'] svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Make the toggle more compact */
+.navbar__items--right .clean-btn[class*='toggleButton_'] {
+  min-width: auto;
+  height: auto;
+}
+
+/* Target only specific navbar links */
+.navbar__items--right .navbar__item.navbar__link svg {
+  display: none;
+}
