@@ -89,4 +89,9 @@ Various configuration options to control behavior:
 
 - Read the [installation guide](./installation) if you haven't already
 - Try the [quick start examples](./quick-start) to see these concepts in action
+
+{/*
+<!--
 - Explore the [basic usage guide](../guides/basic-usage) for more practical examples
+-->
+ */}

@@ -78,6 +78,6 @@ async with AIModelClient(model_endpoint, config) as client:
 
 ## Next Steps
 
-- Follow the [Installation](./installation) guide to get started
-- Check out the [Quick Start](./quick-start) for more examples
-- Learn about [Key Concepts](./key-concepts) in Dhenara
+- Follow the [Installation](./getting-started/installation) guide to get started
+- Check out the [Quick Start](./getting-started/quick-start) for more examples
+- Learn about [Key Concepts](./getting-started/key-concepts) in Dhenara

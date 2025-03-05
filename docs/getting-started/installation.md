@@ -68,5 +68,8 @@ print(f"Dhenara version: {dhenara.__version__}")
 ## Next Steps
 
 - Continue to [Quick Start](./quick-start) for your first Dhenara application
+
+{/*
 - Configure [authentication](../guides/authentication) for your AI providers
 - Explore [foundation models](../foundation-models/overview)
+*/}

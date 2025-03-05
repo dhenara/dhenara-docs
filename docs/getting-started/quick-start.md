@@ -229,6 +229,10 @@ asyncio.run(main())
 
 ## Next Steps
 
+{/*
+<!--
 - Explore [basic usage guides](../guides/basic-usage) for more detailed examples
 - Learn about [available foundation models](../foundation-models/overview)
 - Check the [provider-specific guides](../guides/provider-guides/openai) for provider-specific features
+-->
+ */}

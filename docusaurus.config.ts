@@ -35,7 +35,7 @@ const config: Config = {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.ts',
           // Update this to your repo path
-          //editUrl: "https://github.com/dhenara/dhenara-ai/tree/main/docs/",
+          //editUrl: "https://github.com/dhenara/dhenara/tree/main/docs/",
         },
         blog: false, // Set to false to disable the blog plugin
         theme: {
@@ -68,7 +68,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/dhenara/dhenara-ai',
+          href: 'https://github.com/dhenara/dhenara',
           label: 'GitHub',
           position: 'right',
         },
@@ -87,16 +87,16 @@ const config: Config = {
           items: [
             {
               label: 'Getting Started',
-              to: '/getting-started/introduction',
+              to: '/getting-started/installation'  // Remove the `/docs/` prefix as its configured as the root path
             },
-            {
-              label: 'Guides',
-              to: '/guides/basic-usage',
-            },
-            {
-              label: 'API Reference',
-              to: '/api-reference/aimodelclient',
-            },
+            //{
+            //  label: 'Guides',
+            //  to: '/guides/basic-usage',
+            //},
+            //{
+            //  label: 'API Reference',
+            //  to: '/api-reference/aimodelclient',
+            //},
           ],
         },
         {
@@ -104,11 +104,11 @@ const config: Config = {
           items: [
             {
               label: 'GitHub Discussions',
-              href: 'https://github.com/dhenara/dhenara-ai/discussions',
+              href: 'https://github.com/dhenara/dhenara/discussions',
             },
             {
               label: 'Issues',
-              href: 'https://github.com/dhenara/dhenara-ai/issues',
+              href: 'https://github.com/dhenara/dhenara/issues',
             },
           ],
         },
@@ -117,7 +117,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/dhenara/dhenara-ai',
+              href: 'https://github.com/dhenara/dhenara',
             },
           ],
         },
