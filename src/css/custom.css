@@ -93,3 +93,45 @@ code {
 .navbar__items--right .navbar__item.navbar__link svg {
   display: none;
 }
+
+.limited-height-code {
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto; /* Adds scrollbar when content exceeds height */
+  margin-bottom: 32px;
+}
+
+
+/*Sidebar Style overrides */
+/*
+.menu__link {
+  font-size: 15px;
+}*/
+
+
+/* Hide collapse arrows */
+.menu__link--sublist-caret:after {
+  display: none !important;
+}
+
+/* Style main category items (first level) */
+.menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ifm-color-primary);
+}
+
+/* Add more spacing between main categories */
+.menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist {
+  margin-top: 16px;
+}
+
+/* Optional: Style subcategories (second level) */
+.menu__list .menu__list .menu__link--sublist {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Optional: Style regular doc links */
+.menu__link:not(.menu__link--sublist) {
+  font-size: 0.95rem;
+}

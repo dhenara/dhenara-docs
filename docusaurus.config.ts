@@ -74,6 +74,12 @@ const config: Config = {
         },
       ],
     },
+    docs: {
+      sidebar: {
+        hideable: false,
+        autoCollapseCategories: false,
+      }
+    },
     colorMode: {
       defaultMode: 'dark',
       disableSwitch: false,
@@ -126,7 +132,7 @@ const config: Config = {
     },
     prism: {
       theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      darkTheme: prismThemes. dracula, // palenight, vsDark, dracula,
       additionalLanguages: ['python'],
     },
   } satisfies Preset.ThemeConfig,

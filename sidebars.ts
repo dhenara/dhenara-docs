@@ -6,12 +6,42 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Getting Started',
+      collapsed: false,
       items: [
         'getting-started/installation',
         'getting-started/quick-start',
         'getting-started/key-concepts',
       ],
     },
+    {
+      type: 'category',
+      label: 'Samples',
+      collapsed: false,
+      items: [
+
+        {
+          type: 'category',
+          label: 'Text Generation',
+          collapsed: false,
+          items: [
+            'samples/text-gen/text-gen',
+            'samples/text-gen/text-gen-async',
+            'samples/text-gen/streaming',
+            'samples/text-gen/streaming-async',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Image Generation',
+          collapsed: false,
+          items: [
+            'samples/image-gen/image-gen',
+            'samples/image-gen/image-gen-async',
+          ],
+        },
+      ],
+    },
+
     /*
     {
       type: 'category',
