@@ -27,7 +27,6 @@ const sidebars: SidebarsConfig = {
             'samples/text-gen/text-gen',
             'samples/text-gen/text-gen-async',
             'samples/text-gen/streaming',
-            'samples/text-gen/streaming-async',
           ],
         },
         {
@@ -36,7 +35,6 @@ const sidebars: SidebarsConfig = {
           collapsed: false,
           items: [
             'samples/image-gen/image-gen',
-            'samples/image-gen/image-gen-async',
           ],
         },
       ],
