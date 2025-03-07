@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+title: Installation
 ---
 
 # Installing Dhenara
@@ -8,8 +8,7 @@ Dhenara is available on PyPI and can be installed using pip.
 
 ## Requirements
 
-- Python 3.9 or higher
-- Dependencies for specific providers (see Provider-specific Requirements)
+- Python 3.10 or higher
 
 ## Basic Installation
 
@@ -19,22 +18,22 @@ pip install dhenara
 
 This installs the core Dhenara library with support for all available AI model providers.
 
-## Provider-specific Installation
+## Using a Virtual Environment (Recommended)
 
-If you only need certain providers, you can install just those dependencies:
+It's best practice to use a virtual environment for Python projects:
 
 ```bash
-# For OpenAI support only
-pip install "dhenara[openai]"
+# Create a virtual environment
+python -m venv .venv
 
-# For Google AI support only
-pip install "dhenara[google]"
+# Activate the environment (Linux/Mac)
+source .venv/bin/activate
 
-# For Anthropic support only
-pip install "dhenara[anthropic]"
+# Activate the environment (Windows)
+.venv\Scripts\activate
 
-# For multiple specific providers
-pip install "dhenara[openai,google]"
+# Install Dhenara
+pip install dhenara
 ```
 
 ## Installing from Source
@@ -45,15 +44,40 @@ cd dhenara
 pip install -e .
 ```
 
+## Provider-specific Dependencies
+
+Dhenara automatically installs the necessary dependencies for all supported providers.
+
+
+{/*
+However, you can install provider-specific packages individually if needed:
+
+```bash
+# For OpenAI only
+pip install "dhenara[openai]"
+
+# For Google AI only
+pip install "dhenara[google]"
+
+# For Anthropic only
+pip install "dhenara[anthropic]"
+
+# For development
+pip install "dhenara[dev]"
+```
+*/}
+
 ## Provider-specific Requirements
 
-Different AI providers may have specific requirements:
+Different AI providers have specific requirements:
 
 - **OpenAI**: Requires an OpenAI API key
-- **Google AI**: Requires a Google API key or service account credentials
+- **Google Gemini AI**: Requires a Gemini API key or service account credentials
+- **Google Vertex AI**: Requires service account credentials
 - **Anthropic**: Requires an Anthropic API key
 - **Microsoft Azure**: Requires Azure OpenAI or Azure AI services credentials
 - **Amazon Bedrock**: Requires AWS credentials with Bedrock access
+- **DeepSeek**: Accessible via Azure AI services
 
 ## Verifying Installation
 
@@ -62,8 +86,16 @@ You can verify your installation with:
 ```python
 import dhenara
 
-print(f"Dhenara version: {dhenara.__version__}")
+print(f"Dhenara version: {dhenara.ai.__version__}")
 ```
+
+## Troubleshooting
+
+If you encounter issues with installation:
+
+- Ensure you have the latest pip: `pip install --upgrade pip`
+- Try installing with the `--verbose` flag: `pip install --verbose dhenara`
+- For provider-specific issues, check that you have the required credentials properly configured
 
 ## Next Steps
 

@@ -1,97 +1,204 @@
 ---
-sidebar_position: 4
+title: Key Concepts
 ---
 
-# Key Concepts in Dhenara
+# Key Concepts
 
-Understanding the core concepts of Dhenara will help you use the library effectively. Here are the fundamental concepts you should be familiar with:
+Understanding the core concepts of Dhenara will help you use the library effectively. This guide explains the fundamental components and how they work together.
 
-## AIModelClient
+## Architecture Overview
 
-The primary interface for interacting with AI models. It handles:
+Dhenara is built on principles of simplicity, flexibility, and separation of concerns. The architecture separates:
 
-- Connection management
-- Request formatting
-- Response parsing
-- Error handling
-- Retries and timeouts
+1. **API Providers** - The services that expose AI model APIs (OpenAI, Anthropic, Amazon Bedrock, Microsoft Azure etc.)
+2. **Models** - The specific AI models with their capabilities and parameters
+3. **Endpoints** - The combination of an API provider and a specific model
+4. **Clients** - The interface you use to interact with endpoints
 
-Available in both synchronous (`AIModelClientSync`) and asynchronous (`AIModelClient`) versions.
+This separation lets you:
+- Switch between models while keeping the same code structure
+- Use the same model through different API providers
+- Configure each component independently
 
-## AIModelEndpoint
 
-Represents a specific AI model accessible through a specific API provider. It combines:
+## Core Components
 
-- An `AIModel` definition (capabilities, parameters, costs)
-- An `AIModelAPI` configuration (authentication, provider settings)
+### AIModelAPI
 
-This separation allows reusing the same model with different API providers or the same API with different models.
+Represents credentials and configuration for a specific AI provider:
 
-## Foundation Models
+```python
+# Create API configurations for different providers
+openai_api = AIModelAPI(
+    provider=AIModelAPIProviderEnum.OPEN_AI,
+    api_key="your_openai_api_key",
+)
 
-Pre-configured model definitions for popular AI models from various providers, including:
+anthropic_api = AIModelAPI(
+    provider=AIModelAPIProviderEnum.ANTHROPIC,
+    api_key="your_anthropic_api_key",
+)
 
-- OpenAI models (GPT-4o, DALL-E, etc.)
-- Google AI models (Gemini Pro, Gemini Flash, etc.)
-- Anthropic models (Claude 3, Claude Sonnet, etc.)
-- DeepSeek models
+vertex_ai_api = AIModelAPI(
+    provider=AIModelAPIProviderEnum.GOOGLE_VERTEX_AI,
+    credentials={"service_account_json": {...}},
+    config={"project_id": "your-project", "location": "us-central1"},
+)
+```
 
-These provide sensible defaults and proper configuration for each model, including:
-- Context window sizes
+### AIModel & Foundation Models
+
+Predefined models with appropriate settings and capabilities:
+
 - Token limits
+- Context window sizes
 - Cost information
-- Model capabilities
+- Provider-specific parameters
+- Model Options ( This is very useful when you deal with image generation )
 
-## Response Types
+Dhenara includes foundation models for popular services like OpenAI's GPT models, Google's Gemini, Anthropic's Claude, DeepSeek's R1 and more.
 
-Dhenara uses a consistent response format across providers:
+### AIModelEndpoint
 
-- `AIModelCallResponse`: The top-level response container
-- `ChatResponse`: For text generation responses
-- `ImageResponse`: For image generation responses
-- Streaming variants of these responses
+Connects a specific model with an API configuration:
 
-## Providers
+```python
+# Connect models with API providers
+gpt4o_endpoint = AIModelEndpoint(
+    api=openai_api,
+    ai_model=GPT4o,
+)
 
-Provider-specific implementations that handle:
+claude_endpoint = AIModelEndpoint(
+    api=anthropic_api,
+    ai_model=Claude37Sonnet,
+)
+```
 
-- Authentication
-- API formatting
-- Response parsing
-- Error handling
+The same model can be used with different API providers:
 
-Dhenara supports multiple providers through a unified interface:
-- OpenAI
-- Google AI
-- Anthropic
-- DeepSeek
-- Microsoft Azure
-- Amazon Bedrock
+```python
+# Using Claude through different API providers
+claude_direct = AIModelEndpoint(api=anthropic_api, ai_model=Claude37Sonnet)
+claude_on_bedrock = AIModelEndpoint(api=bedrock_api, ai_model=Claude37Sonnet)
+claude_on_vertex = AIModelEndpoint(api=vertex_ai_api, ai_model=Claude37Sonnet)
+```
 
-## Streaming
+### AIModelClient
 
-First-class support for streaming responses, allowing for:
+The main interface for generating content. It handles:
 
-- Token-by-token processing
-- Progress updates
-- Early termination
-- Efficient resource usage
+- Connection lifecycle management
+- Request formatting and validation
+- Response parsing and normalization
+- Error handling and retries
+- Streaming management
 
-## Configuration
+Available in both synchronous and asynchronous modes:
 
-Various configuration options to control behavior:
+```python
+# Synchronous client
+client = AIModelClient(
+    model_endpoint=endpoint,
+    config=config,
+    is_async=False,
+)
 
-- `AIModelCallConfig`: Control timeouts, retries, and other call parameters
-- Global settings via `dhenara.ai.config.settings`
-- Model-specific options
+# Asynchronous client
+async_client = AIModelClient(
+    model_endpoint=endpoint,
+    config=config,
+    is_async=True,
+)
+```
+
+### AIModelCallConfig
+
+Controls the behavior of individual API calls:
+
+```python
+# Text Generation
+call_config = AIModelCallConfig(
+    max_output_tokens=4000,  # Limit response length
+    streaming=True,          # Enable streaming
+    reasoning=True,          # Enable reasoning/thinking mode
+    max_reasoning_tokens=8000,  # Limit reasoning tokens
+    timeout=30,              # Set timeout in seconds
+    retries=3,               # Configure retries
+    options={},              # Model-specific options
+)
+
+
+#Image call config for Dalle3
+call_config=AIModelCallConfig(
+    options={
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "natural",
+        "n": 1,
+        "response_format": "b64_json",
+    },
+)
+```
+
+## Unified Response Format
+
+Dhenara normalizes responses from all providers into consistent types:
+
+- `AIModelCallResponse`: Top-level container for all responses
+- `ChatResponse`: For text generation
+- `ImageResponse`: For image generation
+- Streaming variants with identical structure
+
+This allows switching between providers without changing your response handling code.
+
+## Working with Streaming
+
+Dhenara provides first-class support for streaming responses:
+
+```python
+response = client.generate(prompt=prompt)
+
+if response.stream_generator:
+    for chunk, accumulated in response.stream_generator:
+        if chunk:
+            # Process each token as it arrives
+            print(chunk.data.choice_deltas[0].content_deltas[0].get_text_delta(),
+                  end="", flush=True)
+
+        # On the last iteration, accumulated contains the complete response
+        if accumulated:
+            final_response = accumulated
+```
+
+Streaming responses automatically accumulate content, providing a final response identical in structure to non-streaming responses.
+
+## Typical Workflow
+
+1. **Configure API credentials** - Create `AIModelAPI` instances
+2. **Select and configure models** - Choose from foundation models or create custom ones
+3. **Create endpoints** - Connect models with API providers
+4. **Configure and create a client** - Set up behavior for API calls
+5. **Generate content** - Use the client to send prompts and process responses
+
+## Error Handling and Resource Management
+
+Dhenara automatically manages resources and connections:
+
+```python
+# Resources automatically cleaned up when context exits
+with AIModelClient(...) as client:
+    response = client.generate(prompt)
+
+# Async version
+async with AIModelClient(...) as client:
+    response = await client.generate_async(prompt)
+```
+
+The library includes built-in error handling, retries, and timeouts to ensure robust operation in production environments.
 
 ## Next Steps
 
 - Read the [installation guide](./installation) if you haven't already
 - Try the [quick start examples](./quick-start) to see these concepts in action
-
-{/*
-<!--
-- Explore the [basic usage guide](../guides/basic-usage) for more practical examples
--->
- */}
+- Explore the API reference for detailed information on each component
