@@ -34,19 +34,13 @@ const sidebars: SidebarsConfig = {
         id: 'features/features-overview',
       },
       items: [
-        {
-          type: 'category',
-          label: 'Multi-turn Conversation',
-          collapsed: false,
-          items: [
-            'features/multi-turn/code',
-            'features/multi-turn/description',
-          ],
-        },
+        'features/multi-turn-conversations',
         'features/usasge-and-charge',
         'features/streaming-simplified',
         'features/type-safety',
+        'features/reasoning',
         'features/test-mode-and-async',
+        'features/models',
       ],
     },
     {

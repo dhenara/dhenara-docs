@@ -19,8 +19,6 @@ Here we compares Dhenara with LangChain, highlighting key differences and advant
 
 ## Key Advantages of Dhenara
 
-From the implementation in [mult-turn conversation](../features/multi-turn/code.md), we believe Dhenara offers several distinct advantages over LangChain for multi-turn conversations:
-
 ### 1. Simplified Architecture
 
 Dhenara uses a more straightforward approach to managing conversation context. The `ConversationNode` structure directly captures all necessary information without the additional layers of abstraction that LangChain introduces with its chains, memory types, and callbacks.

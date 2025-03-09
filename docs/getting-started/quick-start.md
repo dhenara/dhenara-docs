@@ -203,6 +203,9 @@ asyncio.run(generate_text_async())
 ```
 
 ## Next Steps
+- Explore [Real-world Sample](../features/multi-turn-conversations) that shows using dhenara for a multi-turn conversation
+- Learn about [features ](../features/features-overview.md)
+- Look at a [streaming sample](../samples/text-gen/streaming.md)
 
 {/*
 <!--
