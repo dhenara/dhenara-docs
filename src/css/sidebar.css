@@ -1,0 +1,141 @@
+  .menu {
+    padding: 0.5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Remove default Docusaurus sidebar item padding/styling */
+  .menu__list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .menu__list-item {
+    margin: 0.2rem 0;
+  }
+
+  /* Base styling for all menu links */
+  .menu__link {
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ifm-menu-color);
+    padding: 0.5rem 0.75rem;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .menu__link:hover {
+    background-color: rgba(235, 180, 41, 0.08);
+  }
+
+  [data-theme='dark'] .menu__link:hover {
+    background-color: rgba(242, 194, 74, 0.08);
+  }
+
+  /* Make active items more prominent */
+  .menu__link--active {
+    background-color: rgba(235, 180, 41, 0.1);
+    color: var(--ifm-color-primary);
+    font-weight: 600;
+  }
+
+  [data-theme='dark'] .menu__link--active {
+    background-color: rgba(242, 194, 74, 0.1);
+  }
+
+  /* Style main categories */
+  .menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist,
+  .menu__list-item-collapsible > .menu__link {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ifm-color-gray-900);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 6px;
+    letter-spacing: -0.01rem;
+  }
+
+  [data-theme='dark'] .menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist,
+  [data-theme='dark'] .menu__list-item-collapsible > .menu__link {
+    color: var(--ifm-color-gray-100);
+  }
+
+  /* Add subtle dividers between sections */
+  .menu__list-item-collapsible:not(:first-child) > .menu__link,
+  .menu__list > .menu__list-item:not(.menu__list-item--collapsed):not(:first-child) > .menu__link--sublist {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  [data-theme='dark'] .menu__list-item-collapsible:not(:first-child) > .menu__link,
+  [data-theme='dark'] .menu__list > .menu__list-item:not(.menu__list-item--collapsed):not(:first-child) > .menu__link--sublist {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Style subcategories */
+  .menu__list .menu__list .menu__link--sublist,
+  .menu__list .menu__list .menu__list-item-collapsible > .menu__link {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ifm-color-gray-800);
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  [data-theme='dark'] .menu__list .menu__list .menu__link--sublist,
+  [data-theme='dark'] .menu__list .menu__list .menu__list-item-collapsible > .menu__link {
+    color: var(--ifm-color-gray-200);
+  }
+
+  /* Add indentation for nested items */
+  .menu__list .menu__list {
+    padding-left: 0.75rem;
+    margin-left: 0.25rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme='dark'] .menu__list .menu__list {
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Style document items within categories */
+  .menu__list .menu__list .menu__link:not(.menu__link--sublist):not(.menu__list-item-collapsible > .menu__link) {
+    font-weight: 400;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    opacity: 0.85;
+  }
+
+  /* Hide all collapse arrows */
+  .menu__link--sublist-caret:after,
+  .menu__caret:before,
+  .menu__list-item-collapsible .menu__caret,
+  .menu__link--with-badge:after,
+  .menu__list-item-collapsible:after {
+    display: none !important;
+  }
+
+  /* Add subtle hover effect for the entire sidebar */
+  .theme-doc-sidebar-container {
+    background-color: var(--ifm-background-surface-color);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.03);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme='dark'] .theme-doc-sidebar-container {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Make the sidebar slightly wider for better readability */
+  @media (min-width: 997px) {
+    .docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Sidebar-styles-module {
+      width: 300px !important;
+    }
+
+    .docItemCol_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module {
+      max-width: calc(100% - 300px) !important;
+    }
+  }

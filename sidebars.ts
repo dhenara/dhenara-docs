@@ -15,6 +15,42 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Why Dhenara',
+      collapsed: false,
+      link: {
+        type: 'doc',
+        id: 'why-dhenara/why-dhenara',
+      },
+      items: [
+        'why-dhenara/langchain-vs-dhenara',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      collapsed: false,
+      link: {
+        type: 'doc',
+        id: 'features/features-overview',
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Multi-turn Conversation',
+          collapsed: false,
+          items: [
+            'features/multi-turn/code',
+            'features/multi-turn/description',
+          ],
+        },
+        'features/usasge-and-charge',
+        'features/streaming-simplified',
+        'features/type-safety',
+        'features/test-mode-and-async',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Samples',
       collapsed: false,
       items: [

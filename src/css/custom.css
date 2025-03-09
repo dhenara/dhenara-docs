@@ -1,10 +1,4 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
+/* Modern Sidebar Styling */
 :root {
   --ifm-color-primary: #ebb429;
   --ifm-color-primary-dark: #e0a815;
@@ -38,38 +32,7 @@
   font-weight: 700;
 }
 
-.footer {
-  --ifm-footer-background-color: #25262b;
-}
 
-.menu {
-  font-weight: 500;
-}
-
-code {
-  border: 1px solid var(--ifm-color-primary-lightest);
-  background-color: rgba(235, 180, 41, 0.05);
-}
-
-[data-theme='dark'] code {
-  background-color: rgba(242, 194, 74, 0.05);
-}
-
-.theme-doc-sidebar-item-category-level-1 {
-  font-weight: 600;
-}
-
-.theme-doc-sidebar-item-link-level-1 {
-  font-weight: 600;
-}
-
-.pagination-nav__link {
-  border-color: var(--ifm-color-primary-lighter);
-}
-
-.pagination-nav__link:hover {
-  border-color: var(--ifm-color-primary);
-}
 
 /* Reduce the size of the theme toggle button */
 .navbar__items--right .clean-btn[class*='toggleButton_'] {
@@ -89,10 +52,7 @@ code {
   height: auto;
 }
 
-/* Target only specific navbar links */
-.navbar__items--right .navbar__item.navbar__link svg {
-  display: none;
-}
+
 
 .limited-height-code {
   max-height: 400px; /* Adjust height as needed */
@@ -101,37 +61,7 @@ code {
 }
 
 
-/*Sidebar Style overrides */
-/*
-.menu__link {
-  font-size: 15px;
-}*/
-
-
-/* Hide collapse arrows */
-.menu__link--sublist-caret:after {
-  display: none !important;
-}
-
-/* Style main category items (first level) */
-.menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--ifm-color-primary);
-}
-
-/* Add more spacing between main categories */
-.menu__list-item:not(.menu__list-item--collapsed) > .menu__link--sublist {
-  margin-top: 16px;
-}
-
-/* Optional: Style subcategories (second level) */
-.menu__list .menu__list .menu__link--sublist {
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-/* Optional: Style regular doc links */
-.menu__link:not(.menu__link--sublist) {
-  font-size: 0.95rem;
-}
+@import './variables.css';
+@import './navbar.css';
+@import './sidebar.css';
+@import './content.css';

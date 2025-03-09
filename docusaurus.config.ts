@@ -49,7 +49,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/dhenara-social-card.jpg',
     navbar: {
-      title: 'Dhenara',
+      title: 'dhenara',
       logo: {
         alt: 'Dhenara Logo',
         src: 'img/logo.png',
@@ -74,6 +74,14 @@ const config: Config = {
         },
       ],
     },
+    announcementBar: {
+      id: 'github_star',
+      content: '⭐ If you find Dhenara helpful, <b> please <a target="_blank" rel="noopener noreferrer" href="https://github.com/dhenara/dhenara">give us a star on GitHub</a>!</b>',
+      backgroundColor: '#fafbfc',
+      textColor: '#091E42',
+      isCloseable: true, // Set to false if you want it to be persistent
+    },
+
     docs: {
       sidebar: {
         hideable: false,

@@ -1,0 +1,40 @@
+/* src/css/variables.css */
+:root {
+    --ifm-color-primary: #ebb429;
+    --ifm-color-primary-dark: #e0a815;
+    --ifm-color-primary-darker: #d39e14;
+    --ifm-color-primary-darkest: #ae8310;
+    --ifm-color-primary-light: #edc045;
+    --ifm-color-primary-lighter: #efc962;
+    --ifm-color-primary-lightest: #f3d88c;
+    --ifm-code-font-size: 95%;
+    --docusaurus-highlighted-code-line-bg: rgba(235, 180, 41, 0.1);
+
+    /* Additional custom variables */
+    --ifm-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --ifm-heading-font-family: var(--ifm-font-family-base);
+    --ifm-font-size-base: 16px;
+    --ifm-line-height-base: 1.65;
+    --content-max-width: 860px;
+    --custom-border-radius: 8px;
+    --custom-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --custom-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.1);
+    --custom-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* For readability concerns, you should choose a lighter palette in dark mode. */
+  [data-theme='dark'] {
+    --ifm-color-primary: #f2c24a;
+    --ifm-color-primary-dark: #f0b92c;
+    --ifm-color-primary-darker: #efb51c;
+    --ifm-color-primary-darkest: #ca9710;
+    --ifm-color-primary-light: #f4cb68;
+    --ifm-color-primary-lighter: #f5d078;
+    --ifm-color-primary-lightest: #f8df9f;
+    --docusaurus-highlighted-code-line-bg: rgba(242, 194, 74, 0.3);
+
+    /* Dark mode custom shadows */
+    --custom-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --custom-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.25);
+    --custom-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
