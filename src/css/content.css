@@ -119,6 +119,12 @@ article {
     margin: 1.5rem 0;
   }
 
+  .markdown code .plain,
+  .markdown code .interpolation
+  {
+    color: var(--ifm-font-color-base);
+  }
+
   /* Tables */
   .markdown table {
     width: 100%;

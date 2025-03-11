@@ -139,8 +139,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} Dhenara Inc.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes. dracula, // palenight, vsDark, dracula,
+      theme: prismThemes.vsLight,
+      darkTheme: prismThemes.vsDark , // palenight, vsDark, dracula,
       additionalLanguages: ['python'],
     },
   } satisfies Preset.ThemeConfig,
