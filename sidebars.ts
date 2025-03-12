@@ -35,6 +35,7 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         'features/multi-turn-conversations',
+        'features/resource-configuration',
         'features/usasge-and-charge',
         'features/streaming-simplified',
         'features/type-safety',

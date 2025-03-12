@@ -18,7 +18,10 @@ Dhenara-AI is a powerful, flexible, and truly open-source Python framework for i
 - **Easy Regeneration across Providers**: With a unified Pydantic output and built-in prompt formatting, send output from a model to any other model easily
 - **Streaming**: First-class support for streaming responses along with accumulated responses similar to non-streaming responses
 - **Async Support**: Both synchronous and asynchronous interfaces for maximum flexibility
-- **Resource Management**: Automatic handling of connections, retries, and timeouts
+- **Centralized Resource Management**: Configure all AI models and API credentials in one place with a simple YAML configuration
+- **Credential Security**: Keep sensitive API keys and credentials separate from application code
+- **Dynamic Model Selection**: Switch between models and providers at runtime without reconfiguration
+- **Provider Abstraction**: Interact with foundation models regardless of which provider is serving them
 - **Foundation Models**: Pre-configured models with sensible defaults
 - **Test Mode**: Bring up your app with dummy responses for streaming and non-streaming generation
 - **Cost/Usage Data**: Derived cost and usage data along with responses, with optional charge for each model endpoint for commercial deployment

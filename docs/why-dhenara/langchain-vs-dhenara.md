@@ -203,6 +203,59 @@ for i, query in enumerate(queries):
     last_provider = current_provider
 ```
 
+
+## Resource Configuration
+
+| Feature | Dhenara | LangChain |
+|---------|---------|-----------|
+| **Credential Management** | Centralized YAML configuration with runtime loading | Environment variables or manual client setup |
+| **Model Organization** | Structured model registry with provider metadata | Ad-hoc model instantiation |
+| **Provider Switching** | Single config with dynamic model selection | Manual client reconfiguration |
+| **Endpoint Management** | Automatic endpoint creation from models and APIs | Manual endpoint setup |
+| **Resource Querying** | Rich query interface for resource retrieval | No centralized resource management |
+| **Multi-environment Support** | Multiple resource configs for different environments | Manual environment handling |
+
+### Dhenara's ResourceConfig Advantage
+
+Dhenara introduces a centralized resource management system that dramatically simplifies working with multiple AI models and providers:
+
+```python
+# Load all credentials and initialize endpoints in one line
+resource_config = ResourceConfig()
+resource_config.load_from_file("credentials.yaml", init_endpoints=True)
+
+# Get any model by name, regardless of provider
+claude_endpoint = resource_config.get_model_endpoint("claude-3-5-haiku")
+gpt4_endpoint = resource_config.get_model_endpoint("gpt-4o")
+
+# Or use a more specific query when needed
+gemini_endpoint = resource_config.get_resource(
+    ResourceConfigItem(
+        item_type=ResourceConfigItemTypeEnum.ai_model_endpoint,
+        query={"model_name": "gemini-1.5-flash", "api_provider": "google_gemini_api"}
+    )
+)
+```
+
+In contrast, LangChain requires setting up each model client individually:
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Manual setup for each provider
+openai_model = ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"], model="gpt-4o")
+anthropic_model = ChatAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"], model="claude-3-haiku")
+google_model = ChatGoogleGenerativeAI(api_key=os.environ["GOOGLE_API_KEY"], model="gemini-1.5-flash")
+
+# No centralized way to retrieve models by name or query
+# Must manually track which model is which
+```
+
+Dhenara's ResourceConfig provides a more maintainable, structured approach to managing AI resources, especially in applications that use multiple models across different providers.
+
+
 ## Key Limitations of LangChain in this Use Case
 
 1. **Complex Memory Synchronization**: LangChain doesn't natively support sharing memory across different provider chains, requiring manual memory synchronization.
