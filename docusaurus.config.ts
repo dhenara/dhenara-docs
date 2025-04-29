@@ -18,7 +18,6 @@ const config: Config = {
   deploymentBranch: 'gh-pages', // The branch to deploy to
   trailingSlash: false,
 
-
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -34,7 +33,8 @@ const config: Config = {
         docs: {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.ts',
-          // Update this to your repo path
+          // sidebarCollapsible: true,
+          //sidebarCollapsed: false,
           //editUrl: "https://github.com/dhenara/dhenara/tree/main/docs/",
         },
         blog: false, // Set to false to disable the blog plugin
@@ -44,6 +44,27 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+
+  //plugins: [
+  //  [
+  //    '@docusaurus/plugin-content-docs',
+  //    {
+  //      id: 'dhenara-ai',
+  //      path: 'docs/dhenara-ai',
+  //      routeBasePath: 'dhenara-ai',
+  //      sidebarPath: './sidebars.ts',
+  //    },
+  //  ],
+  //  [
+  //    '@docusaurus/plugin-content-docs',
+  //    {
+  //      id: 'dhenara-agent',
+  //      path: 'docs/dhenara-agent',
+  //      routeBasePath: 'dhenara-agent',
+  //      sidebarPath: './sidebars.ts',
+  //    },
+  //  ],
+  //],
 
   themeConfig: {
     // Replace with your project's social card
@@ -56,11 +77,32 @@ const config: Config = {
         height: 25,
       },
       items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'dhenaraAiSidebar',
+          position: 'left',
+          label: 'Dhenara AI',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dhenaraAgentSidebar',
+          position: 'left',
+          label: 'Dhenara Agent',
+        },
         //{
-        //  type: 'docSidebar',
-        //  sidebarId: 'docsSidebar',
+        //  type: 'dropdown',
+        //  label: 'Packages',
         //  position: 'left',
-        //  label: 'Documentation',
+        //  items: [
+        //    {
+        //      label: 'dhenara-ai',
+        //      to: '/dhenara-ai',
+        //    },
+        //    {
+        //      label: 'dhenara-agent',
+        //      to: '/dhenara-agent',
+        //    },
+        //  ],
         //},
         {
           href: 'https://dhenara.com',
@@ -74,19 +116,20 @@ const config: Config = {
         },
       ],
     },
-    announcementBar: {
-      id: 'github_star',
-      content: '⭐ If you find Dhenara helpful, <b> please <a target="_blank" rel="noopener noreferrer" href="https://github.com/dhenara/dhenara">give us a star on GitHub</a>!</b>',
-      backgroundColor: '#fafbfc',
-      textColor: '#091E42',
-      isCloseable: true, // Set to false if you want it to be persistent
-    },
+    //announcementBar: {
+    //  id: 'github_star',
+    //  content:
+    //    '⭐ If you find Dhenara helpful, <b> please <a target="_blank" rel="noopener noreferrer" href="https://github.com/dhenara/dhenara">give us a star on GitHub</a>!</b>',
+    //  backgroundColor: '#fafbfc',
+    //  textColor: '#091E42',
+    //  isCloseable: true, // Set to false if you want it to be persistent
+    //},
 
     docs: {
       sidebar: {
         hideable: false,
         autoCollapseCategories: false,
-      }
+      },
     },
     colorMode: {
       defaultMode: 'dark',
@@ -100,8 +143,12 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
-              label: 'Getting Started',
-              to: '/getting-started/installation'  // Remove the `/docs/` prefix as its configured as the root path
+              label: 'Getting Started (AI)',
+              to: '/dhenara-ai/getting-started/installation', // Remove the `/docs/` prefix as its configured as the root path
+            },
+            {
+              label: 'Getting Started (Agent)',
+              to: '/dhenara-agent/introduction',
             },
             //{
             //  label: 'Guides',
@@ -140,7 +187,7 @@ const config: Config = {
     },
     prism: {
       theme: prismThemes.vsLight,
-      darkTheme: prismThemes.vsDark , // palenight, vsDark, dracula,
+      darkTheme: prismThemes.vsDark, // palenight, vsDark, dracula,
       additionalLanguages: ['python'],
     },
     algolia: {

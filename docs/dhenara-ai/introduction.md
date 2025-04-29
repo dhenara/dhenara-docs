@@ -103,6 +103,6 @@ elif response.stream_generator:
 
 ## Next Steps
 
-- Follow the [Installation](./getting-started/installation) guide to get started
-- Check out the [Quick Start](./getting-started/quick-start) for more examples
-- Learn about [Key Concepts](./getting-started/key-concepts) in Dhenara
+- Follow the [Installation](/dhenara-ai/getting-started/installation) guide to get started
+- Check out the [Quick Start](/dhenara-ai/getting-started/quick-start) for more examples
+- Learn about [Key Concepts](/dhenara-ai/getting-started/key-concepts) in Dhenara

@@ -1,16 +1,17 @@
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
-  docsSidebar: [
-    'introduction',
+  // Sidebar for dhenara-ai
+  dhenaraAiSidebar: [
+    'dhenara-ai/introduction',
     {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
       items: [
-        'getting-started/installation',
-        'getting-started/quick-start',
-        'getting-started/key-concepts',
+        'dhenara-ai/getting-started/installation',
+        'dhenara-ai/getting-started/quick-start',
+        'dhenara-ai/getting-started/key-concepts',
       ],
     },
     {
@@ -19,11 +20,9 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       link: {
         type: 'doc',
-        id: 'why-dhenara/why-dhenara',
+        id: 'dhenara-ai/why-dhenara/why-dhenara',
       },
-      items: [
-        'why-dhenara/langchain-vs-dhenara',
-      ]
+      items: ['dhenara-ai/why-dhenara/langchain-vs-dhenara'],
     },
     {
       type: 'category',
@@ -31,17 +30,17 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       link: {
         type: 'doc',
-        id: 'features/features-overview',
+        id: 'dhenara-ai/features/features-overview',
       },
       items: [
-        'features/multi-turn-conversations',
-        'features/resource-configuration',
-        'features/usasge-and-charge',
-        'features/streaming-simplified',
-        'features/type-safety',
-        'features/reasoning',
-        'features/test-mode-and-async',
-        'features/models',
+        'dhenara-ai/features/multi-turn-conversations',
+        'dhenara-ai/features/resource-configuration',
+        'dhenara-ai/features/usasge-and-charge',
+        'dhenara-ai/features/streaming-simplified',
+        'dhenara-ai/features/type-safety',
+        'dhenara-ai/features/reasoning',
+        'dhenara-ai/features/test-mode-and-async',
+        'dhenara-ai/features/models',
       ],
     },
     {
@@ -49,24 +48,21 @@ const sidebars: SidebarsConfig = {
       label: 'Samples',
       collapsed: false,
       items: [
-
         {
           type: 'category',
           label: 'Text Generation',
           collapsed: false,
           items: [
-            'samples/text-gen/text-gen',
-            'samples/text-gen/text-gen-async',
-            'samples/text-gen/streaming',
+            'dhenara-ai/samples/text-gen/text-gen',
+            'dhenara-ai/samples/text-gen/text-gen-async',
+            'dhenara-ai/samples/text-gen/streaming',
           ],
         },
         {
           type: 'category',
           label: 'Image Generation',
           collapsed: false,
-          items: [
-            'samples/image-gen/image-gen',
-          ],
+          items: ['dhenara-ai/samples/image-gen/image-gen'],
         },
       ],
     },
@@ -123,6 +119,21 @@ const sidebars: SidebarsConfig = {
       ],
     },
     */
+  ],
+
+  // Sidebar for dhenara-agent
+  dhenaraAgentSidebar: [
+    'dhenara-agent/introduction',
+    {
+      type: 'category',
+      label: 'Getting Started',
+      collapsed: false,
+      items: [
+        'dhenara-agent/introduction',
+        //'dhenara-agent/getting-started/installation',
+        //'dhenara-agent/getting-started/quick-start',
+      ],
+    },
   ],
 };
 
