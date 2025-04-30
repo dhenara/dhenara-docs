@@ -33,8 +33,6 @@ const config: Config = {
         docs: {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.ts',
-          // sidebarCollapsible: true,
-          //sidebarCollapsed: false,
           //editUrl: "https://github.com/dhenara/dhenara/tree/main/docs/",
         },
         blog: false, // Set to false to disable the blog plugin
@@ -87,7 +85,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'dhenaraAgentSidebar',
           position: 'left',
-          label: 'Dhenara Agent',
+          label: 'Agent DSL',
         },
         //{
         //  type: 'dropdown',
