@@ -6,7 +6,7 @@ title: Introduction
 
 ## Overview
 
-Dhenara Agent DSL (DAD) is an open-source framework built on top of the `dhenara` Python package. It provides a powerful, expressive, and type-safe domain-specific language (DSL) for defining and executing AI agent workflows. DAD makes it easier to create, compose, and orchestrate AI agents with sophisticated behaviors, while maintaining robust observability and reproducibility.
+Dhenara Agent DSL (DAD) is an open-source framework built on top of the `dhenara-ai` Python package. It provides a powerful, expressive, and type-safe domain-specific language (DSL) for defining and executing AI agent workflows. DAD makes it easier to create, compose, and orchestrate AI agents with sophisticated behaviors, while maintaining robust observability and reproducibility.
 
 ## What is Dhenara Agent DSL?
 

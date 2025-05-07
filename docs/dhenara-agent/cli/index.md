@@ -24,7 +24,7 @@ To start using the CLI, ensure you have the Dhenara Agent DSL package installed:
 pip install dhenara-agent
 ```
 
-Once installed, you can access the CLI through the `dhenara` command:
+Once installed, you can access the CLI through the `dhenara-ai` command:
 
 ```bash
 dhenara --help

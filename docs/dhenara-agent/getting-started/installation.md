@@ -6,6 +6,14 @@ sidebar_position: 1
 
 This guide will help you install the Dhenara Agent DSL (DAD) package and set up your development environment.
 
+
+:::note
+
+DAD is the name of this agent framework and the name of the python package is `dhenara-agent`, there is no package named `dad` or `dhenara-dad`.
+
+:::
+
+
 ## Prerequisites
 
 Before installing Dhenara Agent DSL, make sure you have the following prerequisites:
@@ -32,10 +40,10 @@ conda activate dhenara-env
 
 ### 2. Install the Dhenara Package
 
-DAD is built on top of the core `dhenara` package. Install both using pip:
+DAD is built on top of the core `dhenara-ai` package. Below will install both packages using pip:
 
 ```bash
-pip install dhenara dhenara-agent
+pip install dhenara-agent
 ```
 
 ### 3. Install Optional Dependencies
