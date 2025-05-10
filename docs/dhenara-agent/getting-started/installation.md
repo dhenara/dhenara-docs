@@ -1,15 +1,10 @@
----
-sidebar_position: 1
----
-
 # Installation
 
 This guide will help you install the Dhenara Agent DSL (DAD) package and set up your development environment.
 
-
 :::note
 
-DAD is the name of this agent framework and the name of the python package is `dhenara-agent`, there is no package named `dad` or `dhenara-dad`.
+DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package named `dad` or `dhenara-dad`.
 
 :::
 
@@ -19,51 +14,36 @@ DAD is the name of this agent framework and the name of the python package is `d
 Before installing Dhenara Agent DSL, make sure you have the following prerequisites:
 
 - Python 3.10 or later
-- pip (Python package installer)
+- pip or your preferred Python package installer
 - virtualenv or conda (recommended for managing environments)
 
 ## Installation Steps
 
 ### 1. Create a Virtual Environment (Recommended)
 
-It's recommended to install DAD in a virtual environment to avoid conflicts with other packages:
+It's recommended to install DAD in a virtual environment as you would with any standard Python project:
 
 ```bash
 # Using virtualenv
-python -m venv dhenara-env
-source dhenara-env/bin/activate  # On Windows: dhenara-env\Scripts\activate
-
-# Or using conda
-conda create -n dhenara-env python=3.10
-conda activate dhenara-env
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
 ### 2. Install the Dhenara Package
 
-DAD is built on top of the core `dhenara-ai` package. Below will install both packages using pip:
+DAD is available as a Python package named `dhenara-agent` and is built on top of the core `dhenara` package.
+Install `dhenara-agent` using pip (or your preferred installer):
 
 ```bash
 pip install dhenara-agent
 ```
 
-### 3. Install Optional Dependencies
 
-Depending on your use case, you might want to install additional dependencies:
-
-```bash
-# For visualization features
-pip install dhenara-agent[visualization]
-
-# For observability features (recommended for production)
-pip install dhenara-agent[observability]
-
-# For all optional dependencies
-pip install dhenara-agent[all]
-```
 
 ## Development Installation
 
-If you want to contribute to DAD or run the latest development version, you can install from the source code:
+If you want to contribute to DAD or run the latest development version, you can install from the source code.
+You can even install it in editable mode during development, allowing you to add custom debug and print messages:
 
 ```bash
 git clone https://github.com/dhenara/dhenara-agent.git
@@ -71,55 +51,50 @@ cd dhenara-agent
 pip install -e .
 ```
 
-## Configuration
-
-After installation, you'll need to configure the credentials for the AI models you want to use with DAD.
-
-### Setting up API Keys
-
-It's recommended to use environment variables for API keys:
+Alternatively:
 
 ```bash
-# For OpenAI models
-export OPENAI_API_KEY=your_openai_api_key
-
-# For Anthropic models
-export ANTHROPIC_API_KEY=your_anthropic_api_key
-
-# For Google models
-export GOOGLE_API_KEY=your_google_api_key
+pip install -e "git+https://github.com/dhenara/dhenara-agent.git"
 ```
 
-Alternatively, you can create a credentials file at `~/.dhenara/credentials.yaml`:
+## Configure AI Model API Credentials
 
-```yaml
-api_keys:
-  openai: ${OPENAI_API_KEY}
-  anthropic: ${ANTHROPIC_API_KEY}
-  google: ${GOOGLE_API_KEY}
+After installation, you'll need to configure the credentials for the AI models you want to use with DAD. The package uses `dhenara`'s ResourceConfiguration for a one-time configuration of the API credentials.
 
-endpoints:
-  openai: "https://api.openai.com/v1"
-  anthropic: "https://api.anthropic.com/v1"
-  google: "https://generativelanguage.googleapis.com/v1"
+The simplest way to get started is by creating a credentials template YAML and then loading it:
 
-resource_paths:
-  models: "~/.dhenara/models"
-```
+1. Copy the [template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml)
+2. Edit it with your API keys (you only need to add providers you plan to use)
+3. Save it to `~/.dhenara_credentials.yaml` for automatic loading, or manually load the configuration in your code
 
 ## Verify Installation
 
-Verify your installation by running a simple test script:
+Verify your installation by running a simple CLI command:
 
-```python
-from dhenara.agent.dsl import FlowDefinition
-
-# Create a simple flow definition
-flow = FlowDefinition()
-
-# If no errors, installation is successful
-print("Dhenara Agent DSL installed successfully!")
+```bash
+# Make sure your virtualenv is activated
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+dhenara --help
 ```
+
+You should see the available CLI commands:
+
+```bash
+(.venv) $ dhenara --help
+Usage: dhenara [OPTIONS] COMMAND [ARGS]...
+
+  Dhenara Agent DSL (DAD) development toolkit.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  create        Create new Dhenara components.
+  run           Run DAD components.
+  startproject  Create a new agent project with folder structure.
+(.venv) $
+```
+
 
 ## Next Steps
 
