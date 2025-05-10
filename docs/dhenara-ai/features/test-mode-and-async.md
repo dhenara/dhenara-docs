@@ -1,14 +1,16 @@
 ---
-title:  Test Mode & Async Support
+title: Test Mode & Async Support
 ---
 
 # Test Mode and Synchronous/Asynchronous Client Flexibility
 
-Dhenara provides powerful capabilities to help you develop, test, and deploy AI applications more efficiently. Two key features that enhance developer productivity are the Test Mode functionality and the flexible Sync/Async client options.
+Dhenara provides powerful capabilities to help you develop, test, and deploy AI applications more efficiently. Two key
+features that enhance developer productivity are the Test Mode functionality and the flexible Sync/Async client options.
 
 ## Test Mode
 
-Dhenara's test mode allows you to develop and test your application without making actual API calls to LLM providers, saving costs and enabling development in environments without API access.
+Dhenara's test mode allows you to develop and test your application without making actual API calls to LLM providers,
+saving costs and enabling development in environments without API access.
 
 ### How Test Mode Works
 
@@ -50,7 +52,8 @@ Test mode returns structured responses that mimic the format of real API respons
 
 ## Synchronous and Asynchronous Client Options
 
-Dhenara offers both synchronous and asynchronous client options, allowing you to choose the approach that best fits your application architecture.
+Dhenara offers both synchronous and asynchronous client options, allowing you to choose the approach that best fits your
+application architecture.
 
 ### Creating Sync vs Async Clients
 
@@ -72,7 +75,8 @@ async_client = AIModelClient(
 
 ### Using the Sync Client
 
-The synchronous client is best for applications where you need blocking behavior or are working in a synchronous context:
+The synchronous client is best for applications where you need blocking behavior or are working in a synchronous
+context:
 
 ```python
 # Using the sync client with a context manager
@@ -134,7 +138,8 @@ async def process_multiple_prompts():
 
 ## Advanced Error Handling and Retry Logic
 
-Dhenara's client implementation includes sophisticated error handling and retry mechanisms that work identically in both sync and async modes:
+Dhenara's client implementation includes sophisticated error handling and retry mechanisms that work identically in both
+sync and async modes:
 
 ### Automatic Retries
 
@@ -166,6 +171,9 @@ client = AIModelClient(
 
 ## Conclusion
 
-Dhenara's test mode and flexible sync/async client options simplify the development workflow and make it easy to integrate AI capabilities into any application architecture. The test mode enables rapid development and testing without API costs, while the sync/async flexibility ensures you can build applications that scale optimally.
+Dhenara's test mode and flexible sync/async client options simplify the development workflow and make it easy to
+integrate AI capabilities into any application architecture. The test mode enables rapid development and testing without
+API costs, while the sync/async flexibility ensures you can build applications that scale optimally.
 
-Whether you're building a simple CLI tool, a web application, or a high-throughput API service, Dhenara's client interface adapts to your needs with consistent behavior and powerful built-in features.
+Whether you're building a simple CLI tool, a web application, or a high-throughput API service, Dhenara's client
+interface adapts to your needs with consistent behavior and powerful built-in features.

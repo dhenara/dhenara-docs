@@ -73,24 +73,26 @@ This approach helps you manage complexity and identify issues early in the devel
 Develop effective testing strategies for your agents:
 
 1. **Unit test individual nodes** with mock inputs
+
    ```python
    async def test_code_generator():
        # Create a mock execution context
        mock_context = create_mock_execution_context()
-       
+
        # Create a mock input
        mock_input = AIModelNodeInput(prompt_variables={"task": "Test task"})
-       
+
        # Execute the node with mocks
        node = AIModelNode(...)
        result = await node.execute("test_node", mock_context, mock_input)
-       
+
        # Verify the result
        assert result.status == ExecutionStatusEnum.COMPLETED
        assert result.output.response is not None
    ```
 
 2. **Create test flows** to verify node interactions
+
    ```python
    test_flow = FlowDefinition()
    test_flow.node("test_input", TestInputNode(...))
@@ -99,6 +101,7 @@ Develop effective testing strategies for your agents:
    ```
 
 3. **Use simplified test environments**
+
    ```python
    test_run_context = RunContext(
        root_component_id="test_flow",
@@ -108,6 +111,7 @@ Develop effective testing strategies for your agents:
    ```
 
 4. **Log execution details** for debugging
+
    ```python
    run_context.register_event_handler(EventType.node_execution_completed, log_execution_result)
    ```
@@ -178,7 +182,7 @@ async def get_menu_choice(options: list[str], prompt: str = "Select an option:")
     print(f"\n{prompt}")
     for i, option in enumerate(options):
         print(f"  {i+1}. {option}")
-    
+
     while True:
         try:
             choice = await async_input("Enter number: ")
@@ -205,6 +209,7 @@ Well-designed input handlers improve the user experience and make your agents mo
 ## Common Pitfalls to Avoid
 
 1. **Large Inputs/Outputs**: Be careful with large data - use chunking or summarization
+
    ```python
    # Instead of passing the entire repo content
    FolderAnalyzerSettings(
@@ -214,15 +219,17 @@ Well-designed input handlers improve the user experience and make your agents mo
    ```
 
 2. **Event Handler Leaks**: Ensure event handlers don't persist beyond their needed lifetime
+
    ```python
    # Store handler registration for later cleanup
    handler_id = run_context.register_node_input_handler(my_handler)
-   
+
    # Clean up when done
    run_context.unregister_handler(handler_id)
    ```
 
 3. **Resource Exhaustion**: Implement rate limiting and fallbacks for API calls
+
    ```python
    # Use retries with backoff
    AIModelNodeSettings(
@@ -235,6 +242,7 @@ Well-designed input handlers improve the user experience and make your agents mo
    ```
 
 4. **Non-Deterministic Flows**: Seed random factors when reproducibility is important
+
    ```python
    # Set seed for reproducibility
    AIModelCallConfig(
@@ -243,6 +251,7 @@ Well-designed input handlers improve the user experience and make your agents mo
    ```
 
 5. **Incomplete Error Handling**: Always handle errors at both node and flow levels
+
    ```python
    # Node-level error handling
    try:
@@ -250,7 +259,7 @@ Well-designed input handlers improve the user experience and make your agents mo
    except Exception as e:
        log_error(f"Node {node_id} failed: {str(e)}")
        raise NodeExecutionError(node_id, str(e))
-   
+
    # Flow-level error handling
    flow.connect("processor", "success_handler", on_success=True)
    flow.connect("processor", "error_handler", on_error=True)
@@ -259,12 +268,14 @@ Well-designed input handlers improve the user experience and make your agents mo
 ## Deployment Considerations
 
 1. **Environment Configuration**: Use resource profiles for different environments
+
    ```python
    # Get environment-specific configuration
    config = run_context.get_resource_config(os.environ.get("ENV", "development"))
    ```
 
 2. **Observability Setup**: Ensure proper logging and tracing in production
+
    ```python
    # Production observability settings
    ObservabilitySettings(
@@ -275,12 +286,14 @@ Well-designed input handlers improve the user experience and make your agents mo
    ```
 
 3. **Scaling**: Consider how multiple agent instances will interact
+
    ```python
    # Use a shared resource registry
    resource_config_registry.register("shared", shared_resource_config)
    ```
 
 4. **Security**: Properly manage credentials and sensitive inputs/outputs
+
    ```python
    # Use environment variables for credentials
    ResourceConfig().load_from_env()
@@ -292,4 +305,5 @@ Well-designed input handlers improve the user experience and make your agents mo
    run_context.register_event_handler(EventType.health_check, health_check_handler)
    ```
 
-By following these best practices, you can build robust, maintainable agent applications with DAD that solve real-world problems effectively.
+By following these best practices, you can build robust, maintainable agent applications with DAD that solve real-world
+problems effectively.

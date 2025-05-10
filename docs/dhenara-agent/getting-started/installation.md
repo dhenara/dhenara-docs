@@ -4,10 +4,10 @@ This guide will help you install the Dhenara Agent DSL (DAD) package and set up 
 
 :::note
 
-DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package named `dad` or `dhenara-dad`.
+DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package
+named `dad` or `dhenara-dad`.
 
 :::
-
 
 ## Prerequisites
 
@@ -31,19 +31,17 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 ### 2. Install the Dhenara Package
 
-DAD is available as a Python package named `dhenara-agent` and is built on top of the core `dhenara` package.
-Install `dhenara-agent` using pip (or your preferred installer):
+DAD is available as a Python package named `dhenara-agent` and is built on top of the core `dhenara` package. Install
+`dhenara-agent` using pip (or your preferred installer):
 
 ```bash
 pip install dhenara-agent
 ```
 
-
-
 ## Development Installation
 
-If you want to contribute to DAD or run the latest development version, you can install from the source code.
-You can even install it in editable mode during development, allowing you to add custom debug and print messages:
+If you want to contribute to DAD or run the latest development version, you can install from the source code. You can
+even install it in editable mode during development, allowing you to add custom debug and print messages:
 
 ```bash
 git clone https://github.com/dhenara/dhenara-agent.git
@@ -59,11 +57,13 @@ pip install -e "git+https://github.com/dhenara/dhenara-agent.git"
 
 ## Configure AI Model API Credentials
 
-After installation, you'll need to configure the credentials for the AI models you want to use with DAD. The package uses `dhenara`'s ResourceConfiguration for a one-time configuration of the API credentials.
+After installation, you'll need to configure the credentials for the AI models you want to use with DAD. The package
+uses `dhenara`'s ResourceConfiguration for a one-time configuration of the API credentials.
 
 The simplest way to get started is by creating a credentials template YAML and then loading it:
 
-1. Copy the [template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml)
+1. Copy the
+   [template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml)
 2. Edit it with your API keys (you only need to add providers you plan to use)
 3. Save it to `~/.dhenara_credentials.yaml` for automatic loading, or manually load the configuration in your code
 
@@ -95,7 +95,7 @@ Commands:
 (.venv) $
 ```
 
-
 ## Next Steps
 
-Now that you have installed DAD, you can proceed to the [Quick Start](quick-start) guide to create your first agent, or explore the [Core Concepts](core-concepts) to understand the fundamental building blocks of DAD.
+Now that you have installed DAD, you can proceed to the [Quick Start](quick-start) guide to create your first agent, or
+explore the [Core Concepts](core-concepts) to understand the fundamental building blocks of DAD.

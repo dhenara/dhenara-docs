@@ -6,11 +6,14 @@ title: Extending the CLI
 
 ## Introduction
 
-The Dhenara Agent DSL CLI is designed to be highly extensible, allowing developers to add custom commands that integrate seamlessly with the existing command structure. This guide will walk you through the process of extending the CLI with your own commands.
+The Dhenara Agent DSL CLI is designed to be highly extensible, allowing developers to add custom commands that integrate
+seamlessly with the existing command structure. This guide will walk you through the process of extending the CLI with
+your own commands.
 
 ## Extension Architecture
 
-The DAD CLI follows a modular architecture where each set of related commands is encapsulated in a separate Python module. These modules are automatically discovered and loaded when the CLI starts.
+The DAD CLI follows a modular architecture where each set of related commands is encapsulated in a separate Python
+module. These modules are automatically discovered and loaded when the CLI starts.
 
 To extend the CLI, you'll create a new Python module that follows the established command registration pattern.
 
@@ -18,7 +21,8 @@ To extend the CLI, you'll create a new Python module that follows the establishe
 
 ### Step 1: Create a New Module
 
-Start by creating a new Python module in the `dhenara/cli/commands/` directory. For example, to add custom analytics commands, you might create a file named `analytics.py`:
+Start by creating a new Python module in the `dhenara/cli/commands/` directory. For example, to add custom analytics
+commands, you might create a file named `analytics.py`:
 
 ```python
 # dhenara/cli/commands/analytics.py
@@ -152,7 +156,7 @@ Ensure your custom commands are well-documented with examples:
 @click.option("--output", "-o", help="Output file path")
 def process_file(input_file, output):
     """Process a file and generate output.
-    
+
     Example usage:
         dhenara process-file data.json -o results.json
     """
@@ -174,12 +178,12 @@ def my_command(agent_id, project_root):
     # Initialize run context
     if not project_root:
         project_root = find_project_root()
-    
+
     run_context = RunContext(
         root_component_id=agent_id,
         project_root=Path(project_root),
     )
-    
+
     # Use run context
     run_context.setup_run()
     # Command implementation
@@ -210,11 +214,11 @@ def visualize():
 @click.argument("run_id")
 @click.option("--project-root", help="Project root directory")
 @click.option("--output", "-o", help="Output file path")
-@click.option("--format", "-f", type=click.Choice(["svg", "png", "pdf"]), default="svg", 
+@click.option("--format", "-f", type=click.Choice(["svg", "png", "pdf"]), default="svg",
               help="Output format")
 def visualize_flow(run_id, project_root, output, format):
     """Generate a visual diagram of a flow execution.
-    
+
     Example:
         dhenara visualize flow run_20230517_123456 -o flow.svg
     """
@@ -227,13 +231,13 @@ async def _visualize_flow(run_id, project_root, output, format):
         if not project_root:
             click.echo("Error: Could not determine project root. Please specify with --project-root")
             return
-    
+
     # Set default output path if not specified
     if not output:
         output = f"{run_id}_flow.{format}"
-    
+
     click.echo(f"Generating flow diagram for run {run_id}...")
-    
+
     try:
         # Generate the diagram
         run_context = RunContext(
@@ -241,10 +245,10 @@ async def _visualize_flow(run_id, project_root, output, format):
             project_root=Path(project_root),
             previous_run_id=run_id
         )
-        
+
         diagram_path = await generate_flow_diagram(run_context, output, format)
         click.echo(click.style(f"Flow diagram generated at: {diagram_path}", fg="green"))
-    
+
     except Exception as e:
         click.echo(click.style(f"Error generating diagram: {str(e)}", fg="red"), err=True)
 
@@ -298,4 +302,6 @@ For broadly useful commands, consider contributing them to the core DAD project 
 
 ## Conclusion
 
-Extending the DAD CLI allows you to customize and enhance the functionality to meet your specific needs. By following the established patterns and best practices, you can create seamless extensions that integrate with the existing command structure while adding powerful new capabilities.
+Extending the DAD CLI allows you to customize and enhance the functionality to meet your specific needs. By following
+the established patterns and best practices, you can create seamless extensions that integrate with the existing command
+structure while adding powerful new capabilities.

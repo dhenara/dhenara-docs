@@ -4,7 +4,8 @@ title: Key Concepts
 
 # Key Concepts
 
-Understanding the core concepts of Dhenara will help you use the library effectively. This guide explains the fundamental components and how they work together.
+Understanding the core concepts of Dhenara will help you use the library effectively. This guide explains the
+fundamental components and how they work together.
 
 ## Architecture Overview
 
@@ -16,10 +17,10 @@ Dhenara is built on principles of simplicity, flexibility, and separation of con
 4. **Clients** - The interface you use to interact with endpoints
 
 This separation lets you:
+
 - Switch between models while keeping the same code structure
 - Use the same model through different API providers
 - Configure each component independently
-
 
 ## Core Components
 
@@ -56,7 +57,8 @@ Predefined models with appropriate settings and capabilities:
 - Provider-specific parameters
 - Model Options ( This is very useful when you deal with image generation )
 
-Dhenara includes foundation models for popular services like OpenAI's GPT models, Google's Gemini, Anthropic's Claude, DeepSeek's R1 and more.
+Dhenara includes foundation models for popular services like OpenAI's GPT models, Google's Gemini, Anthropic's Claude,
+DeepSeek's R1 and more.
 
 ### AIModelEndpoint
 
@@ -171,7 +173,8 @@ if response.stream_generator:
             final_response = accumulated
 ```
 
-Streaming responses automatically accumulate content, providing a final response identical in structure to non-streaming responses.
+Streaming responses automatically accumulate content, providing a final response identical in structure to non-streaming
+responses.
 
 ## Typical Workflow
 
@@ -195,7 +198,8 @@ async with AIModelClient(...) as client:
     response = await client.generate_async(prompt)
 ```
 
-The library includes built-in error handling, retries, and timeouts to ensure robust operation in production environments.
+The library includes built-in error handling, retries, and timeouts to ensure robust operation in production
+environments.
 
 ## Next Steps
 

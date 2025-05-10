@@ -4,11 +4,13 @@ title: Resource Configuration
 
 # Resource Configuration
 
-The `ResourceConfig` class provides a centralized way to manage all AI Models and API credentials in Dhenara AI. This page explains how to use this powerful feature to simplify your application's resource management.
+The `ResourceConfig` class provides a centralized way to manage all AI Models and API credentials in Dhenara AI. This
+page explains how to use this powerful feature to simplify your application's resource management.
 
 ## Overview
 
-When working with multiple AI models and providers, managing credentials and configurations can be challenging. The `ResourceConfig` class offers an elegant solution by:
+When working with multiple AI models and providers, managing credentials and configurations can be challenging. The
+`ResourceConfig` class offers an elegant solution by:
 
 1. Loading credentials from standardized configuration files
 2. Automatically initializing API clients with the correct credentials
@@ -21,7 +23,9 @@ When working with multiple AI models and providers, managing credentials and con
 
 The simplest way to get started is by creating a credentials template and then loading it:
 
-Also, you can copy a generated [template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml). (Below command will generate the same file)
+Also, you can copy a generated
+[template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml).
+(Below command will generate the same file)
 
 ```python
 from dhenara.ai.types import ResourceConfig
@@ -36,7 +40,8 @@ config = ResourceConfig()
 config.load_from_file("my_credentials.yaml", init_endpoints=True)
 ```
 
-The generated credentials template will include all supported providers with placeholders for API keys and other required credentials:
+The generated credentials template will include all supported providers with placeholders for API keys and other
+required credentials:
 
 ```yaml
 # Dhenara AI Provider Credentials
@@ -50,7 +55,6 @@ google_gemini_api:
 
 anthropic:
   api_key: <YOUR_ANTHROPIC_API_KEY>
-
 # Additional providers...
 ```
 
@@ -91,7 +95,8 @@ client = AIModelClient(endpoint)
 
 ## Multi-Turn Conversations using Resource Config
 
-Let's see how to use ResourceConfig in a practical multi-turn conversation example. We will modify the [Multi-Turn Conversations Example](multi-turn-conversations.md#real-world-usage) using ResourceConfig:
+Let's see how to use ResourceConfig in a practical multi-turn conversation example. We will modify the
+[Multi-Turn Conversations Example](multi-turn-conversations.md#real-world-usage) using ResourceConfig:
 
 ```python
 import datetime
@@ -289,6 +294,9 @@ The `ResourceConfig` approach offers several advantages:
 
 ## Implementation Notes
 
-The `ResourceConfig` system internally manages the mapping between foundation models (like GPT-4o, Claude 3, etc.) and the API providers that can serve them (OpenAI, Azure OpenAI, etc.). This abstraction allows your application code to focus on what AI capabilities you need rather than worrying about the specific API implementation details.
+The `ResourceConfig` system internally manages the mapping between foundation models (like GPT-4o, Claude 3, etc.) and
+the API providers that can serve them (OpenAI, Azure OpenAI, etc.). This abstraction allows your application code to
+focus on what AI capabilities you need rather than worrying about the specific API implementation details.
 
-By centralizing credential management, it also improves security by keeping sensitive information out of your application code and configuration versioning systems.
+By centralizing credential management, it also improves security by keeping sensitive information out of your
+application code and configuration versioning systems.

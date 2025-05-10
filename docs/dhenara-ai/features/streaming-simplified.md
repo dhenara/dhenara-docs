@@ -1,13 +1,16 @@
 ---
-title:  Streaming Simplified
+title: Streaming Simplified
 ---
+
 # Streaming Simplicity in Dhenara
 
-Dhenara provides a streamlined approach to working with streaming responses from AI models, making it significantly easier to implement real-time AI interactions while maintaining access to complete responses.
+Dhenara provides a streamlined approach to working with streaming responses from AI models, making it significantly
+easier to implement real-time AI interactions while maintaining access to complete responses.
 
 ## The Challenge with Streaming
 
-When working with large language models, streaming responses are essential for creating responsive user experiences. However, traditional streaming implementations introduce several challenges:
+When working with large language models, streaming responses are essential for creating responsive user experiences.
+However, traditional streaming implementations introduce several challenges:
 
 1. **Content Management**: You need to track and accumulate streaming chunks
 2. **State Management**: Maintaining state across streaming chunks becomes complex
@@ -51,13 +54,15 @@ async for chunk, final_response in response.async_stream_generator:
 
 Dhenara provides several advantages for streaming use cases:
 
-1. **Buffered Final Response**: Dhenara automatically accumulates streaming chunks and provides the complete response once streaming is finished.
+1. **Buffered Final Response**: Dhenara automatically accumulates streaming chunks and provides the complete response
+   once streaming is finished.
 
 2. **Simple API**: The same API works for both streaming and non-streaming requests, making your code more maintainable.
 
 3. **Unified Error Handling**: Errors during streaming are handled consistently with non-streaming requests.
 
-4. **Automatic Content Consolidation**: Streaming content is automatically combined into a final response, eliminating the need to manually reconstruct content.
+4. **Automatic Content Consolidation**: Streaming content is automatically combined into a final response, eliminating
+   the need to manually reconstruct content.
 
 5. **Provider-Agnostic**: Works consistently across different providers (OpenAI, Anthropic, Google, etc.)
 
@@ -81,15 +86,16 @@ settings.ENABLE_STREAMING_CONSOLIDATION = False
 
 ## Comparison with Other Libraries
 
-Unlike many other AI integration libraries, Dhenara's streaming solution provides both the incremental updates and the complete final response without additional code:
+Unlike many other AI integration libraries, Dhenara's streaming solution provides both the incremental updates and the
+complete final response without additional code:
 
-| Feature | Dhenara | LangChain |  Direct API |
-|---------|---------|-----------|---------------|
-| Streaming Support | ✅ | ✅ | ✅ |
-| Automatic Content Consolidation | ✅ | ❌ | ❌ |
-| Final Response Without Manual Tracking | ✅ | ❌ | ❌ |
-| Consistent API Between Stream/Non-Stream | ✅ | ⚠️ Partial | ❌ |
-| Provider-Agnostic Implementation | ✅ | ✅ | ❌ |
+| Feature                                  | Dhenara | LangChain  | Direct API |
+| ---------------------------------------- | ------- | ---------- | ---------- |
+| Streaming Support                        | ✅      | ✅         | ✅         |
+| Automatic Content Consolidation          | ✅      | ❌         | ❌         |
+| Final Response Without Manual Tracking   | ✅      | ❌         | ❌         |
+| Consistent API Between Stream/Non-Stream | ✅      | ⚠️ Partial | ❌         |
+| Provider-Agnostic Implementation         | ✅      | ✅         | ❌         |
 
 ## Real-World Benefits
 
@@ -105,6 +111,9 @@ The automatic consolidation feature is particularly valuable for:
 
 ## Conclusion
 
-Dhenara's approach to streaming significantly reduces the complexity of working with real-time AI responses. By handling the state management and content accumulation for you, Dhenara lets you focus on creating great user experiences instead of managing streaming logic.
+Dhenara's approach to streaming significantly reduces the complexity of working with real-time AI responses. By handling
+the state management and content accumulation for you, Dhenara lets you focus on creating great user experiences instead
+of managing streaming logic.
 
-With the automatic consolidation feature, you get the best of both worlds: the responsiveness of streaming and the convenience of complete responses, all with minimal code.
+With the automatic consolidation feature, you get the best of both worlds: the responsiveness of streaming and the
+convenience of complete responses, all with minimal code.

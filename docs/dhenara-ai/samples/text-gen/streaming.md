@@ -6,8 +6,6 @@ title: 'Streaming'
 
 Below example shows streaming chat response.
 
-
-
 ```python
 from dhenara.ai import AIModelClient
 from dhenara.ai.types import AIModelCallConfig, AIModelEndpoint

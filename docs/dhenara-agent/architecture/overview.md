@@ -4,7 +4,9 @@ sidebar_position: 1
 
 # Architecture Overview
 
-Dhenara Agent DSL (DAD) implements a sophisticated architecture designed for flexibility, observability, and reproducibility in AI agent operations. This document provides a high-level overview of the architecture and its key components.
+Dhenara Agent DSL (DAD) implements a sophisticated architecture designed for flexibility, observability, and
+reproducibility in AI agent operations. This document provides a high-level overview of the architecture and its key
+components.
 
 ## Architectural Principles
 
@@ -149,7 +151,8 @@ DAD builds on top of the core Dhenara AI package, which provides:
 - Resource configuration for AI models
 - Streaming and async support
 
-DAD extends these capabilities with the component model, execution system, and observability features to create a complete agent development framework.
+DAD extends these capabilities with the component model, execution system, and observability features to create a
+complete agent development framework.
 
 ## Extensibility
 
@@ -160,7 +163,8 @@ The architecture is designed for extensibility at multiple levels:
 - **Custom Observability**: Extend the observability system with additional collectors
 - **Resource Extensions**: Add support for new AI model providers and resource types
 
-This modular design allows DAD to grow and adapt to new requirements and use cases while maintaining a consistent programming model.
+This modular design allows DAD to grow and adapt to new requirements and use cases while maintaining a consistent
+programming model.
 
 ## Next Steps
 

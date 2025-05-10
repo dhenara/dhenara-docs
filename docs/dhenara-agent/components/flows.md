@@ -6,7 +6,9 @@ title: Flows
 
 ## Overview
 
-Flows in Dhenara Agent DSL (DAD) are intermediate components that organize nodes into connected processing pipelines. They define the execution logic, including sequential processing, conditionals, and loops. Flows serve as the primary way to orchestrate the execution of nodes to achieve specific goals.
+Flows in Dhenara Agent DSL (DAD) are intermediate components that organize nodes into connected processing pipelines.
+They define the execution logic, including sequential processing, conditionals, and loops. Flows serve as the primary
+way to orchestrate the execution of nodes to achieve specific goals.
 
 ## Core Concepts
 
@@ -29,7 +31,8 @@ from dhenara.agent.dsl import FlowDefinition
 my_flow = FlowDefinition(root_id="my_flow")
 ```
 
-The optional `root_id` parameter sets a unique identifier for the flow, which is useful when referencing the flow from other components.
+The optional `root_id` parameter sets a unique identifier for the flow, which is useful when referencing the flow from
+other components.
 
 ## Adding Nodes to Flows
 
@@ -42,7 +45,8 @@ my_flow.node("processor", processor_node)
 my_flow.node("output", output_node)
 ```
 
-Each node is assigned a unique ID within the flow, which can be used to reference the node from other parts of the flow or from other components.
+Each node is assigned a unique ID within the flow, which can be used to reference the node from other parts of the flow
+or from other components.
 
 ## Flow Execution Patterns
 
@@ -86,7 +90,8 @@ main_flow.conditional(
 )
 ```
 
-The condition is evaluated using the template engine, which can access results from previous nodes using hierarchical references.
+The condition is evaluated using the template engine, which can access results from previous nodes using hierarchical
+references.
 
 ### Loop Execution
 
@@ -131,7 +136,8 @@ custom_flow.connect("process_a", "end", on_success=True)
 custom_flow.connect("process_b", "end", on_success=True)
 ```
 
-This example creates a flow where `process_a` is executed if `start` succeeds, and `process_b` is executed if `start` fails. Both processing paths then connect to the `end` node.
+This example creates a flow where `process_a` is executed if `start` succeeds, and `process_b` is executed if `start`
+fails. Both processing paths then connect to the `end` node.
 
 ## Working with Subflows
 
@@ -241,4 +247,5 @@ iterative_flow.node("result_aggregator", aggregator_node)
 4. **Error Handling**: Include conditional branches for handling errors
 5. **Documentation**: Document the purpose and behavior of each flow
 
-By following these practices, you can create clear, maintainable flows that effectively orchestrate complex processing tasks.
+By following these practices, you can create clear, maintainable flows that effectively orchestrate complex processing
+tasks.

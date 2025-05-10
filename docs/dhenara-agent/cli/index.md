@@ -6,7 +6,8 @@ title: Command Line Interface
 
 Welcome to the Dhenara Agent DSL Command Line Interface documentation.
 
-The DAD CLI provides a comprehensive set of tools for working with Dhenara Agent projects, making it easy to create, run, and manage AI agents through simple terminal commands.
+The DAD CLI provides a comprehensive set of tools for working with Dhenara Agent projects, making it easy to create,
+run, and manage AI agents through simple terminal commands.
 
 ## What You'll Learn
 
@@ -41,4 +42,5 @@ This will display all available commands and general usage information.
 - **Observability**: Access logs, traces, and metrics for debugging and analysis
 - **Extensibility**: Easily add custom commands and functionality
 
-Dive into the [CLI Overview](./overview.md) to learn more about the architecture and capabilities of the Dhenara Agent DSL CLI.
+Dive into the [CLI Overview](./overview.md) to learn more about the architecture and capabilities of the Dhenara Agent
+DSL CLI.

@@ -4,7 +4,8 @@ sidebar_position: 3
 
 # Core Concepts
 
-This guide explains the fundamental concepts and building blocks of Dhenara Agent DSL (DAD). Understanding these concepts will help you design and build effective agent systems.
+This guide explains the fundamental concepts and building blocks of Dhenara Agent DSL (DAD). Understanding these
+concepts will help you design and build effective agent systems.
 
 ## Component Hierarchy
 
@@ -30,6 +31,7 @@ Agent
 ### Nodes
 
 Nodes are the atomic units of execution in DAD. Each node performs a specific task such as:
+
 - Making an LLM API call
 - Analyzing files or folders
 - Performing file operations
@@ -39,7 +41,8 @@ Nodes are the leaf components in the hierarchy and do the actual work in an agen
 
 ### Flows
 
-Flows are collections of nodes that define execution logic. They determine how data moves between nodes and in what order nodes are executed. Flows can include:
+Flows are collections of nodes that define execution logic. They determine how data moves between nodes and in what
+order nodes are executed. Flows can include:
 
 - Sequential execution of nodes
 - Conditional branches based on results
@@ -48,7 +51,8 @@ Flows are collections of nodes that define execution logic. They determine how d
 
 ### Agents
 
-Agents are top-level components that can contain multiple flows and other agents (subagents). They represent complete functional units and orchestrate the overall behavior of the system.
+Agents are top-level components that can contain multiple flows and other agents (subagents). They represent complete
+functional units and orchestrate the overall behavior of the system.
 
 ## Execution Model
 
@@ -70,7 +74,8 @@ The execution context is a crucial concept in DAD. It:
 - Provides access to resources (e.g., LLM models)
 - Enables communication between components through events
 
-The execution context creates a hierarchical structure that mirrors the component hierarchy, allowing child components to access resources and results from their parent contexts.
+The execution context creates a hierarchical structure that mirrors the component hierarchy, allowing child components
+to access resources and results from their parent contexts.
 
 ## Event System
 
@@ -81,6 +86,7 @@ The event system provides a publish-subscribe mechanism for communication betwee
 - **Event Bus**: Central hub for routing events to handlers
 
 Common event types include:
+
 - `node_input_required`: Request input for a node
 - `node_execution_completed`: Notify when a node finishes execution
 - `node_execution_failed`: Notify when a node encounters an error
@@ -125,7 +131,8 @@ DAD provides a flexible system for managing AI model resources and API credentia
 - **ResourceRegistry**: Register and override resources
 - **Thread-Local Resources**: Isolate resources between threads
 
-Resource management makes it easier to work with different LLM providers and models while maintaining security and configurability.
+Resource management makes it easier to work with different LLM providers and models while maintaining security and
+configurability.
 
 ## Example: Component Relationships
 
@@ -154,6 +161,7 @@ result = await runner.run()
 ```
 
 In this example:
+
 1. The flow contains two nodes that execute in sequence
 2. The agent contains the flow and potentially other flows
 3. The run context provides the execution environment
@@ -166,4 +174,5 @@ Now that you understand the core concepts of DAD, you can:
 - Explore the [Architecture](../architecture/overview) in more detail
 - Learn about specific [Node Types](../components/nodes) and their capabilities
 - Understand how to use [Flows](../components/flows) and [Agents](../components/agents)
-- Dive deeper into the [Templating System](../features/templating-system) and [Event System](../advanced-guides/event-system)
+- Dive deeper into the [Templating System](../features/templating-system) and
+  [Event System](../advanced-guides/event-system)

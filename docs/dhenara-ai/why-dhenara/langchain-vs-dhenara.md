@@ -1,27 +1,30 @@
 # Dhenara vs. LangChain
 
-Here we compares Dhenara with LangChain, highlighting key differences and advantages to help you choose the right framework for your AI applications.
+Here we compares Dhenara with LangChain, highlighting key differences and advantages to help you choose the right
+framework for your AI applications.
 
 ## At a Glance: Dhenara vs. LangChain
 
-| Feature | Dhenara | LangChain |
-|---------|---------|-----------|
-| **Architecture** | Clean, direct architecture with minimal abstraction layers | Multiple layers of abstraction (chains, memory, callbacks) |
-| **Type Safety** | Strong typing throughout with Pydantic validation | Limited type safety, particularly across providers |
-| **Cross-Provider Support** | Seamless provider switching with unified API | Provider switching requires manual memory synchronization |
-| **Conversation Management** | Direct, explicit control with `ConversationNode` | Complex memory systems with varying implementations |
-| **Streaming** | Simplified streaming with automatic consolidation | Multiple callback systems for streaming |
-| **Usage Tracking** | Built-in cost and token tracking across providers | Limited or manual cost tracking |
-| **Test Mode** | Built-in test mode for rapid development | Requires manual mocking |
-| **Sync/Async** | Unified sync/async interfaces | Mixed sync/async implementations |
-| **Boilerplate** | Minimal setup code required | Significant boilerplate for complex scenarios |
-| **Learning Curve** | Transparent design patterns | Steep learning curve with many abstractions |
+| Feature                     | Dhenara                                                    | LangChain                                                  |
+| --------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| **Architecture**            | Clean, direct architecture with minimal abstraction layers | Multiple layers of abstraction (chains, memory, callbacks) |
+| **Type Safety**             | Strong typing throughout with Pydantic validation          | Limited type safety, particularly across providers         |
+| **Cross-Provider Support**  | Seamless provider switching with unified API               | Provider switching requires manual memory synchronization  |
+| **Conversation Management** | Direct, explicit control with `ConversationNode`           | Complex memory systems with varying implementations        |
+| **Streaming**               | Simplified streaming with automatic consolidation          | Multiple callback systems for streaming                    |
+| **Usage Tracking**          | Built-in cost and token tracking across providers          | Limited or manual cost tracking                            |
+| **Test Mode**               | Built-in test mode for rapid development                   | Requires manual mocking                                    |
+| **Sync/Async**              | Unified sync/async interfaces                              | Mixed sync/async implementations                           |
+| **Boilerplate**             | Minimal setup code required                                | Significant boilerplate for complex scenarios              |
+| **Learning Curve**          | Transparent design patterns                                | Steep learning curve with many abstractions                |
 
 ## Key Advantages of Dhenara
 
 ### 1. Simplified Architecture
 
-Dhenara uses a more straightforward approach to managing conversation context. The `ConversationNode` structure directly captures all necessary information without the additional layers of abstraction that LangChain introduces with its chains, memory types, and callbacks.
+Dhenara uses a more straightforward approach to managing conversation context. The `ConversationNode` structure directly
+captures all necessary information without the additional layers of abstraction that LangChain introduces with its
+chains, memory types, and callbacks.
 
 ```python
 # Dhenara's clean approach
@@ -36,7 +39,8 @@ conversation_nodes.append(node)
 
 ### 2. Strong Typing and Validation
 
-Dhenara leverages Pydantic models throughout the library, ensuring that data structures are properly validated at runtime. This helps catch mistakes early and provides better IDE support with type hints.
+Dhenara leverages Pydantic models throughout the library, ensuring that data structures are properly validated at
+runtime. This helps catch mistakes early and provides better IDE support with type hints.
 
 Every response follows a consistent pattern:
 
@@ -54,7 +58,8 @@ chat_response = ChatResponse(
 
 ### 3. Cross-Provider Flexibility
 
-Dhenara's implementation allows seamless switching between providers (OpenAI, Anthropic, Google) while maintaining conversation context. The `PromptFormatter` automatically handles the conversion between different provider formats.
+Dhenara's implementation allows seamless switching between providers (OpenAI, Anthropic, Google) while maintaining
+conversation context. The `PromptFormatter` automatically handles the conversion between different provider formats.
 
 ```python
 # Effortlessly switch models between turns
@@ -203,21 +208,21 @@ for i, query in enumerate(queries):
     last_provider = current_provider
 ```
 
-
 ## Resource Configuration
 
-| Feature | Dhenara | LangChain |
-|---------|---------|-----------|
-| **Credential Management** | Centralized YAML configuration with runtime loading | Environment variables or manual client setup |
-| **Model Organization** | Structured model registry with provider metadata | Ad-hoc model instantiation |
-| **Provider Switching** | Single config with dynamic model selection | Manual client reconfiguration |
-| **Endpoint Management** | Automatic endpoint creation from models and APIs | Manual endpoint setup |
-| **Resource Querying** | Rich query interface for resource retrieval | No centralized resource management |
-| **Multi-environment Support** | Multiple resource configs for different environments | Manual environment handling |
+| Feature                       | Dhenara                                              | LangChain                                    |
+| ----------------------------- | ---------------------------------------------------- | -------------------------------------------- |
+| **Credential Management**     | Centralized YAML configuration with runtime loading  | Environment variables or manual client setup |
+| **Model Organization**        | Structured model registry with provider metadata     | Ad-hoc model instantiation                   |
+| **Provider Switching**        | Single config with dynamic model selection           | Manual client reconfiguration                |
+| **Endpoint Management**       | Automatic endpoint creation from models and APIs     | Manual endpoint setup                        |
+| **Resource Querying**         | Rich query interface for resource retrieval          | No centralized resource management           |
+| **Multi-environment Support** | Multiple resource configs for different environments | Manual environment handling                  |
 
 ### Dhenara's ResourceConfig Advantage
 
-Dhenara introduces a centralized resource management system that dramatically simplifies working with multiple AI models and providers:
+Dhenara introduces a centralized resource management system that dramatically simplifies working with multiple AI models
+and providers:
 
 ```python
 # Load all credentials and initialize endpoints in one line
@@ -253,16 +258,19 @@ google_model = ChatGoogleGenerativeAI(api_key=os.environ["GOOGLE_API_KEY"], mode
 # Must manually track which model is which
 ```
 
-Dhenara's ResourceConfig provides a more maintainable, structured approach to managing AI resources, especially in applications that use multiple models across different providers.
-
+Dhenara's ResourceConfig provides a more maintainable, structured approach to managing AI resources, especially in
+applications that use multiple models across different providers.
 
 ## Key Limitations of LangChain in this Use Case
 
-1. **Complex Memory Synchronization**: LangChain doesn't natively support sharing memory across different provider chains, requiring manual memory synchronization.
+1. **Complex Memory Synchronization**: LangChain doesn't natively support sharing memory across different provider
+   chains, requiring manual memory synchronization.
 
-2. **Opaque Memory Structure**: The internal representation of conversation history is less transparent and harder to manipulate directly.
+2. **Opaque Memory Structure**: The internal representation of conversation history is less transparent and harder to
+   manipulate directly.
 
-3. **Provider Switching Complexity**: Switching between providers requires creating separate chains and manually transferring context.
+3. **Provider Switching Complexity**: Switching between providers requires creating separate chains and manually
+   transferring context.
 
 4. **Per-Turn Instructions**: LangChain's design makes it difficult to vary system instructions on a per-turn basis.
 
@@ -285,11 +293,15 @@ Dhenara is likely the better choice when:
 7. You need both sync and async interfaces with consistent behavior
 8. You want a lower learning curve with more transparent design patterns
 
-LangChain may still be preferable if you're using its extensive collection of tools, agents, and integrations beyond simple conversation management.
+LangChain may still be preferable if you're using its extensive collection of tools, agents, and integrations beyond
+simple conversation management.
 
 ## Conclusion
 
-For multi-turn conversations specifically, Dhenara provides a more elegant, flexible, and developer-friendly approach compared to LangChain.
-The design prioritizes simplicity and direct control while still offering powerful features like cross-provider compatibility, usage tracking, and contextual awareness.
+For multi-turn conversations specifically, Dhenara provides a more elegant, flexible, and developer-friendly approach
+compared to LangChain. The design prioritizes simplicity and direct control while still offering powerful features like
+cross-provider compatibility, usage tracking, and contextual awareness.
 
-Rather than hiding complexity behind layers of abstraction, Dhenara gives developers clear patterns that are easy to understand, extend, and debug – making it particularly well-suited for production applications that need reliability and maintainability.
+Rather than hiding complexity behind layers of abstraction, Dhenara gives developers clear patterns that are easy to
+understand, extend, and debug – making it particularly well-suited for production applications that need reliability and
+maintainability.

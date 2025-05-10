@@ -6,7 +6,9 @@ title: Nodes
 
 ## Overview
 
-Nodes are the atomic execution units in Dhenara Agent DSL (DAD). Each node performs a specific function, such as making an AI model call, analyzing a folder, or performing file operations. Nodes form the fundamental building blocks of flows and agents, enabling complex behavior through composition.
+Nodes are the atomic execution units in Dhenara Agent DSL (DAD). Each node performs a specific function, such as making
+an AI model call, analyzing a folder, or performing file operations. Nodes form the fundamental building blocks of flows
+and agents, enabling complex behavior through composition.
 
 ## Core Concepts
 
@@ -44,6 +46,7 @@ ai_node = AIModelNode(
 ```
 
 **Key Features**:
+
 - Configure which AI models to use via `resources`
 - Set system instructions and prompts
 - Control model parameters like temperature and max tokens
@@ -72,6 +75,7 @@ file_node = FileOperationNode(
 ```
 
 **Key Features**:
+
 - Perform multiple file operations in a single node
 - Dynamic operations through templates
 - Git integration for staging and committing changes
@@ -103,6 +107,7 @@ analyzer_node = FolderAnalyzerNode(
 ```
 
 **Key Features**:
+
 - Analyze directory structures and file contents
 - Filter files by patterns (include/exclude)
 - Control recursion and content extraction
@@ -125,6 +130,7 @@ command_node = CommandNode(
 ```
 
 **Key Features**:
+
 - Execute shell commands with arguments
 - Control execution environment (working directory, environment variables)
 - Set timeouts for command execution
@@ -195,7 +201,7 @@ class MyCustomNode(NodeDefinition):
     settings_class = MyCustomNodeSettings
     input_class = MyCustomNodeInput
     output_class = MyCustomNodeOutput
-    
+
     # You'll need to register an executor for this node type
 ```
 

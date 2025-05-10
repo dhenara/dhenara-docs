@@ -6,7 +6,8 @@ title: Event System
 
 ## Overview
 
-The Event System in Dhenara Agent DSL (DAD) provides a robust mechanism for communication between components. It enables loose coupling, dynamic interactions, and event-driven programming patterns within your agent workflows.
+The Event System in Dhenara Agent DSL (DAD) provides a robust mechanism for communication between components. It enables
+loose coupling, dynamic interactions, and event-driven programming patterns within your agent workflows.
 
 ## Core Concepts
 
@@ -211,7 +212,7 @@ class CustomEventData(BaseModel):
 class CustomAppEvent(BaseEvent):
     event_type: str = MY_CUSTOM_EVENT
     data: CustomEventData
-    
+
 # Create and publish a custom event
 event = CustomAppEvent(
     data=CustomEventData(
@@ -234,4 +235,6 @@ await event_bus.publish(event)
 
 ## Conclusion
 
-The Event System in DAD provides a powerful mechanism for component communication and coordination. By leveraging the event-driven architecture, you can create flexible, loosely coupled agents that can adapt to dynamic requirements and respond to various stimuli during execution.
+The Event System in DAD provides a powerful mechanism for component communication and coordination. By leveraging the
+event-driven architecture, you can create flexible, loosely coupled agents that can adapt to dynamic requirements and
+respond to various stimuli during execution.

@@ -6,7 +6,9 @@ title: Agents
 
 ## Overview
 
-Agents are the top-level components in Dhenara Agent DSL (DAD). They coordinate multiple flows and subagents to implement complex behaviors and solve sophisticated problems. Agents act as the primary entry points for executing AI-powered workflows, offering a high-level abstraction for organizing and managing flows.
+Agents are the top-level components in Dhenara Agent DSL (DAD). They coordinate multiple flows and subagents to
+implement complex behaviors and solve sophisticated problems. Agents act as the primary entry points for executing
+AI-powered workflows, offering a high-level abstraction for organizing and managing flows.
 
 ## Core Concepts
 
@@ -29,7 +31,8 @@ from dhenara.agent.dsl import AgentDefinition
 my_agent = AgentDefinition(root_id="my_agent")
 ```
 
-The optional `root_id` parameter sets a unique identifier for the agent, which is useful when referencing the agent from other components.
+The optional `root_id` parameter sets a unique identifier for the agent, which is useful when referencing the agent from
+other components.
 
 ## Adding Flows to Agents
 
@@ -52,7 +55,8 @@ my_agent.flow("process", process_flow)
 my_agent.flow("export", export_flow)
 ```
 
-Each flow is assigned a unique ID within the agent, which can be used to reference the flow from other parts of the agent.
+Each flow is assigned a unique ID within the agent, which can be used to reference the flow from other parts of the
+agent.
 
 ## Agent Execution Patterns
 
@@ -257,4 +261,5 @@ This pattern enables sophisticated decision trees for processing.
 4. **Explicit Coordination**: Make coordination between agents explicit
 5. **Reuse Common Patterns**: Identify and reuse common agent patterns
 
-By following these practices, you can create sophisticated agent systems that effectively solve complex problems while maintaining clarity and maintainability.
+By following these practices, you can create sophisticated agent systems that effectively solve complex problems while
+maintaining clarity and maintainability.

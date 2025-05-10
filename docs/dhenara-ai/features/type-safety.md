@@ -1,16 +1,19 @@
 ---
-title:  Type Safety
+title: Type Safety
 ---
 
 # Type Safety and Unified Response Format
 
-Dhenara is designed with strong type safety principles at its core, ensuring robust and predictable behavior when working with AI models. This page explains our approach to type safety and unified response formats, and how this benefits your development workflow.
+Dhenara is designed with strong type safety principles at its core, ensuring robust and predictable behavior when
+working with AI models. This page explains our approach to type safety and unified response formats, and how this
+benefits your development workflow.
 
 ## Type Safety with Pydantic Models
 
 ### Comprehensive Type Validation
 
-Dhenara uses Pydantic models throughout the library to enforce strict type validation, helping you catch errors early in the development process instead of at runtime.
+Dhenara uses Pydantic models throughout the library to enforce strict type validation, helping you catch errors early in
+the development process instead of at runtime.
 
 ```python
 from dhenara.ai.types.genai import ChatResponse, ChatResponseUsage
@@ -30,7 +33,8 @@ response = ChatResponse(
 
 ### Key Benefits of Dhenara's Type System
 
-- **Early Error Detection**: Invalid data structures are caught immediately during object creation, not when trying to use the data.
+- **Early Error Detection**: Invalid data structures are caught immediately during object creation, not when trying to
+  use the data.
 - **Self-Documenting Code**: The type definitions serve as documentation, making it clear what data is expected.
 - **IDE Support**: Get autocompletion and type hints in your IDE, making development faster and more efficient.
 - **Runtime Safety**: Prevent unexpected errors from propagating through your application.
@@ -49,7 +53,8 @@ provider = "some_random_string"  # Error! Caught by type checking
 
 ## Unified Response Data Format
 
-One of Dhenara's standout features is its unified response format across all AI providers, making it simple to switch between models or use multiple models in the same application.
+One of Dhenara's standout features is its unified response format across all AI providers, making it simple to switch
+between models or use multiple models in the same application.
 
 ### Consistent Response Structure
 
@@ -120,24 +125,24 @@ if response.chat_response.usage:
 
 While LangChain provides a wide range of integrations, it often lacks strict type safety:
 
-| Feature | Dhenara | LangChain |
-|---------|---------|-----------|
-| **Type Safety** | Strong typing with Pydantic models throughout | Mixed, often relies on dictionaries or loosely typed objects |
-| **Response Format** | Unified response structure across all providers | Different response formats for different providers |
-| **Error Handling** | Structured error types with detailed information | Often passes through provider-specific errors |
-| **Usage Tracking** | Consistent usage and cost tracking | Varies by integration |
-| **IDE Support** | Full autocompletion and type hints | Limited due to looser typing |
+| Feature             | Dhenara                                          | LangChain                                                    |
+| ------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| **Type Safety**     | Strong typing with Pydantic models throughout    | Mixed, often relies on dictionaries or loosely typed objects |
+| **Response Format** | Unified response structure across all providers  | Different response formats for different providers           |
+| **Error Handling**  | Structured error types with detailed information | Often passes through provider-specific errors                |
+| **Usage Tracking**  | Consistent usage and cost tracking               | Varies by integration                                        |
+| **IDE Support**     | Full autocompletion and type hints               | Limited due to looser typing                                 |
 
 ### Versus Direct Provider SDKs
 
 Using provider SDKs directly can be challenging when working with multiple AI models:
 
-| Feature | Dhenara | Direct Provider SDKs |
-|---------|---------|---------------------|
-| **Cross-Provider Compatibility** | Same code works across providers | Need different code for each provider |
-| **Response Structure** | Normalized, consistent structure | Different structures for each provider |
-| **Learning Curve** | Learn once, use everywhere | Learn each provider's unique API |
-| **Type Safety** | Consistent type checking | Varies by provider |
+| Feature                          | Dhenara                          | Direct Provider SDKs                   |
+| -------------------------------- | -------------------------------- | -------------------------------------- |
+| **Cross-Provider Compatibility** | Same code works across providers | Need different code for each provider  |
+| **Response Structure**           | Normalized, consistent structure | Different structures for each provider |
+| **Learning Curve**               | Learn once, use everywhere       | Learn each provider's unique API       |
+| **Type Safety**                  | Consistent type checking         | Varies by provider                     |
 
 ## Benefits for Development Teams
 
@@ -178,4 +183,5 @@ async with AIModelClient(anthropic_endpoint) as client:
     answer = await get_completion(client, "What is machine learning?")
 ```
 
-The type safety and unified response format in Dhenara make it an ideal choice for teams building production applications with AI, where predictability, reliability, and maintainability are crucial.
+The type safety and unified response format in Dhenara make it an ideal choice for teams building production
+applications with AI, where predictability, reliability, and maintainability are crucial.

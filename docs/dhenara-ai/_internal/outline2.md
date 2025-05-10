@@ -1,8 +1,11 @@
 # Dhenara AI Documentation Outline
 
-Based on the code review, here's a comprehensive documentation outline for the Dhenara AI package. This structure follows the initial outline but has been expanded and reorganized to better reflect the actual code organization and functionality.
+Based on the code review, here's a comprehensive documentation outline for the Dhenara AI package. This structure
+follows the initial outline but has been expanded and reorganized to better reflect the actual code organization and
+functionality.
 
 ## Getting Started
+
 - Introduction
   - What is Dhenara AI?
   - Key Features
@@ -20,6 +23,7 @@ Based on the code review, here's a comprehensive documentation outline for the D
   - Response Structure
 
 ## Core Components
+
 - AIModelClient
   - Overview
   - Initialization
@@ -36,6 +40,7 @@ Based on the code review, here's a comprehensive documentation outline for the D
   - Content Types
 
 ## Provider Guides
+
 - OpenAI
   - Configuration
   - Text Generation
@@ -55,6 +60,7 @@ Based on the code review, here's a comprehensive documentation outline for the D
   - Text Generation
 
 ## Working with Providers
+
 - Provider Setup
   - API Keys and Credentials
   - Provider Configuration
@@ -63,6 +69,7 @@ Based on the code review, here's a comprehensive documentation outline for the D
 - Creating Custom Providers
 
 ## Streaming Responses
+
 - Introduction to Streaming
 - Synchronous Streaming
 - Asynchronous Streaming
@@ -70,17 +77,20 @@ Based on the code review, here's a comprehensive documentation outline for the D
 - Stream Manager
 
 ## File Integration
+
 - Supported File Types
 - Adding Files to Prompts
 - File Processing
 - Image Content
 
 ## Usage Tracking and Cost Management
+
 - Usage Tracking
 - Cost Calculation
 - Setting Cost Parameters
 
 ## Advanced
+
 - Configuration System
   - Default Settings
   - Custom Settings
@@ -96,6 +106,7 @@ Based on the code review, here's a comprehensive documentation outline for the D
   - Creating Mock Responses
 
 ## API Reference
+
 - AI Model Client
   - AIModelClient
   - AIModelClientFactory
@@ -119,12 +130,14 @@ Based on the code review, here's a comprehensive documentation outline for the D
   - Settings
 
 ## Contributing
+
 - Setting Up Development Environment
 - Code Structure
 - Testing
 - Submission Guidelines
 
 ## Migration
+
 - From LangChain to Dhenara
 - API Differences
 - Equivalent Patterns

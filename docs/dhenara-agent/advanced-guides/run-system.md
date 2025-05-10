@@ -6,7 +6,9 @@ title: Run System
 
 ## Overview
 
-The Run System in Dhenara Agent DSL (DAD) is responsible for managing execution contexts, environment setup, and artifact handling. It provides a structured approach to executing DAD components while maintaining isolation, reproducibility, and observability.
+The Run System in Dhenara Agent DSL (DAD) is responsible for managing execution contexts, environment setup, and
+artifact handling. It provides a structured approach to executing DAD components while maintaining isolation,
+reproducibility, and observability.
 
 ## Core Run System Components
 
@@ -100,14 +102,14 @@ try:
     # Initialize and setup
     run_context = RunContext(root_component_id="my_agent", project_root=Path("."))
     run_context.setup_run()
-    
+
     # Execute
     runner = AgentRunner(my_agent, run_context)
     result = await runner.run()
-    
+
     # Complete successfully
     run_context.complete_run(status="completed")
-    
+
     return result
 except Exception as e:
     # Handle failure
@@ -178,4 +180,5 @@ Different types of runners (FlowRunner, AgentRunner) handle the execution of dif
 
 ## Conclusion
 
-The Run System in DAD provides a robust infrastructure for managing the execution of agent components. By leveraging the run system effectively, you can ensure isolation, reproducibility, and observability in your agent workflows.
+The Run System in DAD provides a robust infrastructure for managing the execution of agent components. By leveraging the
+run system effectively, you can ensure isolation, reproducibility, and observability in your agent workflows.

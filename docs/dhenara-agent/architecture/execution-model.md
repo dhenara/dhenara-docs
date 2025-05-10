@@ -6,7 +6,9 @@ title: Execution Model
 
 ## Overview
 
-The Dhenara Agent DSL (DAD) execution model defines how agent components are executed, how data flows between them, and how the execution environment is managed. This model provides a robust framework for reproducible, observable agent execution with clear state management and error handling.
+The Dhenara Agent DSL (DAD) execution model defines how agent components are executed, how data flows between them, and
+how the execution environment is managed. This model provides a robust framework for reproducible, observable agent
+execution with clear state management and error handling.
 
 ## Execution Flow
 
@@ -44,7 +46,8 @@ ExecutionContext
  └── Event Bus
 ```
 
-The execution context creates a hierarchical structure that mirrors the component hierarchy, allowing child components to access resources and results from their parent contexts.
+The execution context creates a hierarchical structure that mirrors the component hierarchy, allowing child components
+to access resources and results from their parent contexts.
 
 ### Run Context
 

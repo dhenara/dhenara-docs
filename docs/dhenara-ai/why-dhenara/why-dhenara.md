@@ -1,11 +1,14 @@
 ---
 title: Why Dhenara
 ---
+
 # Why Dhenara
 
 ## A Foundation for Production AI Applications
 
-Dhenara is a Python framework designed to simplify AI integration in production applications. Unlike other frameworks that prioritize experimentation, Dhenara focuses on clean, maintainable, and robust AI implementations suitable for production environments.
+Dhenara is a Python framework designed to simplify AI integration in production applications. Unlike other frameworks
+that prioritize experimentation, Dhenara focuses on clean, maintainable, and robust AI implementations suitable for
+production environments.
 
 ## Core Design Principles
 
@@ -21,7 +24,8 @@ Dhenara was built with these principles in mind:
 Dhenara addresses common challenges developers face when building AI-powered applications:
 
 - **Tired of boilerplate code?** Dhenara reduces implementation complexity with a clean, intuitive API
-- **Struggling with provider-specific implementations?** Our unified interface makes switching between AI providers seamless
+- **Struggling with provider-specific implementations?** Our unified interface makes switching between AI providers
+  seamless
 - **Need reliable production systems?** Built-in cost tracking, testing modes, and comprehensive error handling
 - **Want both flexibility and control?** Keep direct access to conversation state while benefiting from helper utilities
 

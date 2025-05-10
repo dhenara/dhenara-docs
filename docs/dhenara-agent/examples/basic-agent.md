@@ -4,7 +4,8 @@ title: Basic Code Generation Agent
 
 # Basic Code Generation Agent
 
-This example demonstrates a simple agent that analyzes a repository, generates code based on requirements, and implements the changes.
+This example demonstrates a simple agent that analyzes a repository, generates code based on requirements, and
+implements the changes.
 
 ## Implementation
 
@@ -184,7 +185,8 @@ implementation_flow.node(
 )
 ```
 
-This node takes the repository analysis and a task description as input, and produces a structured `TaskImplementation` object containing file operations.
+This node takes the repository analysis and a task description as input, and produces a structured `TaskImplementation`
+object containing file operations.
 
 ### Code Implementation
 

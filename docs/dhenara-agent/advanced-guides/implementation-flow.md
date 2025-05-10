@@ -6,14 +6,17 @@ title: Implementation Flow
 
 ## Overview
 
-The Implementation Flow in Dhenara Agent DSL (DAD) is a specialized workflow designed for code generation, analysis, and automated implementation of software changes. This document details the architecture of the implementation flow, its components, and how they work together to deliver robust code changes.
+The Implementation Flow in Dhenara Agent DSL (DAD) is a specialized workflow designed for code generation, analysis, and
+automated implementation of software changes. This document details the architecture of the implementation flow, its
+components, and how they work together to deliver robust code changes.
 
 ## Core Components
 
 The Implementation Flow consists of three main components working in sequence:
 
 1. **Repository Analysis**: Analyzes the code repository to understand its structure and content
-2. **Code Generation**: Uses AI models to generate detailed implementation plans based on requirements and repository analysis
+2. **Code Generation**: Uses AI models to generate detailed implementation plans based on requirements and repository
+   analysis
 3. **File Operations**: Implements the generated code changes in the repository
 
 ## Detailed Architecture
@@ -41,7 +44,8 @@ Key aspects of the repository analysis:
 
 ### Code Generation
 
-The code generation is handled by the `AIModelNode` which leverages large language models to generate implementation plans:
+The code generation is handled by the `AIModelNode` which leverages large language models to generate implementation
+plans:
 
 ```python
 implementation_flow.node(
@@ -81,7 +85,8 @@ Key aspects of code generation:
 
 ### File Operations
 
-The file operations are executed by the `FileOperationNode` which implements the changes specified by the code generator:
+The file operations are executed by the `FileOperationNode` which implements the changes specified by the code
+generator:
 
 ```python
 implementation_flow.node(
@@ -118,17 +123,17 @@ async def singleshot_autocoder_input_handler(event: NodeInputRequiredEvent):
         available_models = [*models]
         selected_model_idx = await get_menu_choice(available_models, "Select an AI model:")
         selected_model = available_models[selected_model_idx]
-        
+
         node_input = AIModelNodeInput(
             resources_override=ResourceConfigItem.with_model(selected_model),
         )
-        
+
         if event.node_id == "code_generator":
             task_description = await async_input("Enter your task_description: ")
             node_input.prompt_variables = {"task_description": task_description}
             event.input = node_input
             event.handled = True
-            
+
     elif event.node_type == FlowNodeTypeEnum.folder_analyzer:
         # Folder analyzer node input handling
         if event.node_id == "dynamic_repo_analysis":
@@ -138,7 +143,7 @@ async def singleshot_autocoder_input_handler(event: NodeInputRequiredEvent):
                 operations.append(operation)
                 if not await get_yes_no_input("Add another analysis operation?", False):
                     break
-                    
+
             event.input = FolderAnalyzerNodeInput(
                 settings_override=FolderAnalyzerSettings(
                     base_directory=repo_dir,
@@ -163,7 +168,7 @@ The `TaskImplementation` object is the core data structure for code changes:
 class TaskImplementation(BaseModel):
     """Contains the concrete file operations to implement a specific task of the plan.
     This is the output generated after analyzing the context specified in the TaskSpec."""
-    
+
     file_operations: list[FileOperation]  # Ordered list of file operations to execute
     execution_commands: list[dict] | None = None  # Optional shell commands to run after file operations
     verification_commands: list[dict] | None = None  # Optional commands to verify the changes
@@ -175,7 +180,7 @@ The `FileOperation` objects specify exact changes to make:
 ```python
 class FileOperation(BaseModel):
     """Represents a single file operation for the filesystem"""
-    
+
     type: str  # Operation type (create_file, edit_file, delete_file, etc.)
     path: str | None = None  # Path to the target file or directory
     content: str | None = None  # Content for file creation operations
@@ -202,11 +207,11 @@ The implementation flow supports multiple AI models for code generation:
 ```python
 # Define available models
 models = [
-    "claude-3-7-sonnet", 
-    "gpt-4.1-nano", 
-    "gpt-4.1-nano", 
-    "claude-3-5-haiku", 
-    "gemini-2.0-flash", 
+    "claude-3-7-sonnet",
+    "gpt-4.1-nano",
+    "gpt-4.1-nano",
+    "claude-3-5-haiku",
+    "gemini-2.0-flash",
     "gemini-2.0-flash-lite"
 ]
 
@@ -242,4 +247,6 @@ This enables fine-grained control over what parts of the repository to analyze.
 
 ## Conclusion
 
-The Implementation Flow architecture in DAD provides a powerful, flexible system for automated code generation and implementation. By combining repository analysis, AI-powered code generation, and automatic file operations, it enables efficient implementation of complex code changes while maintaining high quality and consistency.
+The Implementation Flow architecture in DAD provides a powerful, flexible system for automated code generation and
+implementation. By combining repository analysis, AI-powered code generation, and automatic file operations, it enables
+efficient implementation of complex code changes while maintaining high quality and consistency.

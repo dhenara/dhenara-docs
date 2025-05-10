@@ -6,7 +6,9 @@ title: Component Model
 
 ## Overview
 
-The Dhenara Agent DSL (DAD) employs a hierarchical component model that enables composition, reuse, and scalability. This model organizes agent behavior into a clear, logical structure, making it easier to build and maintain complex AI agent systems.
+The Dhenara Agent DSL (DAD) employs a hierarchical component model that enables composition, reuse, and scalability.
+This model organizes agent behavior into a clear, logical structure, making it easier to build and maintain complex AI
+agent systems.
 
 ## Hierarchical Structure
 
@@ -31,12 +33,14 @@ Agent
 
 ### Components at Each Level
 
-1. **Nodes (Leaf components)**: 
+1. **Nodes (Leaf components)**:
+
    - Atomic units of execution that perform specific tasks
    - Represent individual operations like making LLM API calls, analyzing files, or manipulating the file system
    - Form the foundation of any agent workflow
 
 2. **Flows (Intermediate components)**:
+
    - Collections of nodes organized with execution logic
    - Support sequential execution, conditionals, and loops
    - Can contain other flows (subflows) for modularity
@@ -129,4 +133,5 @@ This reusability enables the creation of component libraries that can be shared 
 4. **Scalability**: Grow agent capabilities by adding new components
 5. **Clarity**: Clear structure makes it easier to understand agent behavior
 
-By leveraging this hierarchical component model, DAD enables the construction of complex, reusable agent systems with clear separation of concerns and predictable behavior.
+By leveraging this hierarchical component model, DAD enables the construction of complex, reusable agent systems with
+clear separation of concerns and predictable behavior.

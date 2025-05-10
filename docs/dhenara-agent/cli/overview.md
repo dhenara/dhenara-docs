@@ -6,13 +6,17 @@ title: CLI Overview
 
 ## Introduction
 
-The Dhenara Agent DSL Command Line Interface (CLI) provides a robust and extensible system for interacting with DAD agents and projects. It offers an intuitive way to create, run, and manage agents through simple terminal commands.
+The Dhenara Agent DSL Command Line Interface (CLI) provides a robust and extensible system for interacting with DAD
+agents and projects. It offers an intuitive way to create, run, and manage agents through simple terminal commands.
 
-The CLI is designed with a focus on developer experience, offering rich features while maintaining simplicity and discoverability. It's an essential tool for developers working with Dhenara Agent DSL, streamlining common workflows and enabling efficient agent management.
+The CLI is designed with a focus on developer experience, offering rich features while maintaining simplicity and
+discoverability. It's an essential tool for developers working with Dhenara Agent DSL, streamlining common workflows and
+enabling efficient agent management.
 
 ## Architecture
 
-The DAD CLI is built using [Click](https://click.palletsprojects.com/), a Python package for creating beautiful command line interfaces. The architecture follows a modular design pattern with several key components:
+The DAD CLI is built using [Click](https://click.palletsprojects.com/), a Python package for creating beautiful command
+line interfaces. The architecture follows a modular design pattern with several key components:
 
 ### Main Entry Point
 
@@ -89,7 +93,8 @@ The DAD CLI organizes commands into logical groups based on functionality:
 
 - Various commands for viewing and analyzing traces, logs, and metrics
 
-For detailed information about available commands, their options, and usage examples, see the [Commands Reference](./commands.md).
+For detailed information about available commands, their options, and usage examples, see the
+[Commands Reference](./commands.md).
 
 ## Project Structure
 

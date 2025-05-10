@@ -6,7 +6,9 @@ title: Execution Context
 
 ## Overview
 
-The Execution Context in Dhenara Agent DSL (DAD) is a crucial component that manages state, scoping, and data flow during the execution of agents, flows, and nodes. It serves as a central mechanism for communication between components and provides access to resources, artifact management, and hierarchical data structures.
+The Execution Context in Dhenara Agent DSL (DAD) is a crucial component that manages state, scoping, and data flow
+during the execution of agents, flows, and nodes. It serves as a central mechanism for communication between components
+and provides access to resources, artifact management, and hierarchical data structures.
 
 ## Core Concepts
 
@@ -39,7 +41,8 @@ AgentExecutionContext
            └── NodeExecutionContext H
 ```
 
-This hierarchy allows components to access data from their parent contexts, enabling data flow across the component tree.
+This hierarchy allows components to access data from their parent contexts, enabling data flow across the component
+tree.
 
 ## ExecutionContext Class
 
@@ -83,7 +86,8 @@ node_context = execution_context.get_context_by_path("flow1.node3")
 
 ## Hierarchical References
 
-One of the most powerful features of the execution context is the ability to reference results from other nodes using hierarchical paths:
+One of the most powerful features of the execution context is the ability to reference results from other nodes using
+hierarchical paths:
 
 ```python
 # In a template or expression
@@ -109,7 +113,8 @@ has_result = execution_context.has_result("node_id")
 
 ## Integration with Template Engine
 
-The Execution Context integrates deeply with the templating system, enabling dynamic content generation based on execution results:
+The Execution Context integrates deeply with the templating system, enabling dynamic content generation based on
+execution results:
 
 ```python
 # Render a template with context variables
@@ -147,4 +152,6 @@ result = await my_flow.execute(flow_context)
 
 ## Conclusion
 
-The Execution Context system in DAD provides a powerful mechanism for managing state, sharing data between components, and coordinating complex workflows. By understanding and effectively using the execution context, you can create sophisticated agent behaviors with clean, well-structured data flows.
+The Execution Context system in DAD provides a powerful mechanism for managing state, sharing data between components,
+and coordinating complex workflows. By understanding and effectively using the execution context, you can create
+sophisticated agent behaviors with clean, well-structured data flows.

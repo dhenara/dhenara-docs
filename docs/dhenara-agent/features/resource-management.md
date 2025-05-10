@@ -6,7 +6,9 @@ title: Resource Management
 
 ## Overview
 
-Resource management in Dhenara Agent DSL (DAD) provides a structured approach to managing AI models, API credentials, and other execution resources. The system allows for flexible configuration and runtime overrides of resources, making it easier to work with different environments and providers.
+Resource management in Dhenara Agent DSL (DAD) provides a structured approach to managing AI models, API credentials,
+and other execution resources. The system allows for flexible configuration and runtime overrides of resources, making
+it easier to work with different environments and providers.
 
 ## Core Resource Management Components
 
@@ -31,7 +33,8 @@ The credentials file typically contains API keys, endpoints, and default setting
 
 ### ResourceRegistry
 
-The `ResourceRegistry` manages resources of a specific type, allowing for global registration and thread-local overrides:
+The `ResourceRegistry` manages resources of a specific type, allowing for global registration and thread-local
+overrides:
 
 ```python
 from dhenara.agent.run.registry import resource_config_registry, model_registry
@@ -113,12 +116,12 @@ api_keys:
   google: ${GOOGLE_API_KEY}
 
 endpoints:
-  openai: "https://api.openai.com/v1"
-  anthropic: "https://api.anthropic.com/v1"
-  google: "https://generativelanguage.googleapis.com/v1"
+  openai: 'https://api.openai.com/v1'
+  anthropic: 'https://api.anthropic.com/v1'
+  google: 'https://generativelanguage.googleapis.com/v1'
 
 resource_paths:
-  models: "~/.dhenara/models"
+  models: '~/.dhenara/models'
 ```
 
 ## Resource Resolution
@@ -166,4 +169,5 @@ This allows for different resource configurations in different environments whil
 4. **Thread Isolation**: Use thread-local overrides for parallel execution with different resources
 5. **Resource Validation**: Validate resources are available before execution begins
 
-By following these practices and using DAD's resource management system, you can create flexible, secure agent workflows that can work across different environments and with multiple AI providers.
+By following these practices and using DAD's resource management system, you can create flexible, secure agent workflows
+that can work across different environments and with multiple AI providers.

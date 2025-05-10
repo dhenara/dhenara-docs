@@ -78,8 +78,10 @@ def print_response(response):
 # Call response  formatting fn
 print_response(response)
 ```
+
 ## Text Generation in Async Mode
-To use async in all API calls update your configuration in above example with  is_async=True`
+
+To use async in all API calls update your configuration in above example with is_async=True`
 
 ```python
 
@@ -100,5 +102,3 @@ client = AIModelClient(
 asyncio.run(generate_text_async())
 
 ```
-
-

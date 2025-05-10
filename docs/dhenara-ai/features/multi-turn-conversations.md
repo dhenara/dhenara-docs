@@ -4,16 +4,21 @@ title: Multi-Turn Conversations
 
 ## Multi-Turn Conversations with Dhenara
 
-One of Dhenara's most powerful features is its ability to seamlessly manage multi-turn conversations with AI models. The code example demonstrates how to create coherent, context-aware conversations across multiple turns, even when switching between different AI models and providers.
+One of Dhenara's most powerful features is its ability to seamlessly manage multi-turn conversations with AI models. The
+code example demonstrates how to create coherent, context-aware conversations across multiple turns, even when switching
+between different AI models and providers.
 
-Multi-turn conversations allow your application to maintain context across separate interactions with AI models. This is essential for creating natural dialogue flows, chatbots, interactive assistants, and any application where conversation history matters.
+Multi-turn conversations allow your application to maintain context across separate interactions with AI models. This is
+essential for creating natural dialogue flows, chatbots, interactive assistants, and any application where conversation
+history matters.
 
 ## Real World Usage
 
-In this example, a developer is building an application that requires conversational memory while also having the flexibility to route generated outputs between models from different providers.
+In this example, a developer is building an application that requires conversational memory while also having the
+flexibility to route generated outputs between models from different providers.
 
-Traditional frameworks often make this challenging, but Dhenara provides a streamlined solution. The code below demonstrates this approach, showcasing how Dhenara manages this complexity seamlessly.
-
+Traditional frameworks often make this challenging, but Dhenara provides a streamlined solution. The code below
+demonstrates this approach, showcasing how Dhenara manages this complexity seamlessly.
 
 ```python
 import datetime
@@ -165,15 +170,16 @@ if __name__ == "__main__":
     run_multi_turn_conversation()
 ```
 
-
-
 ## How It Works
 
-Dhenara uses a simple yet powerful system to manage conversation state through `ConversationNode` objects, which store each turn's query, response, and metadata. The `PromptFormatter` handles the conversion of conversation history into formats appropriate for each provider.
+Dhenara uses a simple yet powerful system to manage conversation state through `ConversationNode` objects, which store
+each turn's query, response, and metadata. The `PromptFormatter` handles the conversion of conversation history into
+formats appropriate for each provider.
 
 ### Key Components
 
 1. **API Configuration**: The example initializes connections to three major providers:
+
    ```python
    anthropic_api = AIModelAPI(provider=AIModelAPIProviderEnum.ANTHROPIC, api_key="your_anthropic_api_key")
    openai_api = AIModelAPI(provider=AIModelAPIProviderEnum.OPEN_AI, api_key="your_openai_api_key")
@@ -181,6 +187,7 @@ Dhenara uses a simple yet powerful system to manage conversation state through `
    ```
 
 2. **Model Endpoints**: Multiple model endpoints are created, giving you flexibility to use any model from any provider:
+
    ```python
    all_model_endpoints = [
        AIModelEndpoint(api=anthropic_api, ai_model=Claude37Sonnet),
@@ -189,7 +196,9 @@ Dhenara uses a simple yet powerful system to manage conversation state through `
    ]
    ```
 
-3. **Context Management**: The `get_context()` function processes previous conversation turns into appropriate context for the next model:
+3. **Context Management**: The `get_context()` function processes previous conversation turns into appropriate context
+   for the next model:
+
    ```python
    def get_context(previous_nodes: list[ConversationNode], destination_model: Any) -> list[Any]:
        context = []
@@ -205,6 +214,7 @@ Dhenara uses a simple yet powerful system to manage conversation state through `
    ```
 
 4. **Conversation Turn Handler**: The `handle_conversation_turn()` function manages a single conversation turn:
+
    - Creates an `AIModelClient` for the current model endpoint
    - Formats the user query for the specific model
    - Obtains context from previous conversation turns
@@ -223,9 +233,11 @@ Dhenara uses a simple yet powerful system to manage conversation state through `
 
 2. **Provider Abstraction**: The same code works with OpenAI, Anthropic, Google, and other providers.
 
-3. **Seamless Context Transfer**: Previous conversation turns are automatically converted to the appropriate format for each model.
+3. **Seamless Context Transfer**: Previous conversation turns are automatically converted to the appropriate format for
+   each model.
 
-4. **Simple API**: Despite the complexity of managing different providers and models, the API remains simple and consistent.
+4. **Simple API**: Despite the complexity of managing different providers and models, the API remains simple and
+   consistent.
 
 ## When to Use This Pattern
 
@@ -237,6 +249,5 @@ This pattern is ideal for:
 - A/B testing different models within the same conversation flow
 - Building systems where different parts of a conversation require different model strengths
 
-Dhenara's conversation handling makes all these scenarios straightforward to implement while keeping your codebase clean and maintainable.
-
-
+Dhenara's conversation handling makes all these scenarios straightforward to implement while keeping your codebase clean
+and maintainable.

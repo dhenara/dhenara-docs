@@ -6,11 +6,14 @@ title: Input Handling
 
 ## Overview
 
-Input handling is a critical component of the Dhenara Agent DSL (DAD) framework, enabling interactive configuration and dynamic behavior of agents. This document describes the architecture of the input handling system, its components, and patterns for effective implementation.
+Input handling is a critical component of the Dhenara Agent DSL (DAD) framework, enabling interactive configuration and
+dynamic behavior of agents. This document describes the architecture of the input handling system, its components, and
+patterns for effective implementation.
 
 ## Event-Driven Input Architecture
 
-DAD uses an event-driven architecture for input handling, where nodes emit events when they require input, and registered handlers respond with appropriate configurations:
+DAD uses an event-driven architecture for input handling, where nodes emit events when they require input, and
+registered handlers respond with appropriate configurations:
 
 ```python
 # Node declares that it requires input
@@ -53,7 +56,8 @@ class NodeInputRequiredEvent(BaseEvent):
     handled: bool = False  # Whether the event has been handled
 ```
 
-When a node with `pre_events=[EventType.node_input_required]` is about to execute, it emits this event. Handlers then fill in the `input` field and mark it as `handled`.
+When a node with `pre_events=[EventType.node_input_required]` is about to execute, it emits this event. Handlers then
+fill in the `input` field and mark it as `handled`.
 
 ### Node-Specific Input Classes
 
@@ -104,7 +108,7 @@ async def get_menu_choice(options: list[str], prompt: str = "Select an option:")
     print(f"\n{prompt}")
     for i, option in enumerate(options):
         print(f"  {i+1}. {option}")
-    
+
     while True:
         try:
             choice = await async_input("Enter number: ")
@@ -128,7 +132,7 @@ async def get_operation_input() -> FolderAnalysisOperation:
     include_content = await get_yes_no_input("Include file contents?", True)
     include_patterns = await async_input("Include patterns (comma-separated, e.g., '*.py,*.md'): ")
     exclude_patterns = await async_input("Exclude patterns (comma-separated, e.g., '*.pyc,__pycache__'): ")
-    
+
     return FolderAnalysisOperation(
         operation_type="analyze_folder",
         path=path,
@@ -166,11 +170,11 @@ async def handle_ai_model_input(event: NodeInputRequiredEvent):
     if event.node_id == "query_analyzer":
         # Get the user query
         query = await async_input("Enter your query: ")
-        
+
         # Select the model to use
         models = ["claude-3-7-sonnet", "gpt-4-turbo"]
         model_idx = await get_menu_choice(models, "Select model:")
-        
+
         # Create the input
         event.input = AIModelNodeInput(
             prompt_variables={"query": query},
@@ -193,7 +197,7 @@ async def handle_folder_analyzer_input(event: NodeInputRequiredEvent):
             operations.append(operation)
             if not await get_yes_no_input("Add another analysis operation?", False):
                 break
-        
+
         # Create the input
         event.input = FolderAnalyzerNodeInput(
             settings_override=FolderAnalyzerSettings(
@@ -250,4 +254,6 @@ async def context_aware_handler(event: NodeInputRequiredEvent):
 
 ## Conclusion
 
-The input handling architecture in DAD provides a flexible, powerful system for configuring and interacting with agent nodes. By leveraging the event-driven architecture and implementing appropriate handlers, you can create rich interactive experiences while maintaining clean separation between node definition and input collection.
+The input handling architecture in DAD provides a flexible, powerful system for configuring and interacting with agent
+nodes. By leveraging the event-driven architecture and implementing appropriate handlers, you can create rich
+interactive experiences while maintaining clean separation between node definition and input collection.

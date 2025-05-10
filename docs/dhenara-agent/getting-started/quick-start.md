@@ -4,7 +4,8 @@ sidebar_position: 2
 
 # Quick Start
 
-This guide will help you create and run your first agent using Dhenara Agent DSL (DAD). You'll build a simple question-answering agent that can respond to user queries using an AI model.
+This guide will help you create and run your first agent using Dhenara Agent DSL (DAD). You'll build a simple
+question-answering agent that can respond to user queries using an AI model.
 
 ## Create a Simple Agent
 
@@ -121,7 +122,7 @@ async def handle_input_required(event: NodeInputRequiredEvent):
     if event.node_id == "interactive_assistant":
         # Get input from the user
         question = input("Enter your question: ")
-        
+
         # Create the input object with the user's question
         event.input = AIModelNodeInput(
             prompt_variables={"question": question}
@@ -132,17 +133,17 @@ async def handle_input_required(event: NodeInputRequiredEvent):
 async def main():
     # Set up the run context
     run_context.setup_run()
-    
+
     # Register the input handler
     run_context.register_node_input_handler(handle_input_required)
-    
+
     # Create a runner
     runner = FlowRunner(interactive_flow, run_context)
-    
+
     # Run in isolated execution context
     async with IsolatedExecution(run_context) as execution:
         result = await execution.run(runner)
-        
+
         # Print the result
         print("\nAssistant's response:")
         print(result.outcome.text)

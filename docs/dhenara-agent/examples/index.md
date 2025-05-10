@@ -4,13 +4,17 @@ title: Examples Overview
 
 # DAD Examples Overview
 
-This section provides practical examples of how to use Dhenara Agent DSL (DAD) for different use cases. Each example demonstrates a specific pattern or approach, with explanations of key concepts and techniques.
+This section provides practical examples of how to use Dhenara Agent DSL (DAD) for different use cases. Each example
+demonstrates a specific pattern or approach, with explanations of key concepts and techniques.
 
 ## Available Examples
 
-- [Basic Code Generation Agent](./basic-agent.md) - A simple agent that analyzes a repository, generates code, and implements changes
-- [Multi-Step Code Review Agent](./multi-step-agent.md) - A more complex agent with multiple flows for code analysis and improvement
-- [Collaborative Coding Agent](./collaborative-agents.md) - An advanced agent that coordinates multiple specialized subagents
+- [Basic Code Generation Agent](./basic-agent.md) - A simple agent that analyzes a repository, generates code, and
+  implements changes
+- [Multi-Step Code Review Agent](./multi-step-agent.md) - A more complex agent with multiple flows for code analysis and
+  improvement
+- [Collaborative Coding Agent](./collaborative-agents.md) - An advanced agent that coordinates multiple specialized
+  subagents
 - [Best Practices](./best-practices.md) - Practical tips and patterns for effective agent implementation
 
 ## When to Use Examples

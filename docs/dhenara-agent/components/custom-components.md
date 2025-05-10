@@ -6,7 +6,9 @@ title: Custom Components
 
 ## Overview
 
-Dhenara Agent DSL (DAD) is designed to be extensible, allowing you to create custom components that address specific needs beyond what's provided by the built-in components. This extensibility enables you to tailor DAD to your unique use cases while maintaining the benefits of the framework's architecture and execution model.
+Dhenara Agent DSL (DAD) is designed to be extensible, allowing you to create custom components that address specific
+needs beyond what's provided by the built-in components. This extensibility enables you to tailor DAD to your unique use
+cases while maintaining the benefits of the framework's architecture and execution model.
 
 ## Why Create Custom Components
 
@@ -81,8 +83,8 @@ from dhenara.agent.dsl.base import NodeDefinition
 class DatabaseQueryNode(NodeDefinition):
     node_type: str = "database_query"  # Unique identifier for this node type
     settings: DatabaseQueryNodeSettings | None = None
-    
-    def __init__(self, 
+
+    def __init__(self,
                 settings: DatabaseQueryNodeSettings | None = None,
                 pre_events: list[str] | None = None,
                 post_events: list[str] | None = None):
@@ -100,16 +102,16 @@ import time
 import aiosqlite  # Or any async database library
 
 class DatabaseQueryNodeExecutor(NodeExecutor):
-    async def execute(self, 
-                     node_id: str, 
+    async def execute(self,
+                     node_id: str,
                      execution_context: ExecutionContext,
                      node_input: DatabaseQueryNodeInput | None = None) -> NodeExecutionResult:
         # Get settings, merging with overrides if provided
         settings = self.get_settings(execution_context, node_input)
-        
+
         # Prepare the query with parameters
         query = self.prepare_query(settings.query_template, node_input.query_parameters)
-        
+
         # Execute the query
         start_time = time.time()
         try:
@@ -120,16 +122,16 @@ class DatabaseQueryNodeExecutor(NodeExecutor):
                     row_count = len(rows)
         except Exception as e:
             return NodeExecutionResult.failure(f"Database query failed: {str(e)}")
-        
+
         execution_time = time.time() - start_time
-        
+
         # Create output
         output = DatabaseQueryNodeOutput(
             rows=rows,
             row_count=row_count,
             execution_time=execution_time
         )
-        
+
         # Create outcome for easy access
         outcome = NodeOutcome(
             structured={
@@ -138,9 +140,9 @@ class DatabaseQueryNodeExecutor(NodeExecutor):
                 "execution_time": execution_time
             }
         )
-        
+
         return NodeExecutionResult.success(output, outcome)
-    
+
     def prepare_query(self, query_template: str, parameters: Dict[str, Any]) -> str:
         # Simple parameter replacement - in practice, use proper SQL parameter binding
         result = query_template
@@ -204,7 +206,7 @@ You can create reusable flow patterns by defining factory functions:
 def create_data_processing_flow(data_source: str, processing_type: str) -> FlowDefinition:
     """Create a standardized data processing flow."""
     flow = FlowDefinition()
-    
+
     # Add data source node based on source type
     if data_source == "database":
         flow.node("data_source", DatabaseQueryNode(...))
@@ -212,7 +214,7 @@ def create_data_processing_flow(data_source: str, processing_type: str) -> FlowD
         flow.node("data_source", APIRequestNode(...))
     elif data_source == "file":
         flow.node("data_source", FileReaderNode(...))
-    
+
     # Add processing nodes based on processing type
     if processing_type == "transform":
         flow.node("processor", DataTransformNode(...))
@@ -220,10 +222,10 @@ def create_data_processing_flow(data_source: str, processing_type: str) -> FlowD
         flow.node("processor", DataFilterNode(...))
     elif processing_type == "aggregate":
         flow.node("processor", DataAggregationNode(...))
-    
+
     # Common result handling
     flow.node("result_formatter", ResultFormatterNode(...))
-    
+
     return flow
 
 # Use the factory function
@@ -239,22 +241,22 @@ Similarly, you can create factory functions for specialized agent patterns:
 def create_etl_agent(source_config: dict, transform_config: dict, load_config: dict) -> AgentDefinition:
     """Create an ETL (Extract, Transform, Load) agent."""
     agent = AgentDefinition()
-    
+
     # Create extraction flow
     extract_flow = create_extraction_flow(source_config)
     agent.flow("extract", extract_flow)
-    
+
     # Create transformation flow
     transform_flow = create_transformation_flow(transform_config)
     agent.flow("transform", transform_flow)
-    
+
     # Create loading flow
     load_flow = create_loading_flow(load_config)
     agent.flow("load", load_flow)
-    
+
     # Sequence the flows
     agent.sequence(["extract", "transform", "load"])
-    
+
     return agent
 
 # Use the factory function
@@ -288,7 +290,7 @@ from dhenara.agent.dsl.templates import DADTemplateEngine
 
 # Register a custom function
 DADTemplateEngine.register_function(
-    "encrypt", 
+    "encrypt",
     lambda text, key: some_encryption_function(text, key)
 )
 
@@ -326,4 +328,5 @@ async def handle_approval(event: ApprovalRequiredEvent):
 event_bus.register(EventType.custom_approval_required, handle_approval)
 ```
 
-By extending DAD with custom components, you can adapt the framework to your specific needs while maintaining the benefits of its architecture and execution model.
+By extending DAD with custom components, you can adapt the framework to your specific needs while maintaining the
+benefits of its architecture and execution model.

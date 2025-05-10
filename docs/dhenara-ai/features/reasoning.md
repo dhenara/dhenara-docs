@@ -1,11 +1,13 @@
 ---
 title: Reasoning
 ---
+
 # Unified Reasoning Contents
 
 ## The Challenge of Reasoning Tokens
 
-AI models are increasingly exposing their internal "thinking" or "reasoning" processes, offering a window into how the model arrives at its conclusions. This capability is extremely valuable for:
+AI models are increasingly exposing their internal "thinking" or "reasoning" processes, offering a window into how the
+model arrives at its conclusions. This capability is extremely valuable for:
 
 - Debugging model outputs
 - Verifying logical chains
@@ -13,7 +15,8 @@ AI models are increasingly exposing their internal "thinking" or "reasoning" pro
 - Understanding model reasoning patterns
 - Providing transparency to users
 
-However, different AI providers implement this feature in completely different ways, creating a significant challenge for developers who want to work with multiple models.
+However, different AI providers implement this feature in completely different ways, creating a significant challenge
+for developers who want to work with multiple models.
 
 ## How Different Providers Handle Reasoning
 
@@ -57,7 +60,8 @@ The thinking process is embedded directly in the content, requiring parsing to e
 
 ### OpenAI's Approach
 
-While writing this document, OpenAI doesn't expose the reasoing tokens to developers in any manner. When they support it in the API, we update to handle it.
+While writing this document, OpenAI doesn't expose the reasoing tokens to developers in any manner. When they support it
+in the API, we update to handle it.
 
 ## The Dhenara Solution
 
@@ -83,6 +87,7 @@ Looking at the underlying code, Dhenara:
 
 1. **Provides standardized types** - `ChatResponseContentItemType.REASONING` is a distinct content type
 2. **Handles provider differences transparently**:
+
    - For Anthropic: Converts `ThinkingBlock` objects directly to `ChatResponseReasoningContentItem`
    - For DeepSeek: Parses `<think>...</think>` markup and creates separate reasoning content items
 
@@ -127,4 +132,5 @@ for choice in response.chat_response.choices:
             print(content.text)
 ```
 
-By providing a unified interface for reasoning content, Dhenara significantly simplifies working with multiple AI models and enables you to build more transparent, explainable AI applications.
+By providing a unified interface for reasoning content, Dhenara significantly simplifies working with multiple AI models
+and enables you to build more transparent, explainable AI applications.

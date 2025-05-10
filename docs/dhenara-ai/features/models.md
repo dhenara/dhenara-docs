@@ -4,13 +4,17 @@ title: Foundation Models
 
 # Foundation Models & Custom Models
 
-Foundation models are the building blocks of AI in the Dhenara framework. These pre-configured models encapsulate the capabilities of various AI providers and enable consistent interactions regardless of the underlying API differences.
+Foundation models are the building blocks of AI in the Dhenara framework. These pre-configured models encapsulate the
+capabilities of various AI providers and enable consistent interactions regardless of the underlying API differences.
 
-Before proceeding further, please note that, you are **not** dependent on the Foundation Model in the package. We will update this library as and when new models are published, but you can always create your own FoundationModel objects or even custom AIModel objects and use them in the same manner as described below.
+Before proceeding further, please note that, you are **not** dependent on the Foundation Model in the package. We will
+update this library as and when new models are published, but you can always create your own FoundationModel objects or
+even custom AIModel objects and use them in the same manner as described below.
 
 ## Understanding Foundation Models
 
-In Dhenara, a foundation model is a pre-configured representation of a specific AI model from a provider (like OpenAI, Google AI, Anthropic, etc.) with standardized properties:
+In Dhenara, a foundation model is a pre-configured representation of a specific AI model from a provider (like OpenAI,
+Google AI, Anthropic, etc.) with standardized properties:
 
 - Model identification information
 - Context/token limitations
@@ -39,11 +43,13 @@ claude_model = FoundationModelFns.get_foundation_model("claude-3-5-sonnet")
 
 ## Cross-Provider Model Compatibility
 
-One of the most powerful features of Dhenara's foundation model system is the ability to use the same model across different API providers through model cloning and customization.
+One of the most powerful features of Dhenara's foundation model system is the ability to use the same model across
+different API providers through model cloning and customization.
 
 ### Example: Using Claude 3.5 on Amazon Bedrock
 
-Anthropic's Claude models can be accessed through Anthropic's direct API or via Amazon Bedrock. Here's how to adapt a foundation model for a different provider:
+Anthropic's Claude models can be accessed through Anthropic's direct API or via Amazon Bedrock. Here's how to adapt a
+foundation model for a different provider:
 
 ```python
 from dhenara.ai import AIModelClient
@@ -162,10 +168,11 @@ ChatModelCostData(
 
 ## Readily Available Foundation Models
 
-Dhenara includes a rich collection of pre-configured foundation models.
-But remember that you can always create your own Models, the functional part is independent from the FoundationModel collection.
+Dhenara includes a rich collection of pre-configured foundation models. But remember that you can always create your own
+Models, the functional part is independent from the FoundationModel collection.
 
 ### Text Generation
+
 - GPT-4o
 - GPT-4o-mini
 - O1
@@ -201,4 +208,5 @@ Foundation models in Dhenara provide a powerful abstraction layer that allows yo
 - Track usage and costs accurately
 - Customize models for specific use cases
 
-By leveraging foundation models, you can create robust AI applications that aren't tied to a specific provider while maintaining full control over model settings and costs.
+By leveraging foundation models, you can create robust AI applications that aren't tied to a specific provider while
+maintaining full control over model settings and costs.

@@ -6,7 +6,9 @@ title: Templating System
 
 ## Overview
 
-The Dhenara Agent DSL (DAD) templating system is a powerful feature that enables dynamic content generation, variable substitution, and complex expression evaluation within agent definitions. This document explains the capabilities of the templating system and best practices for effective usage.
+The Dhenara Agent DSL (DAD) templating system is a powerful feature that enables dynamic content generation, variable
+substitution, and complex expression evaluation within agent definitions. This document explains the capabilities of the
+templating system and best practices for effective usage.
 
 ## Core Concepts
 
@@ -41,13 +43,17 @@ Expression evaluation uses the `$expr{expression}` syntax to compute values:
 
 Expressions can include basic arithmetic, string operations, and more complex operations.
 
-Expressions can also include dot notation for accessing object attributes or dictionary keys like `$expr{task_spec.task_id}` or `$expr{task_spec.required_context[0].file_name}`.
+Expressions can also include dot notation for accessing object attributes or dictionary keys like
+`$expr{task_spec.task_id}` or `$expr{task_spec.required_context[0].file_name}`.
 
 :::note
 
-Dot notation can only be used inside expressions (`$expr{}`), not with simple variable substitution. Even when accessing an attribute or key within text (e.g., in a prompt), use `$expr{}` instead of `$var{}`. The `$var{}` syntax should be reserved for simple variable substitution inside strings without any attribute or key access.
+Dot notation can only be used inside expressions (`$expr{}`), not with simple variable substitution. Even when accessing
+an attribute or key within text (e.g., in a prompt), use `$expr{}` instead of `$var{}`. The `$var{}` syntax should be
+reserved for simple variable substitution inside strings without any attribute or key access.
 
 :::
+
 ### Hierarchical References
 
 Hierarchical references use the `$hier{node_path.property}` syntax to access results from other nodes:
@@ -209,4 +215,6 @@ In debug mode, the engine will print detailed information about variable substit
 
 ## Conclusion
 
-The DAD templating system provides a powerful mechanism for creating dynamic, context-aware agent definitions. By leveraging variable substitution, expression evaluation, and hierarchical references, templates enable sophisticated data flow between components while maintaining readability and reusability.
+The DAD templating system provides a powerful mechanism for creating dynamic, context-aware agent definitions. By
+leveraging variable substitution, expression evaluation, and hierarchical references, templates enable sophisticated
+data flow between components while maintaining readability and reusability.

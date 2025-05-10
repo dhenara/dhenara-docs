@@ -4,7 +4,8 @@ title: Collaborative Coding Agent
 
 # Collaborative Coding Agent
 
-This example demonstrates an agent that facilitates collaborative coding by using specialized subagents for different aspects of development.
+This example demonstrates an agent that facilitates collaborative coding by using specialized subagents for different
+aspects of development.
 
 ## Implementation
 

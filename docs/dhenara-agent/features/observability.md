@@ -6,7 +6,9 @@ title: Observability
 
 ## Overview
 
-Observability is a core feature of Dhenara Agent DSL (DAD), providing comprehensive tracking, logging, and metrics for all agent activities. The observability system enables developers to understand, debug, and optimize their agent workflows with detailed visibility into execution.
+Observability is a core feature of Dhenara Agent DSL (DAD), providing comprehensive tracking, logging, and metrics for
+all agent activities. The observability system enables developers to understand, debug, and optimize their agent
+workflows with detailed visibility into execution.
 
 ## Core Observability Components
 
@@ -30,6 +32,7 @@ async def execute_node(self, node_id, execution_context, node_input):
 ```
 
 The tracing system creates hierarchical spans that capture:
+
 - Execution path and hierarchies
 - Timing information
 - Input and output data
@@ -181,4 +184,5 @@ run_jaeger_dashboard()
 4. **Meaningful Metrics**: Capture metrics that provide insights into performance and behavior
 5. **Regular Analysis**: Use the dashboard tools to analyze execution and identify improvements
 
-By utilizing DAD's observability features, developers can gain deep insights into their agent systems, diagnose issues more effectively, and optimize performance.
+By utilizing DAD's observability features, developers can gain deep insights into their agent systems, diagnose issues
+more effectively, and optimize performance.

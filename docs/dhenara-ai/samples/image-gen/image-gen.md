@@ -4,7 +4,6 @@ title: 'Image Generation'
 
 # Image Generation
 
-
 ```python
 import base64
 import io
