@@ -41,6 +41,13 @@ Expression evaluation uses the `$expr{expression}` syntax to compute values:
 
 Expressions can include basic arithmetic, string operations, and more complex operations.
 
+Expressions can also include dot notation for accessing object attributes or dictionary keys like `$expr{task_spec.task_id}` or `$expr{task_spec.required_context[0].file_name}`.
+
+:::note
+
+Dot notation can only be used inside expressions (`$expr{}`), not with simple variable substitution. Even when accessing an attribute or key within text (e.g., in a prompt), use `$expr{}` instead of `$var{}`. The `$var{}` syntax should be reserved for simple variable substitution inside strings without any attribute or key access.
+
+:::
 ### Hierarchical References
 
 Hierarchical references use the `$hier{node_path.property}` syntax to access results from other nodes:
