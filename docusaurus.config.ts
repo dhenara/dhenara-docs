@@ -3,9 +3,9 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Dhenara',
-  tagline: 'A flexible framework for interacting with AI models',
-  favicon: 'img/favicon.png',
+  title: 'Dhenara Documentation',
+  tagline: "Build powerful AI applications with Dhenara's open-source frameworks",
+  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://docs.dhenara.com',
@@ -33,7 +33,8 @@ const config: Config = {
         docs: {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.ts',
-          //editUrl: "https://github.com/dhenara/dhenara/tree/main/docs/",
+          // Remove editUrl if you don't want the "Edit this page" links
+          // editUrl: 'https://github.com/dhenara/dhenara-docs/tree/main/',
         },
         blog: false, // Set to false to disable the blog plugin
         theme: {
@@ -108,7 +109,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/dhenara/dhenara',
+          href: 'https://github.com/dhenara/dhenara-agent',
           label: 'GitHub',
           position: 'right',
         },
@@ -138,14 +139,14 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Documentation',
+          title: 'Docs',
           items: [
             {
-              label: 'Getting Started (AI)',
-              to: '/dhenara-ai/getting-started/installation', // Remove the `/docs/` prefix as its configured as the root path
+              label: 'Dhenara AI',
+              to: '/dhenara-ai/introduction',
             },
             {
-              label: 'Getting Started (Agent)',
+              label: 'Agent DSL',
               to: '/dhenara-agent/introduction',
             },
             //{
@@ -176,12 +177,12 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/dhenara/dhenara',
+              href: 'https://github.com/dhenara',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Dhenara Inc.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Dhenara, Inc.`,
     },
     prism: {
       theme: prismThemes.vsLight,

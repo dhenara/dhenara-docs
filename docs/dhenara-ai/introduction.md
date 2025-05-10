@@ -1,7 +1,10 @@
 ---
 id: introduction
 title: Introduction
-slug: / # To enable `docs-only-mode`
+# INFO:
+# - To make this as the landing page, without a `homepage` use
+#   slug: / # To enable `docs-only-mode`
+#
 sidebar_position: 1
 ---
 
