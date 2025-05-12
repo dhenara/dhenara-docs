@@ -15,8 +15,8 @@ This guide will help you install the Dhenara Agent DSL (DAD) package and set up 
 
 :::note
 
-DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no
-package named `dhenara-dad`.
+DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package
+named `dhenara-dad`.
 
 :::
 

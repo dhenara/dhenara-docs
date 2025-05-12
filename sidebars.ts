@@ -136,6 +136,21 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Examples',
+      collapsed: false,
+      link: {
+        type: 'doc',
+        id: 'dhenara-agent/examples/index',
+      },
+      items: [
+        'dhenara-agent/examples/simple-chatbot',
+        'dhenara-agent/examples/single-shot-coder',
+        'dhenara-agent/examples/auto-coder',
+        'dhenara-agent/examples/image-agent',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Architecture',
       collapsed: false,
       items: [
@@ -163,27 +178,9 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'dhenara-agent/cli/index',
       },
-      items: [
-        'dhenara-agent/cli/overview',
-        'dhenara-agent/cli/commands',
-        'dhenara-agent/cli/extending',
-      ],
+      items: ['dhenara-agent/cli/overview', 'dhenara-agent/cli/commands', 'dhenara-agent/cli/extending'],
     },
-    {
-      type: 'category',
-      label: 'Examples',
-      collapsed: false,
-      link: {
-        type: 'doc',
-        id: 'dhenara-agent/examples/index',
-      },
-      items: [
-        'dhenara-agent/examples/basic-agent',
-        'dhenara-agent/examples/multi-step-agent',
-        'dhenara-agent/examples/collaborative-agents',
-        'dhenara-agent/examples/best-practices',
-      ],
-    },
+
     {
       type: 'category',
       label: 'Features',

@@ -1,29 +1,33 @@
 ---
-title: Examples Overview
+sidebar_position: 1
 ---
 
-# DAD Examples Overview
+# Example Agents
 
-This section provides practical examples of how to use Dhenara Agent DSL (DAD) for different use cases. Each example
-demonstrates a specific pattern or approach, with explanations of key concepts and techniques.
+This section provides practical examples of agents created with Dhenara Agent DSL (DAD). These examples demonstrate the
+versatility and power of the framework, ranging from simple chatbots to complex AI workflows.
+
+Each example is designed to highlight different aspects of DAD's capabilities, showcasing how you can build agents for
+various use cases:
 
 ## Available Examples
 
-- [Basic Code Generation Agent](./basic-agent.md) - A simple agent that analyzes a repository, generates code, and
-  implements changes
-- [Multi-Step Code Review Agent](./multi-step-agent.md) - A more complex agent with multiple flows for code analysis and
-  improvement
-- [Collaborative Coding Agent](./collaborative-agents.md) - An advanced agent that coordinates multiple specialized
-  subagents
-- [Best Practices](./best-practices.md) - Practical tips and patterns for effective agent implementation
+- [Simple Chatbot](./simple-chatbot.md): Build on the Quick Start guide with a basic question-answering agent that
+  responds to user queries.
+- [Single-Shot Coder](./single-shot-coder.md): A simplified code implementation agent for focused, one-time tasks.
+- [Code Generation Agent](./auto-coder.md): Learn how to create an agent that can analyze code repositories and
+  implement code changes.
+- [Image Generation Agent](./image-agent.md): Create an agent that generates images based on text prompts.
 
-## When to Use Examples
+## Getting Started with Examples
 
-These examples provide practical implementation patterns that you can adapt to your own projects:
+These examples assume you've already completed the [Quick Start guide](/dhenara-agent/getting-started/quick-start.md)
+and have a basic understanding of DAD's core concepts.
 
-- Use the **Basic Agent** pattern for straightforward, single-purpose agents
-- Use the **Multi-Step Agent** pattern when your process requires distinct phases with dependencies
-- Use the **Collaborative Agents** approach for complex workflows that benefit from separation of concerns
-- Apply the **Best Practices** to all your DAD implementations to ensure robust, maintainable code
+Each example provides:
 
-Each example includes complete code samples that you can use as starting points for your own agent implementations.
+- A complete explanation of the agent's purpose
+- Code snippets and explanations of key components
+- Guidance on how to adapt the example for your own use cases
+
+Let's start exploring these examples to see what you can build with Dhenara Agent DSL!
