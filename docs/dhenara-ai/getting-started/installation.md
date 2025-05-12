@@ -13,7 +13,7 @@ Dhenara is available on PyPI and can be installed using pip.
 ## Basic Installation
 
 ```bash
-pip install dhenara
+pip install dhenara-ai
 ```
 
 This installs the core Dhenara library with support for all available AI model providers.
@@ -33,13 +33,13 @@ source .venv/bin/activate
 .venv\Scripts\activate
 
 # Install Dhenara
-pip install dhenara
+pip install dhenara-ai
 ```
 
 ## Installing from Source
 
 ```bash
-git clone https://github.com/dhenara/dhenara.git
+git clone https://github.com/dhenara/dhenara-ai.git
 cd dhenara
 pip install -e .
 ```
@@ -54,16 +54,16 @@ However, you can install provider-specific packages individually if needed:
 
 ```bash
 # For OpenAI only
-pip install "dhenara[openai]"
+pip install "dhenara-ai[openai]"
 
 # For Google AI only
-pip install "dhenara[google]"
+pip install "dhenara-ai[google]"
 
 # For Anthropic only
-pip install "dhenara[anthropic]"
+pip install "dhenara-ai[anthropic]"
 
 # For development
-pip install "dhenara[dev]"
+pip install "dhenara-ai[dev]"
 ```
 */}
 
@@ -94,7 +94,7 @@ print(f"Dhenara version: {dhenara.ai.__version__}")
 If you encounter issues with installation:
 
 - Ensure you have the latest pip: `pip install --upgrade pip`
-- Try installing with the `--verbose` flag: `pip install --verbose dhenara`
+- Try installing with the `--verbose` flag: `pip install --verbose dhenara-ai`
 - For provider-specific issues, check that you have the required credentials properly configured
 
 ## Next Steps

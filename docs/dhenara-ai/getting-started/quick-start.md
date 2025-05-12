@@ -11,7 +11,7 @@ This guide will help you get up and running with Dhenara quickly. We'll create a
 First, make sure you have Dhenara installed:
 
 ```bash
-pip install dhenara
+pip install dhenara-ai
 ```
 
 You'll need API credentials for at least one of the supported AI providers. For this example, we'll use Anthropic.

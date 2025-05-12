@@ -10,17 +10,14 @@ export default function HomepageQuickStart(): JSX.Element {
           <div className="col col--6 quickstart-content">
             <h2>Get Started Quickly</h2>
             <p>
-              Dhenara makes it easy to build AI-powered applications. Follow our quick start guides
-              to get up and running in minutes.
+              Dhenara makes it easy to build AI-powered applications. Follow our quick start guides to get up and
+              running in minutes.
             </p>
             <div className="quickstart-links">
               <Link className="quickstart-card" to="/dhenara-agent/getting-started/installation">
                 <div className="quickstart-card-content">
                   <h3>Dhenara Agent Installation</h3>
-                  <p>
-                    Install the agent framework for complex workflows. This also includes AI
-                    package.
-                  </p>
+                  <p>Install the agent framework for complex workflows. This also includes AI package.</p>
                 </div>
                 <div className="quickstart-arrow">→</div>
               </Link>
@@ -47,7 +44,7 @@ export default function HomepageQuickStart(): JSX.Element {
                   <br />
                   # Or install core AI package for simple applications
                   <br />
-                  pip install dhenara
+                  pip install dhenara-ai
                 </code>
               </pre>
             </div>
