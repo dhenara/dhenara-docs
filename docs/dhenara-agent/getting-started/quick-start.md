@@ -286,7 +286,8 @@ Let's examine how this simple flow works step by step:
 
 Now that you've created your first agent, you can:
 
+- Go through [Tutorials](../tutorials/command-line-coder) and more complex [Examples](../examples) to see what you can
+  build
 - Learn more about the [Core Concepts](core-concepts) of DAD
 - Explore the different [Node Types](../components/nodes) and how to use them
 - Understand the [Architecture](../architecture/overview) of DAD
-- Check out more complex [Examples](../examples/basic-agent) to see what you can build

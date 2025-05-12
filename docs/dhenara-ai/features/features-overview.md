@@ -7,7 +7,7 @@ sidebar_label: Overview
 # Features
 
 - [Multi-turn Conversation](/dhenara-ai/features/multi-turn-conversations)
-- [Usage and Charge](/dhenara-ai/features/usasge-and-charge)
+- [Usage and Charge](/dhenara-ai/features/usage-and-charge)
 - [Streaming Simplified](/dhenara-ai/features/streaming-simplified)
 - [Type Safety](/dhenara-ai/features/type-safety)
 - [Reasoning](/dhenara-ai/features/reasoning)

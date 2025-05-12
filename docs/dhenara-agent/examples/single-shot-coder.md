@@ -4,9 +4,9 @@ sidebar_position: 4
 
 # Single-Shot Coder
 
-The Single-Shot Coder is a simplified version of the [Code Generation Agent](./code-generation-agent.md) designed for
-focused, one-time coding tasks. This agent bypasses the planning phase and goes directly to implementation, making it
-ideal for smaller, well-defined tasks.
+The Single-Shot Coder is a simplified version of the [Code Generation Agent](./auto-coder.md) designed for focused,
+one-time coding tasks. This agent bypasses the planning phase and goes directly to implementation, making it ideal for
+smaller, well-defined tasks.
 
 ## Agent Overview
 

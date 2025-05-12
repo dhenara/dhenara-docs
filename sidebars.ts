@@ -3,6 +3,7 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   // Sidebar for dhenara-ai
   dhenaraAiSidebar: [
+    //{ type: 'html', value: '<div class="nav-section-title">Dhenara AI</div>', className: 'sidebar-section-title' },
     'dhenara-ai/introduction',
     {
       type: 'category',
@@ -35,7 +36,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'dhenara-ai/features/multi-turn-conversations',
         'dhenara-ai/features/resource-configuration',
-        'dhenara-ai/features/usasge-and-charge',
+        'dhenara-ai/features/usage-and-charge',
         'dhenara-ai/features/streaming-simplified',
         'dhenara-ai/features/type-safety',
         'dhenara-ai/features/reasoning',
@@ -123,7 +124,15 @@ const sidebars: SidebarsConfig = {
 
   // Sidebar for dhenara-agent
   dhenaraAgentSidebar: [
+    //{
+    //  type: 'html',
+    //  value: '<div class="nav-section-title">Dhenara Agent DSL</div>',
+    //  className: 'sidebar-section-title',
+    //},
+    // 1) Intro
     'dhenara-agent/introduction',
+
+    // 2) Getting Started
     {
       type: 'category',
       label: 'Getting Started',
@@ -134,21 +143,53 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/getting-started/core-concepts',
       ],
     },
+
+    // 3) Tutorials & Examples (merged)
     {
       type: 'category',
-      label: 'Examples',
+      label: 'Tutorials & Examples',
       collapsed: false,
       link: {
         type: 'doc',
-        id: 'dhenara-agent/examples/index',
+        id: 'dhenara-agent/tutorials/index',
       },
       items: [
-        'dhenara-agent/examples/simple-chatbot',
-        'dhenara-agent/examples/single-shot-coder',
-        'dhenara-agent/examples/auto-coder',
-        'dhenara-agent/examples/image-agent',
+        // Tutorials
+        {
+          type: 'category',
+          label: 'Command-Line Coding Assistant',
+          link: {
+            type: 'doc',
+            id: 'dhenara-agent/tutorials/command-line-coder/index',
+          },
+          collapsed: true,
+          items: [
+            'dhenara-agent/tutorials/command-line-coder/single-shot',
+            'dhenara-agent/tutorials/command-line-coder/planning',
+            'dhenara-agent/tutorials/command-line-coder/enhanced-implementation',
+            'dhenara-agent/tutorials/command-line-coder/coordination',
+          ],
+        },
+        // Examples
+        {
+          type: 'category',
+          label: 'Examples',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: 'dhenara-agent/examples/index',
+          },
+          items: [
+            'dhenara-agent/examples/simple-chatbot',
+            'dhenara-agent/examples/auto-coder',
+            'dhenara-agent/examples/single-shot-coder',
+            'dhenara-agent/examples/image-agent',
+          ],
+        },
       ],
     },
+
+    // 4) Core Architecture
     {
       type: 'category',
       label: 'Architecture',
@@ -159,6 +200,8 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/architecture/execution-model',
       ],
     },
+
+    // 5) Components
     {
       type: 'category',
       label: 'Components',
@@ -170,9 +213,11 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/components/custom-components',
       ],
     },
+
+    // 6) CLI
     {
       type: 'category',
-      label: 'CLI',
+      label: 'Command-Line Interface',
       collapsed: false,
       link: {
         type: 'doc',
@@ -181,6 +226,7 @@ const sidebars: SidebarsConfig = {
       items: ['dhenara-agent/cli/overview', 'dhenara-agent/cli/commands', 'dhenara-agent/cli/extending'],
     },
 
+    // 7) Features
     {
       type: 'category',
       label: 'Features',
@@ -192,6 +238,8 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/features/observability',
       ],
     },
+
+    // 8) Advanced Guides
     {
       type: 'category',
       label: 'Advanced Guides',
@@ -203,6 +251,8 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/advanced-guides/implementation-flow',
       ],
     },
+
+    // 9) API Reference
     {
       type: 'category',
       label: 'API Reference',
