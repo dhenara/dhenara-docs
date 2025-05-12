@@ -1,6 +1,6 @@
 # Installation
 
-### TL;DR
+## Quick Install
 
 ```bash
 python3 -m venv .venv
@@ -15,8 +15,8 @@ This guide will help you install the Dhenara Agent DSL (DAD) package and set up 
 
 :::note
 
-DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package
-named `dhenara-dad`.
+DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no
+package named `dhenara-dad`.
 
 :::
 
@@ -26,7 +26,7 @@ Before installing Dhenara Agent DSL, make sure you have the following prerequisi
 - pip or your preferred Python package installer
 - virtualenv or conda (recommended for managing environments)
 
-## Installation Steps
+## Standard Installation
 
 ### 1. Create a Virtual Environment (Recommended)
 
@@ -49,8 +49,9 @@ pip install dhenara-agent
 
 ## Development Installation
 
-If you want to contribute to DAD or run the latest development version, you can install from the source code. You can
-even install it in editable mode during development, allowing you to add custom debug and print messages:
+If you want to contribute to DAD or run the latest development version, you can install from the source code:
+
+### Option 1: Install from Local Repository
 
 ```bash
 git clone https://github.com/dhenara/dhenara-agent.git
@@ -58,11 +59,14 @@ cd dhenara-agent
 pip install -e .
 ```
 
-Alternatively:
+### Option 2: Install Directly from GitHub
 
 ```bash
 pip install -e "git+https://github.com/dhenara/dhenara-agent.git"
 ```
+
+Installing in editable mode (`-e` flag) allows you to modify the source code and see changes immediately without
+reinstalling the package.
 
 ## Verify Installation
 
@@ -76,7 +80,7 @@ dhenara --help
 
 You should see the available CLI commands:
 
-```bash
+```
 (.venv) $ dhenara --help
 Usage: dhenara [OPTIONS] COMMAND [ARGS]...
 

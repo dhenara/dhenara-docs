@@ -7,8 +7,8 @@ sidebar_position: 2
 This guide will help you create and run your first agent using Dhenara Agent DSL (DAD). You'll build a simple
 question-answering agent that can respond to user queries using an AI model.
 
-Make sure you have installed `dhenara-agent` as described in
-[installation](/dhenara-agent/getting-started/installation.md)
+Make sure you have installed `dhenara-agent` as described in the
+[installation guide](/dhenara-agent/getting-started/installation.md).
 
 ```bash
 python3 -m venv .venv
@@ -19,13 +19,13 @@ dhenara --help
 
 ## Start a project
 
-Start a new project using CLI with a project name. We use _dev_agents_ as the project name here.
+Start a new project using the CLI with a project name. We'll use _dev_agents_ as the project name in this example.
 
 ```bash
 dhenara startproject dev_agents
 ```
 
-This will create a git repo with below folder structure
+This will create a git repository with the following folder structure:
 
 ```plaintext
 dev_agents
@@ -45,7 +45,7 @@ dev_agents
 ```
 
 Before you start running an agent, you need to update the `.dhenara/.secrets/.credentials.yaml` file with your API keys
-from Anthropic,OpenAI,Google etx
+from Anthropic, OpenAI, Google, etc.
 
 ```yaml
 openai:
@@ -63,15 +63,15 @@ google_vertex_ai:
 
 ## Create a Simple Agent
 
-Next, lets create an agent. When you use the CLI command, a simple chatbot flow will be included in the flow.py so that
-you can easily start updaing it. Lets name the agent as _chatbot_
+Next, let's create an agent. When you use the CLI command, a simple chatbot flow will be included in the flow.py file so
+that you can easily start updating it. Let's name the agent _chatbot_:
 
 ```bash
 cd dev_agents  # Go inside the project repo
 dhenara create agent chatbot
 ```
 
-This will create a _chatbot_ agent dir inside _agents_, and a _chatbot.py_ runner inside the _runners_ dir
+This will create a _chatbot_ agent directory inside _agents_, and a _chatbot.py_ runner inside the _runners_ directory:
 
 ```plaintext
 .
@@ -90,7 +90,7 @@ This will create a _chatbot_ agent dir inside _agents_, and a _chatbot.py_ runne
         └── defs.py
 ```
 
-The flow inside chatbot will be as below.
+The flow inside the chatbot will be as follows:
 
 ```python
 from dhenara.agent.dsl import (
@@ -132,7 +132,7 @@ main_flow.node(
                 "You are a summarizer which generate a title.",
             ],
             prompt=Prompt.with_dad_text(
-                "Summarize in plane text under 60 characters. $expr{ $hier{ai_model_call_1}.outcome.text }",
+                "Summarize in plain text under 60 characters. $expr{ $hier{ai_model_call_1}.outcome.text }",
             ),
         ),
     ),
@@ -140,7 +140,7 @@ main_flow.node(
 
 ```
 
-There is a handler.py file which will handle input requeste events.
+There is a handler.py file which will handle input request events:
 
 ```python
 from dhenara.agent.dsl import (
@@ -165,11 +165,11 @@ async def node_input_event_handler(event: NodeInputRequiredEvent):
 
 ```
 
-And finally,there is runner to run this flow.
+And finally, there is a runner to run this flow:
 
 dev_agents/src/runners/chatbot.py
 
-```ipython
+```python
 from dhenara.agent.dsl.events import EventType
 from dhenara.agent.run import RunContext
 from dhenara.agent.runner import AgentRunner
@@ -183,7 +183,7 @@ from src.agents.chatbot.agent import agent
 from src.agents.chatbot.handler import node_input_event_handler
 from src.runners.defs import project_root
 
-# Select an agent to run, assignt it a root_id
+# Select an agent to run, assign it a root_id
 root_component_id = "chatbot_root"
 agent.root_id = root_component_id
 
@@ -192,7 +192,7 @@ run_context = RunContext(
     root_component_id=root_component_id,
     project_root=project_root,
     observability_settings=None,  # pass observability_settings to enable tracing
-    run_root_subpath=None,  # "agent_chatbot" Useful to pass when you have multipel agents in the same projects.
+    run_root_subpath=None,  # "agent_chatbot" Useful to pass when you have multiple agents in the same projects.
 )
 
 
@@ -216,17 +216,17 @@ runner = AgentRunner(agent, run_context)
 
 ## Run the flow
 
-Make sure you have configured API keyes. ( You can run in a test mode without API keys, by setting `test_mode` in all
-AIModelNode, you will see a dummy response instread of a real response )
+Make sure you have configured API keys. (You can run in test mode without API keys by setting `test_mode=True` in all
+AIModelNode configurations. In test mode, you will see a dummy response instead of a real response.)
 
 ```bash
 dhenara run agent chatbot
 ```
 
-You will be prompted to select an AI model ,and then to enter your querry. Once the run finhsed, you can see the
+You will be prompted to select an AI model, and then to enter your query. Once the run finishes, you can see the
 location of the run directory. A `runs` directory will be created under the project root when you run it for the first
-time, and all runs will can be tracked there under timestamped dirctories. Inside the current run directory, you will
-see the artifacts per node , like below
+time, and all runs will be tracked there under timestamped directories. Inside the current run directory, you will see
+the artifacts per node, as shown below:
 
 ```plaintext
 └── run_20250512_115947_4eb85d
@@ -243,20 +243,44 @@ see the artifacts per node , like below
     └── static_inputs
 ```
 
-Look into the `outcome.json` file inside each node to see the resutl of execution.
+You can examine the `outcome.json` file inside each node to see the result of execution.
 
-You may think why I have to open a file to see what happened, but wait, DAD is not just for creating fancy workflows,
-rather real complex flows. We will see how all these files will take effect in a different tutorial. Before that,
-understand this simple workflow, as explained below.
+You might wonder why you need to open a file to see what happened. But remember, DAD isn't just for creating fancy
+workflows - it's designed for building real, complex agent workflows.
+
+This simple workflow serves as a foundation for more advanced implementations. We'll explore how all these files work
+together in a subsequent tutorial. For now, let's focus on understanding the basic structure explained below.
 
 ## Explanation
 
-TODO: Explain the flow step by step.
+Let's examine how this simple flow works step by step:
 
-- Add details on how we use a $var to generate dymanic prompt.
-- What is `pre_events=[EventType.node_input_required]` and how it taked to the input hander, and how the input hander
-  identifed the requestong node, and override the definiton settings
-- how did we pass the context between nodes via $hier
+1. **User Input Handling**:
+
+   - The `user_query_processor` node is configured with `pre_events=[EventType.node_input_required]`, which triggers an
+     input request event before execution.
+   - When this event is triggered, our `node_input_event_handler` function catches it and prompts the user for input.
+   - The handler then attaches the user's query as a variable (`user_query`) to the node's input.
+
+2. **Dynamic Prompt Generation**:
+
+   - The prompt in the `user_query_processor` node uses `$var{user_query}` for variable substitution.
+   - This allows the prompt to include the user's input dynamically at runtime.
+
+3. **Context Sharing Between Nodes**:
+
+   - The `title_generator` node references the output of the previous node using `$hier{ai_model_call_1}.outcome.text`.
+   - The `$hier` expression allows access to the hierarchical context, where previous node results are stored.
+
+4. **Node Execution Flow**:
+
+   - Nodes execute in the order they're added to the flow using `.node()` fn.
+   - The `user_query_processor` runs first, generating an AI response to the user query.
+   - The `title_generator` runs second, creating a title based on the response from the first node.
+
+5. **Run Artifacts**:
+   - Each node generates artifacts (outcome.json, result.json, state.json) that capture the execution details.
+   - These artifacts provide transparency and traceability for debugging and analysis.
 
 ## Next Steps
 
