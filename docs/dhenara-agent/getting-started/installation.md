@@ -1,15 +1,24 @@
 # Installation
 
+### TL;DR
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install dhenara-agent
+dhenara --help
+```
+
+## Prerequisites
+
 This guide will help you install the Dhenara Agent DSL (DAD) package and set up your development environment.
 
 :::note
 
 DAD is the name of the agent framework and is available as a Python package named `dhenara-agent`. There is no package
-named `dad` or `dhenara-dad`.
+named `dhenara-dad`.
 
 :::
-
-## Prerequisites
 
 Before installing Dhenara Agent DSL, make sure you have the following prerequisites:
 
@@ -54,18 +63,6 @@ Alternatively:
 ```bash
 pip install -e "git+https://github.com/dhenara/dhenara-agent.git"
 ```
-
-## Configure AI Model API Credentials
-
-After installation, you'll need to configure the credentials for the AI models you want to use with DAD. The package
-uses `dhenara`'s ResourceConfiguration for a one-time configuration of the API credentials.
-
-The simplest way to get started is by creating a credentials template YAML and then loading it:
-
-1. Copy the
-   [template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml)
-2. Edit it with your API keys (you only need to add providers you plan to use)
-3. Save it to `~/.dhenara_credentials.yaml` for automatic loading, or manually load the configuration in your code
 
 ## Verify Installation
 
