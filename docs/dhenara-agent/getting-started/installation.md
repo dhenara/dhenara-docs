@@ -99,4 +99,4 @@ Commands:
 ## Next Steps
 
 Now that you have installed DAD, you can proceed to the [Quick Start](quick-start) guide to create your first agent, or
-explore the [Core Concepts](core-concepts) to understand the fundamental building blocks of DAD.
+explore the [Core Concepts](../concepts/core-concepts) to understand the fundamental building blocks of DAD.

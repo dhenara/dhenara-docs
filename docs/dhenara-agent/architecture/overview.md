@@ -172,4 +172,4 @@ To dive deeper into the architecture, explore:
 
 - [Component Model](component-model): Understand how components are defined and composed
 - [Execution Model](execution-model): Learn how components are executed and managed
-- [Core Components](../components/nodes): Explore the built-in node types and their capabilities
+- [Core Components](../concepts/components/nodes): Explore the built-in node types and their capabilities

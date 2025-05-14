@@ -246,7 +246,7 @@ In this example:
 Now that you understand the core concepts of DAD, you can:
 
 - Explore the [Architecture](../architecture/overview) in more detail
-- Learn about specific [Node Types](../components/nodes) and their capabilities
-- Understand how to use [Flows](../components/flows) and [Agents](../components/agents)
-- Dive deeper into the [Templating System](../features/templating-system) and
-  [Event System](../advanced-guides/event-system)
+- Learn about specific [Node Types](../concepts/components/nodes) and their capabilities
+- Understand how to use [Flows](../concepts/components/flows) and [Agents](../concepts/components/agents)
+- Dive deeper into the [Templating System](../concepts/templating-system) and
+  [Event System](../concepts/event-system)

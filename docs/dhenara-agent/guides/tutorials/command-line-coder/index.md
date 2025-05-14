@@ -24,8 +24,8 @@ DAD framework.
 
 Before starting this tutorial, make sure you have:
 
-- Installed the DAD framework as described in the [installation guide](../../getting-started/installation.md)
-- Completed the [Quick Start guide](../../getting-started/quick-start.md) to understand the basics
+- Installed the DAD framework as described in the [installation guide](../../../getting-started/installation.md)
+- Completed the [Quick Start guide](../../../getting-started/quick-start.md) to understand the basics
 - Familiarity with basic Python programming concepts
 - Set up your API keys for your preferred AI providers
 

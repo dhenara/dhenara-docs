@@ -152,10 +152,10 @@ const sidebars: SidebarsConfig = {
           label: 'Components',
           collapsed: false,
           items: [
-            'dhenara-agent/components/nodes',
-            'dhenara-agent/components/flows',
-            'dhenara-agent/components/agents',
-            'dhenara-agent/components/custom-components',
+            'dhenara-agent/concepts/components/nodes',
+            'dhenara-agent/concepts/components/flows',
+            'dhenara-agent/concepts/components/agents',
+            'dhenara-agent/concepts/components/custom-components',
           ],
         },
         'dhenara-agent/concepts/execution-context',
@@ -174,7 +174,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       link: {
         type: 'doc',
-        id: 'dhenara-agent/tutorials/index',
+        id: 'dhenara-agent/guides/tutorials/index',
       },
       items: [
         {
@@ -183,7 +183,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           link: {
             type: 'doc',
-            id: 'dhenara-agent/tutorials/index',
+            id: 'dhenara-agent/guides/tutorials/index',
           },
           items: [
             // Tutorials
@@ -192,14 +192,14 @@ const sidebars: SidebarsConfig = {
               label: 'Command-Line Coding Assistant',
               link: {
                 type: 'doc',
-                id: 'dhenara-agent/tutorials/command-line-coder/index',
+                id: 'dhenara-agent/guides/tutorials/command-line-coder/index',
               },
               collapsed: true,
               items: [
-                'dhenara-agent/tutorials/command-line-coder/single-shot',
-                'dhenara-agent/tutorials/command-line-coder/planning',
-                'dhenara-agent/tutorials/command-line-coder/enhanced-implementation',
-                'dhenara-agent/tutorials/command-line-coder/coordination',
+                'dhenara-agent/guides/tutorials/command-line-coder/single-shot',
+                'dhenara-agent/guides/tutorials/command-line-coder/planning',
+                'dhenara-agent/guides/tutorials/command-line-coder/enhanced-implementation',
+                'dhenara-agent/guides/tutorials/command-line-coder/coordination',
               ],
             },
           ],
@@ -211,13 +211,13 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           link: {
             type: 'doc',
-            id: 'dhenara-agent/examples/index',
+            id: 'dhenara-agent/guides/examples/index',
           },
           items: [
-            'dhenara-agent/examples/simple-chatbot',
-            'dhenara-agent/examples/auto-coder',
-            'dhenara-agent/examples/single-shot-coder',
-            'dhenara-agent/examples/image-agent',
+            'dhenara-agent/guides/examples/simple-chatbot',
+            'dhenara-agent/guides/examples/auto-coder',
+            'dhenara-agent/guides/examples/single-shot-coder',
+            'dhenara-agent/guides/examples/image-agent',
           ],
         },
       ],
