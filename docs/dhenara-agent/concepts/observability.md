@@ -1,14 +1,280 @@
----
-title: Observability
----
-
 # Observability
 
-## Overview
-
 Observability is a core feature of Dhenara Agent DSL (DAD), providing comprehensive tracking, logging, and metrics for
-all agent activities. The observability system enables developers to understand, debug, and optimize their agent
-workflows with detailed visibility into execution.
+all agent activities. DAD includes built-in observability capabilities at no additional cost, leveraging the open-source
+[OpenTelemetry](https://opentelemetry.io/) framework. **Yes, its truly free**. You can configure observability with a
+few simple steps and connect to your preferred observability services.
+
+Free OpenTelemetry-compatible visualization tools such as Jaeger and Zipkin can be easily integrated with DAD (as
+detailed in later sections).
+
+We are also developing our own platform `Dhenara-Hub` which will offer not just observability features, but a broader
+set of agent management capabilities.
+
+## Observability Configuration
+
+Observability is configured through `ObservabilitySettings`:
+
+```python
+from dhenara.agent.observability.types import ObservabilitySettings
+from dhenara.agent.observability import configure_observability
+import logging
+
+# Create settings
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    tracing_exporter_type="file",  # "console", "file", "otlp", "jaeger", "zipkin"
+    metrics_exporter_type="file",
+    logging_exporter_type="file",
+    trace_file_path="/path/to/trace.jsonl",
+    metrics_file_path="/path/to/metrics.jsonl",
+    log_file_path="/path/to/logs.jsonl",
+    root_log_level=logging.INFO,
+)
+
+# Apply configuration
+configure_observability(settings)
+```
+
+The `RunContext` automatically configures observability based on run parameters.
+
+## Enabling and Disabling Tracing
+
+The tracing system can be enabled or disabled through the `ObservabilitySettings` configuration. Disabling tracing is
+helpful in production environments where performance is critical or in testing scenarios where full observability is not
+needed.
+
+### Disabling Tracing
+
+To disable tracing, set the `enable_tracing` flag to `False` in your `ObservabilitySettings`:
+
+```python
+from dhenara.agent.observability.types import ObservabilitySettings
+from dhenara.agent.observability import configure_observability
+
+# Disable tracing while keeping other observability features enabled
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    enable_tracing=False,  # Disable tracing
+    enable_metrics=True,   # Keep metrics enabled
+    enable_logging=True,   # Keep logging enabled
+)
+
+configure_observability(settings)
+```
+
+When tracing is disabled, the `is_tracing_disabled()` function will return `True`, and any code guarded by this check
+will be skipped:
+
+```python
+from dhenara.agent.observability.tracing import is_tracing_disabled, get_tracer
+
+# Check if tracing is disabled before performing trace operations
+if not is_tracing_disabled():
+    tracer = get_tracer("my_component")
+    with tracer.start_as_current_span("my_operation") as span:
+        # Add trace details
+        span.set_attribute("key", "value")
+```
+
+### Enabling Tracing with Different Exporters
+
+DAD supports multiple exporters for sending trace data to different visualization and analysis systems:
+
+1. **Console Exporter**: Outputs traces to the console (good for development)
+2. **File Exporter**: Writes traces to JSON line format files (default)
+3. **OTLP Exporter**: Sends traces using OpenTelemetry Protocol
+4. **Jaeger Exporter**: Sends traces directly to Jaeger
+5. **Zipkin Exporter**: Sends traces directly to Zipkin
+
+To configure a specific exporter:
+
+```python
+# Configure for Jaeger export
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    tracing_exporter_type="jaeger",  # Use Jaeger exporter
+    jaeger_endpoint="http://localhost:14268/api/traces",
+)
+
+# Or for Zipkin
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    tracing_exporter_type="zipkin",  # Use Zipkin exporter
+    zipkin_endpoint="http://localhost:9411/api/v2/spans",
+)
+
+configure_observability(settings)
+```
+
+## Using Tracing Visualization Tools with Docker
+
+DAD includes built-in support for launching trace visualization tools using Docker, making it easy to analyze your
+agent's execution in detail without complex setup.
+
+### Docker Installation Tips
+
+Before using the Docker-based visualization tools, you need to have Docker installed on your system:
+
+- **Windows/Mac**: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- **Linux**: Install Docker Engine using your distribution's package manager or follow the
+  [official installation guide](https://docs.docker.com/engine/install/)
+
+To verify Docker is installed correctly, run:
+
+```bash
+docker --version
+```
+
+### Using Jaeger for Trace Visualization
+
+[Jaeger](https://www.jaegertracing.io/) is a popular open-source distributed tracing system that's well-suited for
+visualizing DAD agent traces.
+
+#### Running Jaeger with Docker Compose
+
+DAD includes a pre-configured Docker Compose file for Jaeger:
+
+##### Jaeger Docker Compose File
+
+Copy this to a file named `jaeger-docker-compose.yaml`:
+
+```yaml
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - '16686:16686' # Jaeger UI
+      - '14268:14268' # Collector HTTP endpoint
+      - '6831:6831/udp' # Jaeger thrift compact
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+```
+
+You can start Jaeger using one of these methods:
+
+1. **Using VS Code**: Open the file in VS Code and click on the "Run service" button in the editor
+2. **Using command line**:
+
+   ```bash
+   # Navigate to the directory containing jaeger-docker-compose.yaml
+   cd /path/to/directory
+
+   # Start Jaeger using Docker Compose
+   docker-compose -f jaeger-docker-compose.yaml up -d
+   ```
+
+This will start Jaeger with the following components:
+
+- Jaeger UI on port 16686
+- Collector HTTP endpoint on port 14268
+- Jaeger Thrift compact on UDP port 6831
+
+Then access the Jaeger UI at http://localhost:16686.
+
+You can also launch Jaeger directly from your Python code:
+
+```python
+from dhenara.agent.observability.dashboards import run_jaeger_dashboard
+
+# This launches Jaeger in a Docker container and opens the UI in your browser
+run_jaeger_dashboard()
+```
+
+#### Sending Traces to Jaeger
+
+To send traces to your running Jaeger instance, configure your observability settings:
+
+```python
+from dhenara.agent.observability.types import ObservabilitySettings
+from dhenara.agent.observability import configure_observability
+
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    tracing_exporter_type="jaeger",
+    jaeger_endpoint="http://localhost:14268/api/traces",
+)
+
+configure_observability(settings)
+```
+
+### Using Zipkin for Trace Visualization
+
+[Zipkin](https://zipkin.io/) is another popular open-source distributed tracing system that can be used with DAD.
+
+#### Running Zipkin with Docker Compose
+
+DAD includes a pre-configured Docker Compose file for Zipkin:
+
+##### Zipkin Docker Compose File
+
+Copy this to a file named `zipkin-docker-compose.yaml`:
+
+```yaml
+services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - '9411:9411' # Zipkin UI and API
+    environment:
+      - STORAGE_TYPE=mem # For simplicity, store traces in memory
+```
+
+You can start Zipkin using one of these methods:
+
+1. **Using VS Code**: Open the file in VS Code and click on the "Run service" button in the editor
+2. **Using command line**:
+
+   ```bash
+   # Navigate to the directory containing zipkin-docker-compose.yaml
+   cd /path/to/directory
+
+   # Start Zipkin using Docker Compose
+   docker-compose -f zipkin-docker-compose.yaml up -d
+   ```
+
+This will start Zipkin with the UI and API available on port 9411.
+
+You can access the Zipkin UI at http://localhost:9411.
+
+You can also launch Zipkin directly from your Python code:
+
+```python
+from dhenara.agent.observability.dashboards import run_zipkin_dashboard
+
+# This launches Zipkin in a Docker container and opens the UI in your browser
+run_zipkin_dashboard()
+```
+
+#### Sending Traces to Zipkin
+
+To send traces to your running Zipkin instance, configure your observability settings:
+
+```python
+from dhenara.agent.observability.types import ObservabilitySettings
+from dhenara.agent.observability import configure_observability
+
+settings = ObservabilitySettings(
+    service_name="my-agent-app",
+    tracing_exporter_type="zipkin",
+    zipkin_endpoint="http://localhost:9411/api/v2/spans",
+)
+
+configure_observability(settings)
+```
+
+## Using the Simple Built-in Dashboard
+
+For cases where you don't want to use Docker, DAD includes a simple built-in dashboard for viewing trace files:
+
+```python
+from dhenara.agent.observability.dashboards import run_dashboard
+
+# Run the dashboard with a trace file
+run_dashboard("/path/to/trace.jsonl", port=8080)
+```
+
+This will start a local web server and open a browser window with a simple trace viewer.
 
 ## Core Observability Components
 
@@ -77,33 +343,6 @@ record_metric(
 
 Metrics can be aggregated and analyzed to monitor performance and behavior.
 
-## Observability Configuration
-
-Observability is configured through `ObservabilitySettings`:
-
-```python
-from dhenara.agent.observability.types import ObservabilitySettings
-from dhenara.agent.observability import configure_observability
-import logging
-
-# Create settings
-settings = ObservabilitySettings(
-    service_name="my-agent-app",
-    tracing_exporter_type="file",  # "console", "file", "otlp", "jaeger", "zipkin"
-    metrics_exporter_type="file",
-    logging_exporter_type="file",
-    trace_file_path="/path/to/trace.jsonl",
-    metrics_file_path="/path/to/metrics.jsonl",
-    log_file_path="/path/to/logs.jsonl",
-    root_log_level=logging.INFO,
-)
-
-# Apply configuration
-configure_observability(settings)
-```
-
-The `RunContext` automatically configures observability based on run parameters.
-
 ## Tracing Profiles
 
 Tracing profiles define what data should be captured in traces:
@@ -139,42 +378,49 @@ my_node_profile = NodeTracingProfile(
 
 Profiles help control what data is captured in traces, balancing detail against volume.
 
-## Exporters
+## Complete Example: Running an Agent with Tracing and Visualization
 
-DAD supports multiple exporters for observability data:
-
-- **Console**: Output to console (good for development)
-- **File**: JSON line format files (default)
-- **OTLP**: OpenTelemetry Protocol (for integration with observability platforms)
-- **Jaeger**: Direct export to Jaeger tracing
-- **Zipkin**: Direct export to Zipkin tracing
+Here's a complete example that sets up an agent with tracing enabled and visualization using Jaeger:
 
 ```python
-# Configure for Jaeger export
+from pathlib import Path
+import logging
+
+from dhenara.agent.observability import configure_observability
+from dhenara.agent.observability.types import ObservabilitySettings
+from dhenara.agent.observability.dashboards import run_jaeger_dashboard
+from dhenara.agent.run import RunContext
+from dhenara.agent.runner import AgentRunner
+
+# Step 1: Start Jaeger in Docker
+run_jaeger_dashboard()
+
+# Step 2: Configure observability with Jaeger exporter
 settings = ObservabilitySettings(
-    service_name="my-agent-app",
+    service_name="my-agent-example",
     tracing_exporter_type="jaeger",
     jaeger_endpoint="http://localhost:14268/api/traces",
-)
-```
-
-## Dashboards
-
-DAD includes built-in dashboard support for visualizing traces:
-
-```python
-from dhenara.agent.observability.dashboards import (
-    run_dashboard,
-    run_jaeger_dashboard,
-    run_zipkin_dashboard,
+    root_log_level=logging.DEBUG,
 )
 
-# Run a simple dashboard on a trace file
-run_dashboard("path/to/trace.jsonl", port=8080)
+configure_observability(settings)
 
-# Or launch Jaeger in a Docker container
-run_jaeger_dashboard()
+# Step 3: Create and run your agent
+agent = create_my_agent()  # Your agent creation function
+
+run_context = RunContext(
+    root_component_id="my_agent",
+    project_root=Path("."),
+)
+run_context.setup_run()
+
+# Execute the agent
+runner = AgentRunner(agent, run_context)
+result = await runner.run()
 ```
+
+With this setup, you can view detailed traces of your agent's execution in the Jaeger UI, helping you understand its
+behavior, identify bottlenecks, and diagnose issues.
 
 ## Best Practices
 
@@ -183,6 +429,9 @@ run_jaeger_dashboard()
 3. **Structured Logging**: Use log_with_context to maintain correlation with traces
 4. **Meaningful Metrics**: Capture metrics that provide insights into performance and behavior
 5. **Regular Analysis**: Use the dashboard tools to analyze execution and identify improvements
+6. **Production Settings**: Consider disabling detailed tracing in production for performance-critical systems, or using
+   sampling strategies
+7. **Cleanup**: Remember to stop Docker containers when you're done analyzing traces to free up resources
 
 By utilizing DAD's observability features, developers can gain deep insights into their agent systems, diagnose issues
-more effectively, and optimize performance.
+more effectively, and optimize performance with the help of powerful visualization tools.
