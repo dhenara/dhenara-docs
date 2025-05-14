@@ -164,7 +164,7 @@ Nodes can specify events they want to receive or emit:
 ai_node = AIModelNode(
     pre_events=[EventType.node_input_required],  # Events before execution
     post_events=[EventType.custom_completion_notification],  # Events after execution
-    resources=ResourceConfigItem.with_model("claude-3-5-sonnet"),
+    resources=ResourceConfigItem.with_model("claude-3-7-sonnet"),
     settings=AIModelNodeSettings(...),
 )
 ```

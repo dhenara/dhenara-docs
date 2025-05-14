@@ -42,12 +42,9 @@ from ..types import TaskImplementation
 # Constants
 global_data_directory = "$expr{run_root}/global_data"
 models = [
-    "claude-3-5-sonnet",
-    "gpt-4o",
-    "gpt-4-turbo",
-    "claude-3-opus",
-    "gpt-4o-mini",
-    "claude-3-5-haiku",
+    "claude-3-7-sonnet",
+    "gpt-4.1",
+    "gpt-4.1-mini",
 ]
 test_mode = False
 

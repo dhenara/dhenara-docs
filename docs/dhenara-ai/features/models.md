@@ -38,7 +38,7 @@ for model in ALL_CHAT_MODELS:
     print(f"Model: {model.display_name}, Provider: {model.provider}")
 
 # Get a specific foundation model by name
-claude_model = FoundationModelFns.get_foundation_model("claude-3-5-sonnet")
+claude_model = FoundationModelFns.get_foundation_model("claude-3-7-sonnet")
 ```
 
 ## Cross-Provider Model Compatibility
@@ -71,7 +71,7 @@ bedrock_api = AIModelAPI(
 # Clone the foundation model and customize for Amazon Bedrock
 bedrock_claude35_sonnet = Claude35Sonnet.clone(
     # Use the Bedrock-specific model name
-    model_name="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    model_name="us.anthropic.claude-3-7-sonnet-20241022-v2:0",
 )
 # NOTE: Remove the version suffix used by Anthropic's direct API
 bedrock_claude35_sonnet.metadata["version_suffix"] = None

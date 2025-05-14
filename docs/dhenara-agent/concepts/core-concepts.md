@@ -7,26 +7,100 @@ sidebar_position: 3
 This guide explains the fundamental concepts and building blocks of Dhenara Agent DSL (DAD). Understanding these
 concepts will help you design and build effective agent systems.
 
-## Component Hierarchy
 
-DAD uses a hierarchical component model with three main types of components:
+## Domain Specific Language (DSL)
 
+A [Domain Specific Language](https://en.wikipedia.org/wiki/Domain-specific_language) is specilized language for for a domain. DAD is a DSL for AI Agent creation.
+Though we call it as a DSL, it is not a seperate programming laguage, but its just Python. We call is as DSL bcause DAD is an attempt to make agent definitions looks like a program like below
+
+
+```python
+
+implementation_flow = (
+    FlowDefinition()
+    .node(
+        "dynamic_repo_analysis",
+        FolderAnalyzerNode(settings=FolderAnalyzerSettings(base_directory=global_data_directory)),
+    )
+    .node(
+        "code_generator",
+        AIModelNode(
+            pre_events=[EventType.node_input_required],
+            settings=AIModelNodeSettings(
+                models=models,
+                system_instructions=["You are a professional code implementation agent."],
+                prompt=Prompt.with_dad_text(text=("Description: $expr{task_description}\n\n")),
+                model_call_config=AIModelCallConfig(
+                    structured_output=TaskImplementation,
+                ),
+            ),
+        ),
+    )
+    .for_each(
+        id="implementation_loop",
+        statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
+        item_var="task_spec",
+        index_var="task_index",
+        start_index=0,
+        max_iterations=20,
+        body=FlowDefinition().node(
+            "code_generator_file_ops",
+            FileOperationNode(
+                settings=FileOperationNodeSettings(
+                    base_directory=global_data_directory,
+                    operations_template="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+                ),
+                stage=True,
+                commit=False,
+            ),
+        ),
+    )
+)
 ```
-Agent
- ├── Flow 1
- │    ├── Node A
- │    ├── Node B
- │    └── Subflow
- │         ├── Node C
- │         └── Node D
- ├── Flow 2
- │    ├── Node E
- │    └── Node F
- └── Subagent
-      └── Flow 3
-           ├── Node G
-           └── Node H
+
+## Basic Elements
+
+A DAD agent definiton will have three types of elements in in.
+
+- Execution Flow Node ( or simply Node)
+- Execution Flow ( or simply Flow)
+- Agent, which is defined using `AgentDefinition`, which add a FlowDefinition and runs that flow
+
+Now, you need to *define* these types of elements.
+
+- **Nodes**: There are basic node types defined in the framwrok, which includes
+    - AIModelCallNode : Performs an AI Model API call
+    - FileOperationNode : Does file operations like create_file, edit_file, delete_filei etc
+    - FolderAnalyzerNode : Reads a folder or file with fine grained controls
+    - CommandNode : Executes a shell command
+
+  These are the inbuilt nodes in the framework now, but we will add mode node types soon ( which will also include [MCP](https://modelcontextprotocol.io)  support)
+
+  But you can also add your cutom nodes by createing a NodeDefinition and along with its settings and executor.
+
+- **Flows** - You will create a flow using a `FlowDefinition`, and then add elements to that which could be a
+    - Node
+    - Condition Block
+    - ForEach Block
+    - Another subflow
+
+- **Agents**:- You will create an agent using an `AgentDefinition`, and then add elements to that which could be a
+    - Flow
+    - Condition Block
+    - ForEach Block
+    - Another subagent
+
+### An `identifier` in elements
+When you add an element to a Flow/Agent definition, you need to pass an `id` string that uniquely identifies that element.
+In the above code  "dynamic_repo_analysis", "code_generator", implementation_loop" and  "code_generator_file_ops" are ids.
+THese ids are used to refere the output of an element exeuction, in another element by using a `$hier{}` template syntax, like
+
+```python
+        statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
 ```
+
+
+## Element execution
 
 ### Nodes
 

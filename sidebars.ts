@@ -137,37 +137,71 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
-      items: [
-        'dhenara-agent/getting-started/installation',
-        'dhenara-agent/getting-started/quick-start',
-        'dhenara-agent/getting-started/core-concepts',
-      ],
+      items: ['dhenara-agent/getting-started/installation', 'dhenara-agent/getting-started/quick-start'],
     },
 
-    // 3) Tutorials & Examples (merged)
+    // 3) Concepts
     {
       type: 'category',
-      label: 'Tutorials & Examples',
+      label: 'Concepts',
+      collapsed: false,
+      items: [
+        'dhenara-agent/concepts/core-concepts',
+        {
+          type: 'category',
+          label: 'Components',
+          collapsed: false,
+          items: [
+            'dhenara-agent/components/nodes',
+            'dhenara-agent/components/flows',
+            'dhenara-agent/components/agents',
+            'dhenara-agent/components/custom-components',
+          ],
+        },
+        'dhenara-agent/concepts/execution-context',
+        'dhenara-agent/concepts/templating-system',
+        'dhenara-agent/concepts/resource-management',
+        'dhenara-agent/concepts/observability',
+        'dhenara-agent/concepts/run-system',
+        'dhenara-agent/concepts/event-system',
+        'dhenara-agent/concepts/input-handling',
+      ],
+    },
+    // 4) Guides( Tutorials & Examples merged)
+    {
+      type: 'category',
+      label: 'Guides',
       collapsed: false,
       link: {
         type: 'doc',
         id: 'dhenara-agent/tutorials/index',
       },
       items: [
-        // Tutorials
         {
           type: 'category',
-          label: 'Command-Line Coding Assistant',
+          label: 'Tutorials',
+          collapsed: true,
           link: {
             type: 'doc',
-            id: 'dhenara-agent/tutorials/command-line-coder/index',
+            id: 'dhenara-agent/tutorials/index',
           },
-          collapsed: true,
           items: [
-            'dhenara-agent/tutorials/command-line-coder/single-shot',
-            'dhenara-agent/tutorials/command-line-coder/planning',
-            'dhenara-agent/tutorials/command-line-coder/enhanced-implementation',
-            'dhenara-agent/tutorials/command-line-coder/coordination',
+            // Tutorials
+            {
+              type: 'category',
+              label: 'Command-Line Coding Assistant',
+              link: {
+                type: 'doc',
+                id: 'dhenara-agent/tutorials/command-line-coder/index',
+              },
+              collapsed: true,
+              items: [
+                'dhenara-agent/tutorials/command-line-coder/single-shot',
+                'dhenara-agent/tutorials/command-line-coder/planning',
+                'dhenara-agent/tutorials/command-line-coder/enhanced-implementation',
+                'dhenara-agent/tutorials/command-line-coder/coordination',
+              ],
+            },
           ],
         },
         // Examples
@@ -189,7 +223,7 @@ const sidebars: SidebarsConfig = {
       ],
     },
 
-    // 4) Core Architecture
+    // 5) Core Architecture
     {
       type: 'category',
       label: 'Architecture',
@@ -198,19 +232,6 @@ const sidebars: SidebarsConfig = {
         'dhenara-agent/architecture/overview',
         'dhenara-agent/architecture/component-model',
         'dhenara-agent/architecture/execution-model',
-      ],
-    },
-
-    // 5) Components
-    {
-      type: 'category',
-      label: 'Components',
-      collapsed: false,
-      items: [
-        'dhenara-agent/components/agents',
-        'dhenara-agent/components/flows',
-        'dhenara-agent/components/nodes',
-        'dhenara-agent/components/custom-components',
       ],
     },
 
@@ -226,33 +247,7 @@ const sidebars: SidebarsConfig = {
       items: ['dhenara-agent/cli/overview', 'dhenara-agent/cli/commands', 'dhenara-agent/cli/extending'],
     },
 
-    // 7) Features
-    {
-      type: 'category',
-      label: 'Features',
-      collapsed: false,
-      items: [
-        'dhenara-agent/features/execution-context',
-        'dhenara-agent/features/templating-system',
-        'dhenara-agent/features/resource-management',
-        'dhenara-agent/features/observability',
-      ],
-    },
-
-    // 8) Advanced Guides
-    {
-      type: 'category',
-      label: 'Advanced Guides',
-      collapsed: false,
-      items: [
-        'dhenara-agent/advanced-guides/run-system',
-        'dhenara-agent/advanced-guides/event-system',
-        'dhenara-agent/advanced-guides/input-handling',
-        'dhenara-agent/advanced-guides/implementation-flow',
-      ],
-    },
-
-    // 9) API Reference
+    // 7) API Reference
     {
       type: 'category',
       label: 'API Reference',

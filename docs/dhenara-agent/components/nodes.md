@@ -33,7 +33,7 @@ from dhenara.agent.dsl import AIModelNode, AIModelNodeSettings
 from dhenara.ai.types import Prompt, ResourceConfigItem
 
 ai_node = AIModelNode(
-    resources=ResourceConfigItem.with_model("claude-3-5-sonnet"),
+    resources=ResourceConfigItem.with_model("claude-3-7-sonnet"),
     settings=AIModelNodeSettings(
         system_instructions=["You are a helpful assistant."],
         prompt=Prompt.with_dad_text("Generate ideas for: $var{topic}"),

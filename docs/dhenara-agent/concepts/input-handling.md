@@ -172,7 +172,7 @@ async def handle_ai_model_input(event: NodeInputRequiredEvent):
         query = await async_input("Enter your query: ")
 
         # Select the model to use
-        models = ["claude-3-7-sonnet", "gpt-4-turbo"]
+        models = ["claude-3-7-sonnet", "gpt-4.1"]
         model_idx = await get_menu_choice(models, "Select model:")
 
         # Create the input

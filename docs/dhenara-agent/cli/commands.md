@@ -181,13 +181,13 @@ dhenara run agent implementation [OPTIONS] TASK_FILE
 **Options:**
 
 - `--project-root TEXT`: Root directory of the project (default: auto-detected)
-- `--model TEXT`: AI model to use for implementation (default: claude-3-5-sonnet)
+- `--model TEXT`: AI model to use for implementation (default: claude-3-7-sonnet)
 - `--no-commit`: Don't commit changes to version control
 
 **Example:**
 
 ```bash
-dhenara run agent implementation tasks/feature-123.md --model gpt-4-turbo
+dhenara run agent implementation tasks/feature-123.md --model gpt-4.1
 ```
 
 ## Command Implementation Examples

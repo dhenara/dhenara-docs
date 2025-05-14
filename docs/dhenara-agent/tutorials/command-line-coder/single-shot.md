@@ -141,11 +141,9 @@ global_data_directory = "$expr{run_root}/global_data"
 
 # Define the available AI models
 models = [
-    "claude-3-5-sonnet",
-    "gpt-4o",
-    "gpt-4-turbo",
-    "claude-3-opus",
-    "gpt-4o-mini",
+    "claude-3-7-sonnet",
+    "gpt-4.1",
+    "gpt-4.1-mini",
     "claude-3-5-haiku",
 ]
 
@@ -257,9 +255,9 @@ from dhenara.agent.utils.helpers.terminal import get_ai_model_node_input
 
 # You can define your models here or import them from elsewhere
 models = [
-    "claude-3-5-sonnet",
+    "claude-3-7-sonnet",
     "gpt-4o",
-    "gpt-4-turbo",
+    "gpt-4.1",
     "claude-3-opus",
     "gpt-4o-mini",
     "claude-3-5-haiku",

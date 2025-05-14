@@ -157,11 +157,9 @@ from ..types import Plan
 # Constants
 global_data_directory = "$expr{run_root}/global_data"
 models = [
-    "claude-3-5-sonnet",
-    "gpt-4o",
-    "gpt-4-turbo",
-    "claude-3-opus",
-    "gpt-4o-mini",
+    "claude-3-7-sonnet",
+    "gpt-4.1",
+    "gpt-4.1-mini",
     "claude-3-5-haiku",
 ]
 test_mode = False
@@ -257,9 +255,9 @@ from dhenara.agent.utils.helpers.terminal import (
 # Global constants (you might want to move these to a defs.py file)
 global_data_directory = "$expr{run_root}/global_data"
 models = [
-    "claude-3-5-sonnet",
+    "claude-3-7-sonnet",
     "gpt-4o",
-    "gpt-4-turbo",
+    "gpt-4.1",
     "claude-3-opus",
     "gpt-4o-mini",
     "claude-3-5-haiku",

@@ -61,13 +61,13 @@ from dhenara.ai.types import ResourceConfigItem
 
 # Create a node with specific resource requirements
 ai_node = AIModelNode(
-    resources=ResourceConfigItem.with_model("claude-3-5-sonnet"),
+    resources=ResourceConfigItem.with_model("claude-3-7-sonnet"),
     # Other settings...
 )
 
 # Or use multiple models
 ai_node = AIModelNode(
-    resources=ResourceConfigItem.with_models(["claude-3-5-sonnet", "gpt-4-turbo"]),
+    resources=ResourceConfigItem.with_models(["claude-3-7-sonnet", "gpt-4.1"]),
     # Other settings...
 )
 ```
@@ -83,7 +83,7 @@ from dhenara.ai.types import AIModel, AIModelCallConfig
 
 # Define a model configuration
 model = AIModel(
-    model_id="claude-3-5-sonnet",
+    model_id="claude-3-7-sonnet",
     provider="anthropic",
     api_key="${ANTHROPIC_API_KEY}",  # Environment variable reference
     endpoint="https://api.anthropic.com/v1/messages",
@@ -95,7 +95,7 @@ model = AIModel(
 )
 
 # Register the model
-model_registry.register("claude-3-5-sonnet", model)
+model_registry.register("claude-3-7-sonnet", model)
 ```
 
 ## Credential Management
