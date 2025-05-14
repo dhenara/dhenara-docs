@@ -7,12 +7,11 @@ sidebar_position: 3
 This guide explains the fundamental concepts and building blocks of Dhenara Agent DSL (DAD). Understanding these
 concepts will help you design and build effective agent systems.
 
-
 ## Domain Specific Language (DSL)
 
-A [Domain Specific Language](https://en.wikipedia.org/wiki/Domain-specific_language) is specilized language for for a domain. DAD is a DSL for AI Agent creation.
-Though we call it as a DSL, it is not a seperate programming laguage, but its just Python. We call is as DSL bcause DAD is an attempt to make agent definitions looks like a program like below
-
+A [Domain Specific Language](https://en.wikipedia.org/wiki/Domain-specific_language) is specilized language for for a
+domain. DAD is a DSL for AI Agent creation. Though we call it as a DSL, it is not a seperate programming laguage, but
+its just Python. We call is as DSL bcause DAD is an attempt to make agent definitions looks like a program like below
 
 ```python
 
@@ -66,39 +65,43 @@ A DAD agent definiton will have three types of elements in in.
 - Execution Flow ( or simply Flow)
 - Agent, which is defined using `AgentDefinition`, which add a FlowDefinition and runs that flow
 
-Now, you need to *define* these types of elements.
+Now, you need to _define_ these types of elements.
 
 - **Nodes**: There are basic node types defined in the framwrok, which includes
-    - AIModelCallNode : Performs an AI Model API call
-    - FileOperationNode : Does file operations like create_file, edit_file, delete_filei etc
-    - FolderAnalyzerNode : Reads a folder or file with fine grained controls
-    - CommandNode : Executes a shell command
 
-  These are the inbuilt nodes in the framework now, but we will add mode node types soon ( which will also include [MCP](https://modelcontextprotocol.io)  support)
+  - AIModelCallNode : Performs an AI Model API call
+  - FileOperationNode : Does file operations like create_file, edit_file, delete_filei etc
+  - FolderAnalyzerNode : Reads a folder or file with fine grained controls
+  - CommandNode : Executes a shell command
+
+  These are the inbuilt nodes in the framework now, but we will add mode node types soon ( which will also include
+  [MCP](https://modelcontextprotocol.io) support)
 
   But you can also add your cutom nodes by createing a NodeDefinition and along with its settings and executor.
 
 - **Flows** - You will create a flow using a `FlowDefinition`, and then add elements to that which could be a
-    - Node
-    - Condition Block
-    - ForEach Block
-    - Another subflow
+
+  - Node
+  - Condition Block
+  - ForEach Block
+  - Another subflow
 
 - **Agents**:- You will create an agent using an `AgentDefinition`, and then add elements to that which could be a
-    - Flow
-    - Condition Block
-    - ForEach Block
-    - Another subagent
+  - Flow
+  - Condition Block
+  - ForEach Block
+  - Another subagent
 
 ### An `identifier` in elements
-When you add an element to a Flow/Agent definition, you need to pass an `id` string that uniquely identifies that element.
-In the above code  "dynamic_repo_analysis", "code_generator", implementation_loop" and  "code_generator_file_ops" are ids.
-THese ids are used to refere the output of an element exeuction, in another element by using a `$hier{}` template syntax, like
+
+When you add an element to a Flow/Agent definition, you need to pass an `id` string that uniquely identifies that
+element. In the above code "dynamic_repo_analysis", "code_generator", implementation_loop" and "code_generator_file_ops"
+are ids. THese ids are used to refere the output of an element exeuction, in another element by using a `$hier{}`
+template syntax, like
 
 ```python
         statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
 ```
-
 
 ## Element execution
 
@@ -248,5 +251,4 @@ Now that you understand the core concepts of DAD, you can:
 - Explore the [Architecture](../architecture/overview) in more detail
 - Learn about specific [Node Types](../concepts/components/nodes) and their capabilities
 - Understand how to use [Flows](../concepts/components/flows) and [Agents](../concepts/components/agents)
-- Dive deeper into the [Templating System](../concepts/templating-system) and
-  [Event System](../concepts/event-system)
+- Dive deeper into the [Templating System](../concepts/templating-system) and [Event System](../concepts/event-system)

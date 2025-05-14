@@ -38,36 +38,6 @@ run_context = RunContext(
 run_context.setup_run(run_id_prefix="test")
 ```
 
-### RunEnvParams
-
-The `RunEnvParams` class encapsulates the essential parameters for a run:
-
-```python
-from dhenara.agent.types.data import RunEnvParams
-
-env_params = RunEnvParams(
-    run_id="run_20231015_123456",
-    run_dir="/path/to/project/runs/run_20231015_123456",
-    run_root="/path/to/project/runs",
-    trace_dir="/path/to/project/runs/run_20231015_123456/.trace",
-    outcome_repo_dir="/path/to/project/runs/outcome/project_name",
-)
-```
-
-### IsolatedExecution
-
-The `IsolatedExecution` class provides a context manager for isolated execution environments:
-
-```python
-from dhenara.agent.run import IsolatedExecution
-
-async with IsolatedExecution(run_context) as execution:
-    # Operations within this block run in an isolated environment
-    result = await execution.run(runner)
-```
-
-This ensures that each run has its own isolated environment, preventing interference between runs.
-
 ## Run Directory Structure
 
 A typical run directory structure looks like this:
