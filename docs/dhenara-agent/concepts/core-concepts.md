@@ -9,12 +9,12 @@ concepts will help you design and build effective agent systems.
 
 ## Domain Specific Language (DSL)
 
-A [Domain Specific Language](https://en.wikipedia.org/wiki/Domain-specific_language) is specilized language for for a
-domain. DAD is a DSL for AI Agent creation. Though we call it as a DSL, it is not a seperate programming laguage, but
-its just Python. We call is as DSL bcause DAD is an attempt to make agent definitions looks like a program like below
+A [Domain Specific Language](https://en.wikipedia.org/wiki/Domain-specific_language) is a specialized language designed
+for a particular domain. DAD is a DSL for AI Agent creation. Though we call it a DSL, it is not a separate programming
+language, but rather Python with specialized patterns and structures. We call it a DSL because DAD is an attempt to make
+agent definitions look like a program, as shown below:
 
 ```python
-
 implementation_flow = (
     FlowDefinition()
     .node(
@@ -59,51 +59,60 @@ implementation_flow = (
 
 ## Basic Elements
 
-A DAD agent definiton will have three types of elements in in.
+A DAD agent definition consists of three primary types of elements:
 
-- Execution Flow Node ( or simply Node)
-- Execution Flow ( or simply Flow)
-- Agent, which is defined using `AgentDefinition`, which add a FlowDefinition and runs that flow
+- **Execution Flow Node** (or simply Node): The atomic unit of execution
+- **Execution Flow** (or simply Flow): A collection of nodes with execution logic
+- **Agent**: Created using `AgentDefinition`, which organizes and coordinates multiple flows
 
-Now, you need to _define_ these types of elements.
+These elements form a hierarchical structure, with Agents at the top, containing Flows, which in turn contain Nodes.
 
-- **Nodes**: There are basic node types defined in the framwrok, which includes
+### Node Types
 
-  - AIModelCallNode : Performs an AI Model API call
-  - FileOperationNode : Does file operations like create_file, edit_file, delete_filei etc
-  - FolderAnalyzerNode : Reads a folder or file with fine grained controls
-  - CommandNode : Executes a shell command
+The framework provides several built-in node types:
 
-  These are the inbuilt nodes in the framework now, but we will add mode node types soon ( which will also include
-  [MCP](https://modelcontextprotocol.io) support)
+- **AIModelNode**: Performs an AI Model API call
+- **FileOperationNode**: Performs file operations like create_file, edit_file, delete_file, etc.
+- **FolderAnalyzerNode**: Reads a folder or file with fine-grained controls
+- **CommandNode**: Executes a shell command
 
-  But you can also add your cutom nodes by createing a NodeDefinition and along with its settings and executor.
+These are the core built-in nodes in the framework, with support for additional node types including
+[MCP](https://modelcontextprotocol.io) (Model Context Protocol) being developed.
 
-- **Flows** - You will create a flow using a `FlowDefinition`, and then add elements to that which could be a
+You can also create your custom nodes by creating a NodeDefinition along with its settings and executor.
 
-  - Node
-  - Condition Block
-  - ForEach Block
-  - Another subflow
+### Flow Structure
 
-- **Agents**:- You will create an agent using an `AgentDefinition`, and then add elements to that which could be a
-  - Flow
-  - Condition Block
-  - ForEach Block
-  - Another subagent
+A Flow is created using a `FlowDefinition`, to which you can add the following elements:
 
-### An `identifier` in elements
+- Nodes
+- Conditional Blocks (for branching logic)
+- ForEach Blocks (for iteration)
+- Other subflows (for modular design)
 
-When you add an element to a Flow/Agent definition, you need to pass an `id` string that uniquely identifies that
-element. In the above code "dynamic_repo_analysis", "code_generator", implementation_loop" and "code_generator_file_ops"
-are ids. THese ids are used to refere the output of an element exeuction, in another element by using a `$hier{}`
-template syntax, like
+### Agent Structure
+
+An Agent is created using an `AgentDefinition`, to which you can add the following elements:
+
+- Flows (top-level execution units)
+- Conditional Blocks (for high-level branching)
+- ForEach Blocks (for iterative processing)
+- Other subagents (for complex, hierarchical designs)
+
+### Element Identifiers
+
+When you add an element to a Flow/Agent definition, you need to provide an `id` string that uniquely identifies that
+element within its parent. For example, in the code above, "dynamic_repo_analysis", "code_generator",
+"implementation_loop", and "code_generator_file_ops" are ids.
+
+These ids are crucial because they allow you to reference the output of one element's execution in another element using
+the `$hier{}` template syntax, like:
 
 ```python
-        statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
+statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
 ```
 
-## Element execution
+## Element Execution
 
 ### Nodes
 
@@ -199,17 +208,6 @@ Observability is a core feature of DAD that provides visibility into execution:
 - **Dashboards**: Visualize traces and metrics for analysis
 
 Observability helps debug issues, optimize performance, and understand complex agent behaviors.
-
-## Resource Management
-
-DAD provides a flexible system for managing AI model resources and API credentials:
-
-- **ResourceConfig**: Configure models, endpoints, and credentials
-- **ResourceRegistry**: Register and override resources
-- **Thread-Local Resources**: Isolate resources between threads
-
-Resource management makes it easier to work with different LLM providers and models while maintaining security and
-configurability.
 
 ## Example: Component Relationships
 
