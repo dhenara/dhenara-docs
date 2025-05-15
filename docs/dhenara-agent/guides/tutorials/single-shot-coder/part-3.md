@@ -4,30 +4,38 @@ title: Part 3- Component Variables
 
 # Part 3: Component Variables
 
-In Part 2, we implemented live inputs for our agent, allowing us to specify the task description and context files at runtime. While this is a significant improvement, entering multiple folder analysis operations one by one can be tedious, especially when dealing with complex projects that require analyzing numerous files for context.
+In Part 2, we implemented live inputs for our agent, allowing us to specify the task description and context files at
+runtime. While this is a significant improvement, entering multiple folder analysis operations one by one can be
+tedious, especially when dealing with complex projects that require analyzing numerous files for context.
 
-In this part, we'll enhance our implementation by using **component variables** and structured task specifications loaded from files. This approach provides greater flexibility and reusability to our agent.
+In this part, we'll enhance our implementation by using **component variables** and structured task specifications
+loaded from files. This approach provides greater flexibility and reusability to our agent.
 
 ## What are Component Variables?
 
-In the Dhenara Agent DSL (DAD), components are high-level constructs like Flows and Agents. Component variables are variables defined at the component level that are accessible to all nodes within that component. This is a powerful feature for several reasons:
+In the Dhenara Agent DSL (DAD), components are high-level constructs like Flows and Agents. Component variables are
+variables defined at the component level that are accessible to all nodes within that component. This is a powerful
+feature for several reasons:
 
 1. **Shared Configuration**: Multiple nodes can access the same data without duplicating it
 2. **Flow Reusability**: The same flow can be used in different agents with different variable values
 3. **Clean Separation**: You can separate complex configurations from your flow logic
 
-For our implementation flow, we'll use component variables to store task specifications, making it easier to handle complex tasks and creating more maintainable code.
+For our implementation flow, we'll use component variables to store task specifications, making it easier to handle
+complex tasks and creating more maintainable code.
 
 ## Task Specification Structure
 
-Before we implement component variables, let's understand the task specification structure we'll be using. We'll define a `TaskSpec` type that contains:
+Before we implement component variables, let's understand the task specification structure we'll be using. We'll define
+a `TaskSpec` type that contains:
 
 1. An order number for execution sequencing
 2. A unique task ID
 3. A detailed description of what the task should accomplish
 4. A list of required context files/folders that the LLM needs to analyze to implement the task
 
-This structured approach allows us to define complex tasks in a JSON file, which we can load into our flow as a component variable.
+This structured approach allows us to define complex tasks in a JSON file, which we can load into our flow as a
+component variable.
 
 ## Implementing Component Variables
 
@@ -317,6 +325,7 @@ Let's create these files in the `src/common/live_prompts/autocoder/` directory:
 
 ```markdown
 # task_description.md
+
 Create a readme file
 ```
 
@@ -347,19 +356,26 @@ Create a readme file
 Let's understand the key improvements in this approach compared to the previous parts:
 
 1. **Component Variables**:
+
    - We added `implementation_flow.vars({"task_spec": task_spec})` to define a component-level variable
    - All nodes in the flow can access this variable using `$expr{task_spec...}` expressions
 
 2. **Structured Task Definition**:
+
    - We defined a proper `TaskSpec` data model with Pydantic
    - The task specification can now be loaded from a JSON file
 
 3. **Dynamic Context Analysis**:
-   - The FolderAnalyzerNode now uses `operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}")` to dynamically get operations from our task specification
+
+   - The FolderAnalyzerNode now uses
+     `operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}")` to dynamically get operations
+     from our task specification
    - We no longer need user input for each analysis operation
 
 4. **Prompt Template**:
-   - The AIModelNode prompt now uses `$expr{task_spec.task_id}` and `$expr{task_spec.description}` to reference the task information
+
+   - The AIModelNode prompt now uses `$expr{task_spec.task_id}` and `$expr{task_spec.description}` to reference the task
+     information
 
 5. **Handler Simplification**:
    - We've commented out the code to manually get the task description through user input
@@ -370,14 +386,17 @@ Let's understand the key improvements in this approach compared to the previous 
 To run our agent with component variables:
 
 1. Make sure you've created the necessary directory structure:
+
    ```bash
    mkdir -p src/common/live_prompts/autocoder
    ```
 
 2. Create the task description and specification files:
+
    ```bash
    echo "Create a readme file" > src/common/live_prompts/autocoder/task_description.md
    ```
+
    And create the JSON file with the content shown above.
 
 3. Run the agent:
@@ -397,11 +416,13 @@ Using component variables provides several benefits:
 
 ## What's Next?
 
-Now that we've built a fully functional single-shot coding assistant with component variables, you can explore more advanced features:
+Now that we've built a fully functional single-shot coding assistant with component variables, you can explore more
+advanced features:
 
 1. **Multiple Flows**: Create additional flows for different purposes, like planning or verification
 2. **Flow Composition**: Compose flows together to create more complex agents
 3. **Advanced Event Handling**: Implement more sophisticated event handlers
 4. **Custom Nodes**: Create your own custom nodes to extend the functionality
 
-The complete code for this tutorial can be found in the [DAD Tutorials repository](https://github.com/dhenara/dad_tutorials).
+The complete code for this tutorial can be found in the
+[DAD Tutorials repository](https://github.com/dhenara/dad_tutorials).

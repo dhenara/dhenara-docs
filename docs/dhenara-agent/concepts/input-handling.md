@@ -26,7 +26,9 @@ ai_node = AIModelNode(
 # Handler provides input when requested
 async def input_handler(event: NodeInputRequiredEvent):
     if event.node_id == "my_node" and event.node_type == FlowNodeTypeEnum.ai_model_call:
-        event.input = AIModelNodeInput(prompt_variables={"query": "user input"})
+        # Collect user input
+        user_query = await async_input("Enter your query: ")
+        event.input = AIModelNodeInput(prompt_variables={"query": user_query})
         event.handled = True  # Mark the event as handled
 
 # Register the handler with the event bus
@@ -77,18 +79,134 @@ class FolderAnalyzerNodeInput(NodeInput):
 
 These classes provide type safety and clear structure for node configuration.
 
-## Common Input Patterns
+## Input Handling in the Single-Shot Coder Tutorial
 
-### Interactive Console Input
+The single-shot coder tutorial demonstrates practical input handling patterns. In the tutorial, a basic event handler is
+implemented:
 
-One common pattern is to collect input from the console:
+```python
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    node_input = None
+
+    if event.node_type == FlowNodeTypeEnum.ai_model_call:
+        if event.node_id == "code_generator":
+            # Get model input using the built-in helper
+            node_input = await get_ai_model_node_input(
+                node_def_settings=event.node_def_settings,
+            )
+            # Get user task description
+            task_description = await async_input("Enter your query: ")
+            # Pass it as a prompt variable
+            node_input.prompt_variables = {"task_description": task_description}
+
+        event.input = node_input
+        event.handled = True
+
+    elif event.node_type == FlowNodeTypeEnum.folder_analyzer:
+        if event.node_id == "dynamic_repo_analysis":
+            # Use built-in helper for folder analyzer input
+            node_input = await get_folder_analyzer_node_input(
+                node_def_settings=event.node_def_settings,
+                base_directory=global_data_directory,
+                predefined_exclusion_patterns=[],
+            )
+
+        event.input = node_input
+        event.handled = True
+```
+
+This handler is registered in the run context:
+
+```python
+run_context.register_event_handlers(
+    handlers_map={
+        EventType.node_input_required: node_input_event_handler,
+        # Optional Notification events
+        EventType.node_execution_completed: print_node_completion,
+        EventType.component_execution_completed: print_component_completion,
+    }
+)
+```
+
+## Built-in Input Helpers
+
+DAD provides several helper functions that simplify collecting user input:
+
+### async_input
+
+A simple utility for asynchronous console input:
 
 ```python
 async def async_input(prompt: str) -> str:
     # Use event loop to run input in a thread pool
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, lambda: input(prompt))
+```
 
+### get_ai_model_node_input
+
+Provides an interactive interface for configuring AI model nodes:
+
+```python
+async def get_ai_model_node_input(
+    node_def_settings: AIModelNodeSettings,
+    models: list[str] = None,
+) -> AIModelNodeInput:
+    # If models list is provided, show selection menu
+    # Otherwise use models from node definition
+    if models is None and node_def_settings is not None:
+        models = node_def_settings.models
+
+    if models and len(models) > 1:
+        print("\n=== AI Model Selection ===")
+        model_idx = await get_menu_choice(models, "Select an AI model:")
+        print(f"Using model: {models[model_idx]}")
+
+        return AIModelNodeInput(
+            resources_override=[ResourceConfigItem.with_model(models[model_idx])]
+        )
+    return AIModelNodeInput()
+```
+
+### get_folder_analyzer_node_input
+
+Provides an interactive interface for configuring folder analyzer nodes:
+
+```python
+async def get_folder_analyzer_node_input(
+    node_def_settings: FolderAnalyzerSettings = None,
+    base_directory: str = None,
+    predefined_exclusion_patterns: list[list[str]] = None,
+) -> FolderAnalyzerNodeInput:
+    # Interactive menu to configure folder analysis operations
+    print("\n=== Repository Analysis Configuration ===")
+
+    operations = []
+    while True:
+        operation = await get_operation_input(base_directory, predefined_exclusion_patterns)
+        operations.append(operation)
+        if not await get_yes_no_input("Add another analysis operation?", False):
+            break
+
+    print("\nConfigured operations:")
+    for i, op in enumerate(operations, 1):
+        print(f"{i}. {op.operation_type} - {op.path}")
+
+    return FolderAnalyzerNodeInput(
+        settings_override=FolderAnalyzerSettings(
+            base_directory=base_directory,
+            operations=operations,
+        )
+    )
+```
+
+## Common Input Patterns
+
+### Interactive Console Input
+
+The simplest pattern is to collect input directly from the console:
+
+```python
 async def ai_model_node_input_handler(event: NodeInputRequiredEvent):
     if event.node_type == FlowNodeTypeEnum.ai_model_call:
         if event.node_id == "ai_model_call_1":
@@ -96,8 +214,6 @@ async def ai_model_node_input_handler(event: NodeInputRequiredEvent):
             event.input = AIModelNodeInput(prompt_variables={"user_query": user_query})
             event.handled = True
 ```
-
-This pattern is useful for simple interactive agents.
 
 ### Menu-Based Selection
 
@@ -120,27 +236,58 @@ async def get_menu_choice(options: list[str], prompt: str = "Select an option:")
             print("Please enter a valid number")
 ```
 
-This can be used for model selection or other multiple-choice scenarios.
+### Combining with Template Variables
 
-### Complex Object Collection
-
-For more complex inputs like folder analysis operations, a step-by-step collection approach works well:
+Input handlers can provide values for template variables:
 
 ```python
-async def get_operation_input() -> FolderAnalysisOperation:
-    path = await async_input("Enter path to analyze: ")
-    include_content = await get_yes_no_input("Include file contents?", True)
-    include_patterns = await async_input("Include patterns (comma-separated, e.g., '*.py,*.md'): ")
-    exclude_patterns = await async_input("Exclude patterns (comma-separated, e.g., '*.pyc,__pycache__'): ")
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    if event.node_id == "code_generator":
+        node_input = await get_ai_model_node_input(event.node_def_settings)
+        task_description = await async_input("Enter your query: ")
 
-    return FolderAnalysisOperation(
-        operation_type="analyze_folder",
-        path=path,
-        include_content=include_content,
-        include_patterns=include_patterns.split(",") if include_patterns else None,
-        exclude_patterns=exclude_patterns.split(",") if exclude_patterns else None,
-    )
+        # These variables will be substituted in templates using $var{task_description}
+        node_input.prompt_variables = {"task_description": task_description}
+
+        event.input = node_input
+        event.handled = True
 ```
+
+And in the node definition:
+
+```python
+prompt=Prompt.with_dad_text(
+    text=(
+        "## Task Description\n"
+        "$var{task_description}\n"
+        # ... more content ...
+    ),
+)
+```
+
+### Leveraging Component Variables
+
+In Part 3 of the tutorial, component variables are used to reduce the need for interactive inputs:
+
+```python
+# Load task specification from files
+def read_task_spec_json():
+    with open("src/common/live_prompts/autocoder/task_spec.json") as file:
+        spec_dict = json.load(file)
+        spec = TaskSpecWithFolderAnalysisOps(**spec_dict)
+        return spec
+
+task_spec = read_task_spec_json()
+
+# Add as component variable
+implementation_flow.vars(
+    {
+        "task_spec": task_spec,
+    }
+)
+```
+
+This makes the task specification available to all nodes in the flow without requiring user input.
 
 ### Static Input Registration
 
@@ -158,55 +305,6 @@ run_context.read_static_inputs()  # Reads from static_inputs.json
 ```
 
 This is useful for batch processing or testing.
-
-## Input Handling for Different Node Types
-
-### AIModelNode Input Handling
-
-AI model nodes typically require prompt variables and occasionally resource overrides:
-
-```python
-async def handle_ai_model_input(event: NodeInputRequiredEvent):
-    if event.node_id == "query_analyzer":
-        # Get the user query
-        query = await async_input("Enter your query: ")
-
-        # Select the model to use
-        models = ["claude-3-7-sonnet", "gpt-4.1"]
-        model_idx = await get_menu_choice(models, "Select model:")
-
-        # Create the input
-        event.input = AIModelNodeInput(
-            prompt_variables={"query": query},
-            resources_override=[ResourceConfigItem.with_model(models[model_idx])]
-        )
-        event.handled = True
-```
-
-### FolderAnalyzerNode Input Handling
-
-Folder analyzer nodes require configuration for what to analyze:
-
-```python
-async def handle_folder_analyzer_input(event: NodeInputRequiredEvent):
-    if event.node_id == "repo_analyzer":
-        # Collect operations
-        operations = []
-        while True:
-            operation = await get_operation_input()
-            operations.append(operation)
-            if not await get_yes_no_input("Add another analysis operation?", False):
-                break
-
-        # Create the input
-        event.input = FolderAnalyzerNodeInput(
-            settings_override=FolderAnalyzerSettings(
-                base_directory="/path/to/repo",
-                operations=operations,
-            )
-        )
-        event.handled = True
-```
 
 ## Advanced Input Handling Techniques
 
@@ -250,10 +348,11 @@ async def context_aware_handler(event: NodeInputRequiredEvent):
 4. **Error Handling**: Handle input errors gracefully with appropriate feedback
 5. **Timeout Handling**: Implement timeouts for user input to prevent indefinite waiting
 6. **Modular Design**: Organize input handlers in a modular way for reusability
-7. **State Management**: For complex inputs, consider maintaining state across prompts
+7. **Leverage Built-in Helpers**: Use DAD's built-in input helper functions
+8. **Component Variables**: Use component variables to reduce repetitive inputs
 
 ## Conclusion
 
 The input handling architecture in DAD provides a flexible, powerful system for configuring and interacting with agent
-nodes. By leveraging the event-driven architecture and implementing appropriate handlers, you can create rich
-interactive experiences while maintaining clean separation between node definition and input collection.
+nodes. By leveraging the event-driven architecture, built-in helper functions, and component variables, you can create
+rich interactive experiences while maintaining clean separation between node definition and input collection.

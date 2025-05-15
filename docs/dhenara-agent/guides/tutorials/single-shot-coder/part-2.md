@@ -7,8 +7,8 @@ title: Part 1- Live Inputs
 If you look into the flow in part 1, we were hard coding the _task_description_ inside the flow, which is a bit weird.
 You don't want to edit your source code every time when you run the agent.
 
-DAD's event system helps here. In this part we will modify the implementation_flow to accept live inputs on run. Make
-sure you switch back to _test_mode_ until the last section in this part so that you don't want to send wrong inputs to
+DAD's event system helps here. In this part we will modify the implementation*flow to accept live inputs on run. Make
+sure you switch back to \_test_mode* until the last section in this part so that you don't want to send wrong inputs to
 APIs and cost money.
 
 ## Live Model Selections

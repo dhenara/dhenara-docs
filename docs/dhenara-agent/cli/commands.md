@@ -45,6 +45,19 @@ dhenara startproject [OPTIONS] PROJECT_NAME
 dhenara startproject my-agent-project --directory ~/projects
 ```
 
+**Output:**
+
+```
+Initializing Git.
+✅ Project 'my-agent-project' created successfully!
+  - Project identifier: my-agent-project
+  - Location: ~/projects/my-agent-project
+
+Next steps:
+  1. cd my-agent-project
+  2. dhenara create agent <agent_name>
+```
+
 ## Agent Commands
 
 ### `create agent`
@@ -68,7 +81,16 @@ dhenara create agent [OPTIONS] IDENTIFIER [NAME]
 **Example:**
 
 ```bash
-dhenara create agent code-reviewer "Code Review Assistant"
+dhenara create agent autocoder "Code Generation Assistant"
+```
+
+**Output:**
+
+```
+✅ Agent 'autocoder' created successfully!
+  - Identifier: autocoder
+  - Location: /path/to/project/src/agents/autocoder
+  - Command to run: dhenara run agent autocoder
 ```
 
 ### `run agent`
@@ -86,13 +108,38 @@ dhenara run agent [OPTIONS] IDENTIFIER
 **Options:**
 
 - `--project-root TEXT`: Root directory of the project (default: auto-detected)
-- `--previous-run-id TEXT`: ID of a previous run to use as a base
-- `--start-path TEXT`: Hierarchical path to start execution from (e.g., 'agent_id/flow_id/node_id')
+- `--previous-run-id TEXT`: ID of a previous run to use as a base for resuming execution
+- `--entry-point TEXT`: Specific point in the execution graph to begin from. Format can be a single element ID or a
+  dot-notation path (e.g., 'agent_id.flow_id.node_id')
 
 **Example:**
 
 ```bash
-dhenara run agent code-reviewer --previous-run-id run_20230615_123456
+dhenara run agent autocoder
+```
+
+**With Resumption:**
+
+```bash
+dhenara run agent autocoder --previous-run-id run_20240515_121100_f36578 --entry-point main_flow.code_generator
+```
+
+**Output:**
+
+```
+✓ Node dynamic_repo_analysis execution completed
+✓ Node code_generator execution completed
+✓ Node code_generator_file_ops execution completed
+✓ main_flow execution completed
+✓ autocoder_root execution completed
+Agent standard run completed successfully. Run ID: run_20240515_233729_f3cd51
+
+✅ RUN COMPLETED SUCCESSFULLY
+────────────────────────────────────────────────────────────────────────────────
+  Run ID: run_20240515_233729_f3cd51
+  Artifacts location: /path/to/project/runs/run_20240515_233729_f3cd51
+
+Logs in /path/to/project/runs/run_20240515_233729_f3cd51/.trace/logs.jsonl
 ```
 
 ## Output Commands
@@ -114,7 +161,7 @@ dhenara outputs list [OPTIONS]
 **Example:**
 
 ```bash
-dhenara outputs list --agent-id code-reviewer --limit 5
+dhenara outputs list --agent-id autocoder --limit 5
 ```
 
 ### `outputs compare`
@@ -138,7 +185,7 @@ dhenara outputs compare [OPTIONS] RUN_ID_1 RUN_ID_2
 **Example:**
 
 ```bash
-dhenara outputs compare run_20230615_123456 run_20230616_234567 --output-format html
+dhenara outputs compare run_20240515_121100_f36578 run_20240515_233729_f3cd51 --output-format html
 ```
 
 ### `outputs checkout`
@@ -161,7 +208,7 @@ dhenara outputs checkout [OPTIONS] RUN_ID
 **Example:**
 
 ```bash
-dhenara outputs checkout run_20230615_123456 --output-dir ./analysis
+dhenara outputs checkout run_20240515_233729_f3cd51 --output-dir ./analysis
 ```
 
 ## Implementation Commands
@@ -190,6 +237,42 @@ dhenara run agent implementation [OPTIONS] TASK_FILE
 dhenara run agent implementation tasks/feature-123.md --model gpt-4.1
 ```
 
+## Run Artifacts Structure
+
+When you run an agent, DAD generates a structured directory of artifacts for each run. Understanding this structure is
+important for debugging and for resuming runs:
+
+```
+runs/run_20240515_233729_f3cd51/
+├── .trace/
+│   ├── dad_metadata.json
+│   ├── logs.jsonl
+│   ├── metrics.jsonl
+│   └── trace.jsonl
+├── autocoder_root/
+│   └── main_flow/
+│       ├── code_generator/
+│       │   ├── outcome.json   # Node-specific outcome
+│       │   ├── result.json    # Complete execution result
+│       │   └── state.json     # For AIModelNode, contains API call parameters
+│       ├── code_generator_file_ops/
+│       │   ├── outcome.json
+│       │   └── result.json
+│       └── dynamic_repo_analysis/
+│           ├── outcome.json
+│           └── result.json
+└── static_inputs/
+```
+
+Each node's artifacts contain:
+
+- **result.json**: The complete execution result including input, output, and outcome
+- **outcome.json**: Just the outcome field, extracted for convenience
+- **state.json**: (For AIModelNode only) Contains the actual LLM API call parameters
+
+This structure enables precise resumption of execution from any node by using the `--previous-run-id` and
+`--entry-point` options.
+
 ## Command Implementation Examples
 
 Here's an example of how a command is implemented in the DAD CLI:
@@ -204,11 +287,11 @@ Here's an example of how a command is implemented in the DAD CLI:
     help="ID of a previous run to use as a base for this run",
 )
 @click.option(
-    "--start-path",
+    "--entry-point",
     default=None,
-    help="Hierarchical path to start execution from (e.g., 'agent_id/flow_id/node_id')",
+    help="Specific point in the execution graph to begin from (e.g., 'agent_id.flow_id.node_id')",
 )
-def run_agent(identifier, project_root, previous_run_id, start_path):
+def run_agent(identifier, project_root, previous_run_id, entry_point):
     """Run an agent with the specified identifier."""
     # Uses asyncio to run the async implementation
     asyncio.run(
@@ -216,7 +299,7 @@ def run_agent(identifier, project_root, previous_run_id, start_path):
             identifier=identifier,
             project_root=project_root,
             previous_run_id=previous_run_id,
-            start_hierarchy_path=start_path,
+            start_hierarchy_path=entry_point,
         )
     )
 ```

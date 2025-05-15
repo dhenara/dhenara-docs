@@ -56,6 +56,50 @@ class NodeInputRequiredEvent(BaseEvent):
     handled: bool = False  # Whether the event has been handled
 ```
 
+## Common Event Patterns
+
+### Input Handling with node_input_required
+
+One of the most common patterns is using the `node_input_required` event to gather inputs for nodes before execution.
+This enables interactive and dynamic workflows:
+
+```python
+# Define a node that requires input
+implementation_flow.node(
+    "code_generator",
+    AIModelNode(
+        pre_events=[EventType.node_input_required],  # Request input before execution
+        settings=AIModelNodeSettings(...),
+    ),
+)
+
+# Handle the input required event
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    if event.node_type == FlowNodeTypeEnum.ai_model_call and event.node_id == "code_generator":
+        # Get input from built-in helper
+        node_input = await get_ai_model_node_input(
+            node_def_settings=event.node_def_settings,
+        )
+
+        # Customize with additional inputs if needed
+        task_description = await async_input("Enter your query: ")
+        node_input.prompt_variables = {"task_description": task_description}
+
+        # Provide the input back to the event
+        event.input = node_input
+        event.handled = True
+
+# Register the handler with the run context
+run_context.register_event_handlers(
+    handlers_map={
+        EventType.node_input_required: node_input_event_handler,
+    }
+)
+```
+
+This pattern allows you to build interactive agents that can prompt for information at runtime rather than having all
+inputs predefined.
+
 ## Using the Event Bus
 
 ### Registering Handlers
@@ -176,19 +220,25 @@ The node executor will automatically emit the specified pre-events before execut
 The `RunContext` provides a simplified interface for registering common event handlers:
 
 ```python
+# Create a run context
+run_context = RunContext(
+    root_component_id="autocoder_root",
+    project_root=project_root,
+)
+
 # Register an input handler in the run context
 async def my_input_handler(event: NodeInputRequiredEvent):
     # Handle node input requirements
     ...
 
-run_context.register_node_input_handler(my_input_handler)
-
-# Register a completion handler
-async def my_completion_handler(event: NodeExecutionCompletedEvent):
-    # Handle node completion
-    ...
-
-run_context.register_node_completion_handler(my_completion_handler)
+# Register the handler in the run context
+run_context.register_event_handlers(
+    handlers_map={
+        EventType.node_input_required: my_input_handler,
+        EventType.node_execution_completed: print_node_completion,
+        EventType.component_execution_completed: print_component_completion,
+    }
+)
 ```
 
 ## Custom Event Definitions
@@ -232,9 +282,12 @@ await event_bus.publish(event)
 4. **Error Handling**: Implement proper error handling in event handlers
 5. **Debugging**: Use the observability system to trace event flow
 6. **Performance**: Consider performance implications of slow event handlers
+7. **Consistent Handling Pattern**: Follow a consistent pattern for handling events across your application
+8. **State Management**: Use events for state transitions rather than direct state manipulation
 
 ## Conclusion
 
 The Event System in DAD provides a powerful mechanism for component communication and coordination. By leveraging the
 event-driven architecture, you can create flexible, loosely coupled agents that can adapt to dynamic requirements and
-respond to various stimuli during execution.
+respond to various stimuli during execution. The event system is particularly valuable for creating interactive agents
+that can request and process user input during runtime.

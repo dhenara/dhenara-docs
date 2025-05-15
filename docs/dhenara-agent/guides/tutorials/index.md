@@ -12,6 +12,23 @@ teach you the process of building an agent from the ground up, explaining each s
 
 ## Available Tutorials
 
+### [Single-Shot Coding Assistant](./single-shot-coder/index.md)
+
+Learn how to build a simple command-line coding assistant using the DAD framework. This comprehensive tutorial takes you
+through building a coding assistant that can generate code based on user requirements, from a basic single-shot
+implementation to an enhanced version with component variables.
+
+- **Time Required**: Approximately 45 minutes
+- **Difficulty**: Beginner to Intermediate
+- **Prerequisites**: Basic understanding of Python and the DAD framework core concepts
+- **Structure**:
+  - Part 1: Building a basic implementation that can handle standalone coding tasks
+  - Part 2: Enhancing the assistant to accept inputs at runtime
+  - Part 3: Using component variables for better organization and reusability
+
+This tutorial serves as an excellent reference for understanding the core concepts of the DAD framework and how to build
+practical AI agents.
+
 ### [Command-Line Coding Assistant](./command-line-coder/index.md)
 
 Learn how to build a command-line coding assistant that can generate code based on user requirements. This comprehensive

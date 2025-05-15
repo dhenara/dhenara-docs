@@ -112,6 +112,35 @@ the `$hier{}` template syntax, like:
 statement="$expr{ $hier{code_generator}.outcome.structured.implementation_tasks }",
 ```
 
+## Component Variables
+
+Component variables are variables defined at the component level (Flow or Agent) that are accessible to all elements
+within that component. They provide a way to share configuration or state within a component hierarchy.
+
+To define component variables in a flow:
+
+```python
+implementation_flow = FlowDefinition()
+implementation_flow.vars(
+    {
+        "task_spec": task_spec,
+        "global_data_directory": "$var{run_root}/global_data",
+    }
+)
+```
+
+Component variables can be accessed in templates using the `$expr{}` syntax:
+
+```python
+operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}")
+```
+
+Component variables provide several benefits:
+
+1. **Shared Configuration**: Multiple nodes can access the same data without duplication
+2. **Flow Reusability**: The same flow can be used with different variable values
+3. **Cleaner Organization**: Separation of configuration from flow logic
+
 ## Element Execution
 
 ### Nodes
@@ -171,20 +200,98 @@ The event system provides a publish-subscribe mechanism for communication betwee
 - **Event Handlers**: Functions that respond to specific event types
 - **Event Bus**: Central hub for routing events to handlers
 
+### Common Event Types
+
 Common event types include:
 
 - `node_input_required`: Request input for a node
 - `node_execution_completed`: Notify when a node finishes execution
 - `node_execution_failed`: Notify when a node encounters an error
 
+### Event Handling Example
+
+To make a node trigger an input event, add it to the pre_events list:
+
+```python
+AIModelNode(
+    pre_events=[EventType.node_input_required],
+    settings=AIModelNodeSettings(...)
+)
+```
+
+Then create a handler to respond to this event:
+
+```python
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    if event.node_type == FlowNodeTypeEnum.ai_model_call:
+        if event.node_id == "code_generator":
+            node_input = await get_ai_model_node_input(
+                node_def_settings=event.node_def_settings,
+            )
+            task_description = await async_input("Enter your query: ")
+            node_input.prompt_variables = {"task_description": task_description}
+
+        event.input = node_input
+        event.handled = True
+```
+
+Register the handler in the run context:
+
+```python
+run_context.register_event_handlers(
+    handlers_map={
+        EventType.node_input_required: node_input_event_handler,
+        EventType.node_execution_completed: print_node_completion,
+    }
+)
+```
+
 ## Template Engine
 
 The template engine is a powerful feature of DAD that allows for dynamic text generation and processing:
 
-- **Variable Substitution**: Replace `$var{name}` with the value of a variable
-- **Expression Evaluation**: Evaluate expressions like `$expr{1 + 2}`
-- **Hierarchical References**: Access results from other nodes using `$hier{node_id.property}`
-- **Python Expressions**: Evaluate Python code with `$expr{py: len(items)}`
+### Variable Substitution
+
+Replace `$var{name}` with the value of a variable:
+
+```python
+"$var{task_description}"
+```
+
+### Expression Evaluation
+
+Evaluate expressions using `$expr{...}`:
+
+```python
+"$expr{1 + 2}"
+"$expr{task_spec.task_id}"
+```
+
+### Hierarchical References
+
+Access results from other nodes using `$hier{node_id.property}`:
+
+```python
+"$expr{ $hier{code_generator}.outcome.structured.file_operations }"
+```
+
+### Python Expressions
+
+Evaluate Python code with `$expr{py: ...}`:
+
+```python
+"$expr{py: len(items)}"
+```
+
+### Object Template
+
+For complex expressions or when using templates in object properties:
+
+```python
+operations_template=ObjectTemplate(
+    expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+)
+```
 
 The template engine makes it easy to build dynamic prompts, process responses, and coordinate between components.
 
@@ -195,6 +302,35 @@ The run system manages the execution environment for DAD components:
 - **RunContext**: Manages run directories, artifacts, and settings
 - **IsolatedExecution**: Provides isolation between runs
 - **Run Lifecycle**: Initialize, setup, execute, manage artifacts, and complete
+
+### Run Artifacts
+
+Each run creates a unique directory structure for artifacts:
+
+```
+runs/run_20250514_233729_f3cd51/
+├── .trace/
+│   ├── dad_metadata.json
+│   ├── logs.jsonl
+│   ├── metrics.jsonl
+│   └── trace.jsonl
+├── root_component_id/
+│   └── flow_id/
+│       ├── node_id_1/
+│       │   ├── outcome.json
+│       │   ├── result.json
+│       │   └── state.json (for AIModelNode)
+│       └── node_id_2/
+│           ├── outcome.json
+│           └── result.json
+└── static_inputs/
+```
+
+Each node's artifacts include:
+
+- **result.json**: Complete execution result including input, output, and outcome
+- **outcome.json**: Just the outcome field extracted for convenience
+- **state.json**: (For AIModelNode) The API call parameters including the final prompt
 
 The run system ensures reproducibility and proper resource management across different runs.
 
@@ -235,12 +371,83 @@ runner.setup_run()
 result = await runner.run()
 ```
 
-In this example:
+## Practical Example: Single-Shot Coder
 
-1. The flow contains two nodes that execute in sequence
-2. The agent contains the flow and potentially other flows
-3. The run context provides the execution environment
-4. The runner handles the execution process
+Here's a practical example of a simple coding assistant that demonstrates many of the concepts discussed:
+
+```python
+# Create a FlowDefinition
+implementation_flow = FlowDefinition()
+
+# Add component variables
+implementation_flow.vars(
+    {
+        "task_spec": task_spec,
+    }
+)
+
+# 1. Dynamic Folder Analysis
+implementation_flow.node(
+    "dynamic_repo_analysis",
+    FolderAnalyzerNode(
+        pre_events=[EventType.node_input_required],
+        settings=FolderAnalyzerSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}"),
+        ),
+    ),
+)
+
+# 2. Code Generation Node
+implementation_flow.node(
+    "code_generator",
+    AIModelNode(
+        pre_events=[EventType.node_input_required],
+        settings=AIModelNodeSettings(
+            models=["claude-3-7-sonnet", "o4-mini"],
+            system_instructions=["You are a professional code implementation agent."],
+            prompt=Prompt.with_dad_text(
+                text=(
+                    "Task ID: $expr{task_spec.task_id}\n"
+                    "Description: $expr{task_spec.description}\n\n"
+                    "## Repository Context\n"
+                    "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+                ),
+            ),
+            model_call_config=AIModelCallConfig(
+                structured_output=TaskImplementation,
+            ),
+        ),
+    ),
+)
+
+# 3. File Operation Node
+implementation_flow.node(
+    "code_generator_file_ops",
+    FileOperationNode(
+        settings=FileOperationNodeSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(
+                expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+            ),
+            stage=True,
+            commit=True,
+        ),
+    ),
+)
+
+# Create and register an agent
+agent = AgentDefinition()
+agent.flow("main_flow", implementation_flow)
+```
+
+This example demonstrates:
+
+- Component variables for task specifications
+- Event system for handling inputs
+- Template engine for dynamic prompts and data passing
+- Hierarchical structure of agents, flows, and nodes
+- Different node types working together
 
 ## Next Steps
 
@@ -250,3 +457,4 @@ Now that you understand the core concepts of DAD, you can:
 - Learn about specific [Node Types](../concepts/components/nodes) and their capabilities
 - Understand how to use [Flows](../concepts/components/flows) and [Agents](../concepts/components/agents)
 - Dive deeper into the [Templating System](../concepts/templating-system) and [Event System](../concepts/event-system)
+- Try the [Single-Shot Coder Tutorial]( ../guides/tutorials/single-shot-coder/index.md) to build a practical agent

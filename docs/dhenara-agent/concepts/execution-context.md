@@ -19,6 +19,7 @@ The Execution Context system revolves around these key concepts:
 3. **Hierarchical Structure**: Maintaining parent-child relationships between contexts
 4. **Variable Scoping**: Managing variable access across different execution scopes
 5. **Resource Access**: Providing access to configured resources like AI models
+6. **Component Communication**: Enabling data flow between different components through references
 
 ## Execution Context Hierarchy
 
@@ -69,6 +70,31 @@ class ExecutionContext:
 - **execution_results**: Dictionary mapping node IDs to execution results
 - **run_context**: Reference to the global run context
 
+## Component Communication through Execution Context
+
+One of the most powerful features of the Execution Context is enabling communication between components. This is done
+through referencing previous node results using the `$hier{}` syntax in templates and expressions:
+
+```python
+# In an AIModelNode prompt template
+prompt=Prompt.with_dad_text(
+    text=(
+        "## Repository Context\n"
+        "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+        "## Previous Analysis\n"
+        "$expr{$hier{code_generator}.outcome.structured.file_operations}"
+    ),
+)
+
+# In a FileOperationNode settings
+operations_template=ObjectTemplate(
+    expression="$expr{$hier{code_generator}.outcome.structured.file_operations}",
+)
+```
+
+This pattern allows nodes to access outputs from previous executions and use them as inputs, creating a data flow
+pipeline.
+
 ## Data Access
 
 ExecutionContext provides methods for accessing data across the hierarchy:
@@ -84,6 +110,31 @@ value = execution_context.get_context_variable("variable_name")
 node_context = execution_context.get_context_by_path("flow1.node3")
 ```
 
+## Component Variables
+
+Component variables provide a way to share data across all nodes within a component:
+
+```python
+# Define variables at the flow level
+implementation_flow = FlowDefinition()
+implementation_flow.vars(
+    {
+        "task_spec": task_spec,  # This variable is accessible to all nodes in the flow
+    }
+)
+
+# Access component variables in node settings or templates
+prompt=Prompt.with_dad_text(
+    text=(
+        "Task Specification\n"
+        "Task ID: $expr{task_spec.task_id}\n"
+        "Description: $expr{task_spec.description}\n\n"
+    ),
+)
+```
+
+Component variables improve code organization by centralizing configuration and enabling reusability.
+
 ## Hierarchical References
 
 One of the most powerful features of the execution context is the ability to reference results from other nodes using
@@ -95,6 +146,27 @@ hierarchical paths:
 ```
 
 This allows data to flow naturally between components without having to manually pass results around.
+
+## Template Expressions
+
+The Execution Context integrates with the template system to allow dynamic content based on context variables and node
+results:
+
+```python
+# Basic variable substitution
+"$var{task_description}"
+
+# Expression evaluation
+"$expr{task_spec.required_context}"
+
+# Hierarchical reference to previous node result
+"$expr{$hier{dynamic_repo_analysis}.outcome.results}"
+
+# Combining multiple references
+"$expr{$hier{code_generator}.outcome.structured.file_operations[$var{index}]}"
+```
+
+The template engine resolves these expressions at runtime using the current execution context.
 
 ## Result Management
 
@@ -142,6 +214,58 @@ flow_context = FlowExecutionContext(
 result = await my_flow.execute(flow_context)
 ```
 
+## Practical Example
+
+Here's a practical example showing how Execution Context enables data flow in a multi-node workflow:
+
+```python
+# Folder analysis node that analyzes files
+implementation_flow.node(
+    "dynamic_repo_analysis",
+    FolderAnalyzerNode(
+        settings=FolderAnalyzerSettings(
+            base_directory=global_data_directory,
+            operations=folder_operations,
+        ),
+    ),
+)
+
+# Code generation node that uses the analysis results
+implementation_flow.node(
+    "code_generator",
+    AIModelNode(
+        settings=AIModelNodeSettings(
+            prompt=Prompt.with_dad_text(
+                text=(
+                    "## Repository Context\n"
+                    "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+                ),
+            ),
+            model_call_config=AIModelCallConfig(
+                structured_output=TaskImplementation,
+            ),
+        ),
+    ),
+)
+
+# File operation node that uses the generated code operations
+implementation_flow.node(
+    "code_generator_file_ops",
+    FileOperationNode(
+        settings=FileOperationNodeSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(
+                expression="$expr{$hier{code_generator}.outcome.structured.file_operations}",
+            ),
+            stage=True,
+        ),
+    ),
+)
+```
+
+This pattern demonstrates how data flows between nodes through the Execution Context without requiring direct
+connections.
+
 ## Best Practices
 
 1. **Respect Scoping Rules**: Access only results that are in scope for your component
@@ -149,6 +273,8 @@ result = await my_flow.execute(flow_context)
 3. **Keep Contexts Clean**: Avoid storing excessive data in context variables
 4. **Cache Results When Appropriate**: For expensive operations, cache results in the context
 5. **Be Careful with Circular References**: Avoid creating circular dependencies in hierarchical references
+6. **Use Component Variables**: Use flow-level variables for configuration that needs to be shared across nodes
+7. **Prefer Explicit References**: Be explicit in your references to make the data flow clear
 
 ## Conclusion
 

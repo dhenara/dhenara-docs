@@ -63,8 +63,7 @@ google_vertex_ai:
 
 ## Create a Simple Agent
 
-Next, let's create an agent. When you use the CLI command, a simple chatbot flow will be included in the flow.py file so
-that you can easily start updating it. Let's name the agent _chatbot_:
+Next, let's create an agent. We'll name it _chatbot_:
 
 ```bash
 cd dev_agents  # Go inside the project repo
@@ -90,7 +89,7 @@ This will create a _chatbot_ agent directory inside _agents_, and a _chatbot.py_
         └── defs.py
 ```
 
-The flow inside the chatbot will be as follows:
+The flow inside `src/agents/chatbot/flow.py` will be as follows:
 
 ```python
 from dhenara.agent.dsl import (
@@ -101,6 +100,7 @@ from dhenara.agent.dsl import (
 )
 from dhenara.ai.types import AIModelCallConfig, Prompt
 
+# Create a FlowDefinition for our chatbot
 main_flow = FlowDefinition()
 main_flow.node(
     "user_query_processor",
@@ -123,6 +123,8 @@ main_flow.node(
         ),
     ),
 )
+
+# Second node - Title Generator
 main_flow.node(
     "title_generator",
     AIModelNode(
@@ -132,15 +134,28 @@ main_flow.node(
                 "You are a summarizer which generate a title.",
             ],
             prompt=Prompt.with_dad_text(
-                "Summarize in plain text under 60 characters. $expr{ $hier{ai_model_call_1}.outcome.text }",
+                "Summarize in plain text under 60 characters. $expr{ $hier{user_query_processor}.outcome.text }",
             ),
         ),
     ),
 )
-
 ```
 
-There is a handler.py file which will handle input request events:
+Next, see the `src/agents/chatbot/agent.py` file to understand how we use our new flow:
+
+```python
+from dhenara.agent.dsl import AgentDefinition
+
+from .flow import main_flow
+
+agent = AgentDefinition()
+agent.flow(
+    "main_flow",
+    main_flow,
+)
+```
+
+Look at the handler in `src/agents/chatbot/handler.py` to see how it process the input event:
 
 ```python
 from dhenara.agent.dsl import (
@@ -153,7 +168,7 @@ from dhenara.agent.utils.helpers.terminal import async_input, get_ai_model_node_
 async def node_input_event_handler(event: NodeInputRequiredEvent):
     node_input = None
     if event.node_type == FlowNodeTypeEnum.ai_model_call:
-        if event.node_id == "ai_model_call_1":
+        if event.node_id == "user_query_processor":
             node_input = await get_ai_model_node_input(
                 node_def_settings=event.node_def_settings,
             )
@@ -217,18 +232,31 @@ runner = AgentRunner(agent, run_context)
 ## Run the flow
 
 Make sure you have configured API keys. (You can run in test mode without API keys by setting `test_mode=True` in all
-AIModelNode configurations. In test mode, you will see a dummy response instead of a real response.)
+AIModelNode configurations.)
 
 ```bash
 dhenara run agent chatbot
 ```
 
-You will be prompted to select an AI model, and then to enter your query. Once the run finishes, you can see the
-location of the run directory. A `runs` directory will be created under the project root when you run it for the first
-time, and all runs will be tracked there under timestamped directories. Inside the current run directory, you will see
-the artifacts per node, as shown below:
+You will be prompted to select an AI model, and then to enter your query:
 
 ```plaintext
+=== AI Model Selection ===
+
+Select an AI model:
+1. claude-3-5-haiku
+2. gpt-4.1-nano
+3. gemini-2.0-flash-lite
+Enter number: 1
+Using model: claude-3-5-haiku
+Enter your query: What is Dhenara Agent DSL?
+```
+
+Once the run finishes, you'll see the location of the run directory. A `runs` directory will be created under the
+project root when you run it for the first time, and all runs will be tracked there under timestamped directories:
+
+```plaintext
+runs/
 └── run_20250512_115947_4eb85d
     ├── chatbot_root
     │   └── main_flow
@@ -251,43 +279,42 @@ workflows - it's designed for building real, complex agent workflows.
 This simple workflow serves as a foundation for more advanced implementations. We'll explore how all these files work
 together in a subsequent tutorial. For now, let's focus on understanding the basic structure explained below.
 
-## Explanation
+## Understanding the Flow Structure
 
-Let's examine how this simple flow works step by step:
+Let's examine how our flow works step by step:
 
-1. **User Input Handling**:
+1. **Flow Definition**:
 
-   - The `user_query_processor` node is configured with `pre_events=[EventType.node_input_required]`, which triggers an
-     input request event before execution.
-   - When this event is triggered, our `node_input_event_handler` function catches it and prompts the user for input.
-   - The handler then attaches the user's query as a variable (`user_query`) to the node's input.
+   - We created a `FlowDefinition` object to define our flow
+   - This approach allows us to organize complex flows in a structured way
 
-2. **Dynamic Prompt Generation**:
+2. **User Input Handling**:
 
-   - The prompt in the `user_query_processor` node uses `$var{user_query}` for variable substitution.
-   - This allows the prompt to include the user's input dynamically at runtime.
+   - The `user_query_processor` node triggers an input event with `pre_events=[EventType.node_input_required]`
+   - Our `node_input_event_handler` function catches this event and prompts for user input
+   - The handler attaches the user's query as a variable (`user_query`) to the node's input
 
-3. **Context Sharing Between Nodes**:
+3. **Dynamic Prompt Generation**:
 
-   - The `title_generator` node references the output of the previous node using `$hier{ai_model_call_1}.outcome.text`.
-   - The `$hier` expression allows access to the hierarchical context, where previous node results are stored.
+   - The prompt uses `$var{user_query}` for variable substitution
+   - This allows the prompt to include user input dynamically at runtime
 
-4. **Node Execution Flow**:
+4. **Context Sharing Between Nodes**:
 
-   - Nodes execute in the order they're added to the flow using `.node()` fn.
-   - The `user_query_processor` runs first, generating an AI response to the user query.
-   - The `title_generator` runs second, creating a title based on the response from the first node.
+   - The `title_generator` node accesses the output of the previous node with `$hier{user_query_processor}.outcome.text`
+   - The `$hier` expression provides access to hierarchical context where previous node results are stored
 
-5. **Run Artifacts**:
-   - Each node generates artifacts (outcome.json, result.json, state.json) that capture the execution details.
-   - These artifacts provide transparency and traceability for debugging and analysis.
+5. **Execution Flow**:
+   - Nodes execute in the order they're defined in the flow
+   - The `user_query_processor` runs first, generating a response to the user query
+   - The `title_generator` runs second, creating a title based on the first node's response
 
 ## Next Steps
 
-Now that you've created your first agent, you can:
+This simple chatbot demonstrates the foundational concepts of DAD. To build more sophisticated agents:
 
-- Go through [Tutorials](../guides/tutorials/command-line-coder) and more complex [Examples](../guides/examples) to see
-  what you can build
-- Learn more about the [Core Concepts](../concepts/core-concepts) of DAD
-- Explore the different [Node Types](../concepts/components/nodes) and how to use them
-- Understand the [Architecture](../architecture/overview) of DAD
+- Explore [Tutorials](../guides/tutorials/single-shot-coder) for more complex implementations
+- Learn about [Component Variables](../guides/tutorials/single-shot-coder/part-3) for better organization
+- Check out the [Examples](../guides/examples) to see what you can build
+- Understand [Core Concepts](../concepts/core-concepts) in more depth
+- Explore [Node Types](../concepts/components/nodes) for additional functionality

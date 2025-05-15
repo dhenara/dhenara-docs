@@ -96,7 +96,30 @@ Commands:
 (.venv) $
 ```
 
+## Setting Up API Keys
+
+Most DAD agents use AI models that require API keys. After creating a project with `dhenara startproject`, you'll need
+to configure these keys in `.dhenara/.secrets/.credentials.yaml`:
+
+```yaml
+openai:
+  api_key: <YOUR_OPENAI_API_KEY>
+
+google_gemini_api:
+  api_key: <YOUR_GOOGLE_GEMINI_API_API_KEY>
+
+anthropic:
+  api_key: <YOUR_ANTHROPIC_API_KEY>
+
+# For Google Cloud Vertex AI
+google_vertex_ai:
+  credentials: <PATH_TO_YOUR_SERVICE_ACCOUNT_JSON_OR_CONTENTS>
+```
+
+You can also run agents in test mode by setting `test_mode=True` in AIModelNode configurations, which returns dummy
+responses instead of making actual API calls.
+
 ## Next Steps
 
-Now that you have installed DAD, you can proceed to the [Quick Start](quick-start) guide to create your first agent, or
-explore the [Core Concepts](../concepts/core-concepts) to understand the fundamental building blocks of DAD.
+Now that you have installed DAD, proceed to the [Quick Start](quick-start) guide to create your first agent, or explore
+the [Core Concepts](../concepts/core-concepts) to understand the fundamental building blocks of DAD.

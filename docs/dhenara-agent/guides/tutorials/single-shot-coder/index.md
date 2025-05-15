@@ -16,8 +16,8 @@ We'll create a _single-shot_ command-line coding assistant that progressively ev
 2. **Part 2: Live Inputs** - Enhanced to accept inputs at runtime
 3. **Part 3: Component Variables** - Using component variables for better organization and reusability
 
-By the end of this tutorial, you'll have a fully functional coding assistant that can take a coding task and _implement_ it
-using the DAD framework.
+By the end of this tutorial, you'll have a fully functional coding assistant that can take a coding task and _implement_
+it using the DAD framework.
 
 ## Prerequisites
 
@@ -31,6 +31,7 @@ Before starting this tutorial, make sure you have:
 ## Tutorial Structure
 
 This tutorial is divided into three parts, each building on the previous one:
+
 - [Part 1: Bringup](./part-1.md) - Setting up the foundational implementation
 - [Part 2: Live Inputs](./part-2.md) - Adding runtime input capabilities
 - [Part 3: Component Variables](./part-3.md) - Using flow-level variables for better organization

@@ -17,7 +17,8 @@ The DAD templating system operates on several key concepts:
 1. **Variable Substitution**: Replace placeholders with variable values
 2. **Expression Evaluation**: Evaluate expressions within templates
 3. **Hierarchical References**: Access outputs from other nodes in the flow
-4. **Conditional Logic**: Include conditional sections based on expression results
+4. **Component Variables**: Share configuration across all nodes in a flow
+5. **Conditional Logic**: Include conditional sections based on expression results
 
 ## Template Syntax
 
@@ -33,6 +34,26 @@ Variable substitution uses the `$var{name}` syntax to replace placeholders with 
 
 When rendered, this replaces `$var{language}` and `$var{feature}` with their respective values.
 
+In the single-shot-coder tutorial, we see this pattern used for task descriptions:
+
+```python
+prompt=Prompt.with_dad_text(
+    text=(
+        "## Task Description\n"
+        "$var{task_description}"
+        "## Repository Context\n"
+        # ... more content ...
+    ),
+)
+```
+
+And then in the handler providing the value:
+
+```python
+task_description = await async_input("Enter your query: ")
+node_input.prompt_variables = {"task_description": task_description}
+```
+
 ### Expression Evaluation
 
 Expression evaluation uses the `$expr{expression}` syntax to compute values:
@@ -45,6 +66,14 @@ Expressions can include basic arithmetic, string operations, and more complex op
 
 Expressions can also include dot notation for accessing object attributes or dictionary keys like
 `$expr{task_spec.task_id}` or `$expr{task_spec.required_context[0].file_name}`.
+
+In the tutorial, expressions are commonly used when accessing component variables or hierarchical references:
+
+```python
+operations_template=ObjectTemplate(
+    expression="$expr{task_spec.required_context}",
+)
+```
 
 :::note
 
@@ -64,6 +93,27 @@ Hierarchical references use the `$hier{node_path.property}` syntax to access res
 
 This allows nodes to reference outputs from previously executed nodes.
 
+In the tutorial, hierarchical references are extensively used to pass data between nodes:
+
+```python
+prompt=Prompt.with_dad_text(
+    text=(
+        # ... other content ...
+        "## Repository Context\n"
+        "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+        # ... more content ...
+    ),
+)
+```
+
+And in the file operation node:
+
+```python
+operations_template=ObjectTemplate(
+    expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+),
+```
+
 ### Python Expressions
 
 For more complex logic, Python expressions can be used with `$expr{py: python_code}`:
@@ -74,6 +124,39 @@ For more complex logic, Python expressions can be used with `$expr{py: python_co
 
 This enables the full power of Python within templates.
 
+## Component Variables
+
+Component variables are a powerful feature of the DAD framework that allow you to define variables at the component
+level (like a flow) and access them from any node within that component. This promotes code reusability and cleaner
+organization.
+
+To define component variables for a flow:
+
+```python
+implementation_flow = FlowDefinition()
+
+implementation_flow.vars(
+    {
+        "task_spec": task_spec,
+    }
+)
+```
+
+These variables can then be accessed in any node using expressions:
+
+```python
+prompt=Prompt.with_dad_text(
+    text=(
+        "Task Specification\n"
+        "Task ID: $expr{task_spec.task_id}\n"
+        "Description: $expr{task_spec.description}\n\n"
+        # ... more content ...
+    ),
+)
+```
+
+Component variables help centralize configuration and make flows more reusable across different contexts.
+
 ## Using Templates in Nodes
 
 ### AIModelNode Templates
@@ -82,20 +165,23 @@ Templates are commonly used in AI model node prompts:
 
 ```python
 AIModelNode(
-    resources=ResourceConfigItem.with_models("claude-3-7-sonnet"),
+    pre_events=[EventType.node_input_required],
     settings=AIModelNodeSettings(
+        models=["claude-3-7-sonnet", "gpt-4.1"],
         system_instructions=[
             "You are a $var{role} specialized in $var{domain}.",
         ],
         prompt=Prompt.with_dad_text(
             text=(
-                "Based on the following repository analysis:\n\n"
-                "$hier{repo_analysis}.outcome.structured\n\n"
-                "Implement a $var{feature_type} feature for $var{target_component}"
+                "## Task Description\n"
+                "$var{task_description}\n\n"
+                "## Repository Context\n"
+                "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+                "## Implementation Requirements\n"
+                "1. Generate precise file operations that can be executed programmatically\n"
             ),
             variables={
-                "feature_type": "search",
-                "target_component": "user dashboard"
+                "task_description": "Generate a README file"
             }
         ),
     ),
@@ -109,11 +195,13 @@ Templates are used in file operation nodes to specify operations:
 ```python
 FileOperationNode(
     settings=FileOperationNodeSettings(
-        base_directory=repo_dir,
+        base_directory=global_data_directory,
         operations_template=ObjectTemplate(
-            expression="$hier{code_generator}.outcome.structured.file_operations"
+            expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
         ),
-        commit_message="$var{run_id}: Implemented $var{feature_name}",
+        stage=True,
+        commit=True,
+        commit_message="$var{run_id}: Auto generated.",
     ),
 )
 ```
@@ -125,15 +213,10 @@ Templates can be used in folder analyzer settings:
 ```python
 FolderAnalyzerNode(
     settings=FolderAnalyzerSettings(
-        base_directory="$var{repo_dir}",
-        operations=[
-            FolderAnalysisOperation(
-                operation_type="analyze_folder",
-                path="$var{target_dir}",
-                include_patterns=["*.py", "*.md"],
-                exclude_patterns=["__pycache__"],
-            )
-        ],
+        base_directory="$var{run_root}/global_data",
+        operations_template=ObjectTemplate(
+            expression="$expr{task_spec.required_context}",
+        ),
     ),
 )
 ```
@@ -170,8 +253,9 @@ When resolving variables, the templating system follows this order:
 
 1. Variables explicitly provided in the template definition
 2. Variables provided through input handlers
-3. Variables from the execution context
-4. Default values if specified
+3. Component variables from the flow or agent
+4. Variables from the execution context
+5. Default values if specified
 
 ```python
 # Variable with a default value
@@ -216,5 +300,5 @@ In debug mode, the engine will print detailed information about variable substit
 ## Conclusion
 
 The DAD templating system provides a powerful mechanism for creating dynamic, context-aware agent definitions. By
-leveraging variable substitution, expression evaluation, and hierarchical references, templates enable sophisticated
-data flow between components while maintaining readability and reusability.
+leveraging variable substitution, expression evaluation, hierarchical references, and component variables, templates
+enable sophisticated data flow between components while maintaining readability and reusability.

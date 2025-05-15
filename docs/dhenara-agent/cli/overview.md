@@ -78,10 +78,7 @@ The DAD CLI organizes commands into logical groups based on functionality:
 
 - `create agent`: Creates a new agent within an existing project
 - `run agent`: Executes an agent in an isolated environment
-
-### Deployment
-
-- `deploy`: Deploys an agent or application to various environments (dev, staging, prod)
+- `run agent implementation`: Specialized command for running implementation flows
 
 ### Output Management
 
@@ -108,19 +105,55 @@ project-name/
 ├─ src/                  # Source code directory
 │  ├─ agents/            # Agent definitions
 │  │  └─ my_agent/       # Individual agent directory
+│  │     ├─ __init__.py  # Python package marker
 │  │     ├─ agent.py     # Main agent definition
-│  │     ├─ flow.py      # Agent flow definitions
-│  │     └─ inputs/      # Agent input handlers
-│  │        └─ handler.py
+│  │     ├─ handler.py   # Event handler for the agent
+│  │     └─ flows/       # Flow definitions directory
+│  │        ├─ __init__.py
+│  │        └─ implementation.py
 │  ├─ common/            # Shared code
-│  │  └─ prompts/        # Reusable prompts
+│  │  └─ live_prompts/   # Runtime prompt templates
 │  └─ runners/           # Agent runners
+│     ├─ __init__.py     # Python package marker
 │     ├─ defs.py         # Common runner definitions
 │     └─ my_agent.py     # Agent-specific runner
+├─ runs/                 # Generated artifacts directory (not tracked in git)
+│  └─ global_data/       # Global data directory for context
+│     └─ your_repo/      # Context repositories
 └─ README.md             # Project documentation
 ```
 
-This structure is automatically created by the `startproject` command and expanded by the `create agent` command.
+This structure is automatically created by the `startproject` command and expanded by the `create agent` command. The
+`runs` directory contains artifacts from agent executions and is not tracked in git.
+
+## Run Artifacts Structure
+
+When you run an agent, DAD generates a structured directory of artifacts under the `runs` directory:
+
+```
+runs/run_20240515_233729_f3cd51/
+├── .trace/                      # Observability data
+│   ├── dad_metadata.json        # Run metadata
+│   ├── logs.jsonl               # Execution logs
+│   ├── metrics.jsonl            # Performance metrics
+│   └── trace.jsonl              # Execution trace
+├── agent_root_id/               # Root component ID from runner
+│   └── flow_id/                 # Flow ID from agent definition
+│       ├── node_id_1/           # First node in the flow
+│       │   ├── outcome.json     # Node outcome
+│       │   └── result.json      # Complete execution result
+│       └── node_id_2/           # Second node in the flow
+│           ├── outcome.json
+│           ├── result.json
+│           └── state.json       # For AIModelNode, includes API call details
+└── static_inputs/               # Static input files if any
+```
+
+This structure enables powerful features like:
+
+1. **Run Resumption**: Using `--previous-run-id` and `--entry-point` to resume from any node
+2. **Debugging**: Examining exactly what happened at each step
+3. **Tracing**: Following the full execution path with input/output for each node
 
 ## Templates System
 
@@ -147,6 +180,39 @@ The templates include:
 1. **Agent Templates**: Basic agent structure with flow definitions and input handlers
 2. **Runner Templates**: Runner configurations for executing agents
 
+## Node Input Events and Handlers
+
+The DAD CLI supports live user input through a handler system. This is demonstrated in the autocoder agent example where
+the handler pattern is used to collect runtime inputs:
+
+```python
+from dhenara.agent.dsl import FlowNodeTypeEnum, NodeInputRequiredEvent
+from dhenara.agent.utils.helpers.terminal import async_input, get_ai_model_node_input
+
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    if event.node_type == FlowNodeTypeEnum.ai_model_call:
+        if event.node_id == "code_generator":
+            node_input = await get_ai_model_node_input(node_def_settings=event.node_def_settings)
+            task_description = await async_input("Enter your query: ")
+            node_input.prompt_variables = {"task_description": task_description}
+
+            event.input = node_input
+            event.handled = True
+```
+
+This handler is registered in the runner to enable interactive terminal input:
+
+```python
+run_context.register_event_handlers(
+    handlers_map={
+        EventType.node_input_required: node_input_event_handler,
+        # Optional Notification events
+        EventType.node_execution_completed: print_node_completion,
+        EventType.component_execution_completed: print_component_completion,
+    }
+)
+```
+
 ## Best Practices
 
 1. **Consistent Command Structure**: Follow the established pattern of command registration
@@ -154,5 +220,7 @@ The templates include:
 3. **Isolated Async Execution**: Use the `IsolatedExecution` context for running agents
 4. **Error Handling**: Implement proper error handling and reporting
 5. **User Feedback**: Provide clear feedback about command progress and results
+6. **Component Variables**: Use flow-level variables for better code organization
+7. **Structured Task Specs**: Define structured task specifications for complex projects
 
 To learn more about extending the CLI with custom commands, see the [Extending the CLI](./extending.md) guide.

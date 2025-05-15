@@ -39,24 +39,50 @@ other components.
 Flows are added to agents using the `flow` method:
 
 ```python
-# Create flows
-analysis_flow = FlowDefinition()
-# Define analysis flow nodes...
-
-process_flow = FlowDefinition()
-# Define process flow nodes...
-
-export_flow = FlowDefinition()
-# Define export flow nodes...
+# Import flows
+from .flows.implementation import implementation_flow
 
 # Add flows to the agent
-my_agent.flow("analyze", analysis_flow)
-my_agent.flow("process", process_flow)
-my_agent.flow("export", export_flow)
+my_agent = AgentDefinition()
+my_agent.flow("main_flow", implementation_flow)
 ```
 
 Each flow is assigned a unique ID within the agent, which can be used to reference the flow from other parts of the
 agent.
+
+## Single-Flow Agent Pattern
+
+The simplest agent pattern uses a single flow, as shown in the single-shot-coder tutorial:
+
+```python
+from dhenara.agent.dsl import AgentDefinition
+from .flows.implementation import implementation_flow
+
+agent = AgentDefinition(root_id="autocoder_root")
+agent.flow(
+    "main_flow",
+    implementation_flow,
+)
+```
+
+This pattern is effective for straightforward tasks that follow a linear process, like the single-shot coding assistant.
+
+## Multi-Flow Agent Pattern
+
+More complex agents can coordinate multiple flows:
+
+```python
+# Create an agent with multiple flows
+complex_agent = AgentDefinition()
+complex_agent.flow("analyze", analysis_flow)
+complex_agent.flow("process", process_flow)
+complex_agent.flow("export", export_flow)
+
+# Define sequential execution of flows
+complex_agent.sequence(["analyze", "process", "export"])
+```
+
+This ensures that flows are executed in the specified order, with each flow starting after the previous one completes.
 
 ## Agent Execution Patterns
 
@@ -161,28 +187,95 @@ Results from flows and nodes within an agent can be accessed using hierarchical 
 
 These references can be used in templates to dynamically generate content based on previous results.
 
-## Agent Execution Context
+## Agent Execution
 
-When an agent is executed, it creates an `AgentExecutionContext` that manages the agent's state and results:
+Agents are executed through a runner, which requires a run context:
 
 ```python
-# Execute an agent with a specific context
-result = await agent.execute(
-    execution_context=AgentExecutionContext(
-        component_id="my_agent",
-        component_definition=agent,
-        run_context=run_context
-    )
+from dhenara.agent.run import RunContext
+from dhenara.agent.runner import AgentRunner
+from dhenara.agent.dsl.events import EventType
+from dhenara.agent.utils.helpers.terminal import print_node_completion, print_component_completion
+
+# Select the agent to run
+from src.agents.autocoder.agent import agent
+from src.agents.autocoder.handler import node_input_event_handler
+
+# Set agent root_id
+root_component_id = "autocoder_root"
+agent.root_id = root_component_id
+
+# Create run context
+run_context = RunContext(
+    root_component_id=root_component_id,
+    project_root=project_root,
+    observability_settings=None,
+    run_root_subpath=None,
 )
+
+# Register event handlers
+run_context.register_event_handlers({
+    EventType.node_input_required: node_input_event_handler,
+    EventType.node_execution_completed: print_node_completion,
+    EventType.component_execution_completed: print_component_completion,
+})
+
+# Create and run the agent
+runner = AgentRunner(agent, run_context)
+# Run using: dhenara run agent <agent_name>
 ```
 
-The execution context keeps track of all flow and node results and provides access to them throughout execution.
+The run context provides the execution environment for the agent, including event handling and artifacts storage.
+
+## Agent Artifacts
+
+When an agent is executed, it generates artifacts in the run directory:
+
+```
+runs/run_<timestamp>_<id>/
+├── .trace/
+│   ├── dad_metadata.json
+│   ├── logs.jsonl
+│   ├── metrics.jsonl
+│   └── trace.jsonl
+├── <agent_root_id>/
+│   └── <flow_id>/
+│       ├── <node_id_1>/
+│       │   ├── outcome.json
+│       │   └── result.json
+│       ├── <node_id_2>/
+│       │   ├── outcome.json
+│       │   ├── result.json
+│       │   └── state.json  # For AIModelNode
+└── static_inputs/
+```
+
+These artifacts provide valuable information for debugging and understanding the agent's execution:
+
+- **result.json**: Contains the complete node execution result
+- **outcome.json**: Contains just the outcome portion of the result
+- **state.json**: For AIModelNode, contains the actual API call details
 
 ## Common Agent Patterns
 
+### Single-Shot Coding Agent
+
+A common pattern is a coding agent that implements tasks in a single pass:
+
+```python
+# Agent definition
+agent = AgentDefinition(root_id="autocoder_root")
+agent.flow(
+    "main_flow",
+    implementation_flow,  # Flow that analyzes code and makes changes
+)
+```
+
+This pattern, demonstrated in the single-shot-coder tutorial, is effective for straightforward coding tasks.
+
 ### Multi-Stage Processing Agent
 
-A common pattern is to create an agent that processes data in distinct stages:
+A multi-stage agent processes data in distinct stages:
 
 ```python
 # Create a multi-stage processing agent
@@ -219,40 +312,6 @@ coordinator_agent.flow("coordination", coordination_flow)
 
 This pattern enables delegation of specialized tasks to appropriate subagents.
 
-### Adaptive Decision-Making Agent
-
-Adaptive agents can change their behavior based on analysis results:
-
-```python
-# Create an adaptive agent
-adaptive_agent = AgentDefinition()
-adaptive_agent.flow("initial_analysis", analysis_flow)
-
-# Define behavior branches
-simple_case_agent = AgentDefinition().flow("simple_process", simple_flow)
-complex_case_agent = AgentDefinition().flow("complex_process", complex_flow)
-extreme_case_agent = AgentDefinition().flow("extreme_process", extreme_flow)
-
-# Add conditional for first decision
-adaptive_agent.conditional(
-    "complexity_check",
-    statement=ObjectTemplate(expression="$hier{initial_analysis.analyzer}.outcome.structured.complexity > 0.7"),
-    true_branch=complex_branch_agent,
-    false_branch=simple_branch_agent
-)
-
-# Complex branch agent has its own conditional
-complex_branch_agent = AgentDefinition()
-complex_branch_agent.conditional(
-    "extreme_check",
-    statement=ObjectTemplate(expression="$hier{initial_analysis.analyzer}.outcome.structured.complexity > 0.9"),
-    true_branch=extreme_case_agent,
-    false_branch=complex_case_agent
-)
-```
-
-This pattern enables sophisticated decision trees for processing.
-
 ## Best Practices
 
 1. **Logical Decomposition**: Break complex tasks into logical agent components
@@ -260,6 +319,8 @@ This pattern enables sophisticated decision trees for processing.
 3. **Appropriate Granularity**: Choose the right level of granularity for agents
 4. **Explicit Coordination**: Make coordination between agents explicit
 5. **Reuse Common Patterns**: Identify and reuse common agent patterns
+6. **Event Handling**: Implement comprehensive event handling for user interaction
+7. **Artifact Management**: Understand and leverage the artifacts system for debugging
 
 By following these practices, you can create sophisticated agent systems that effectively solve complex problems while
 maintaining clarity and maintainability.

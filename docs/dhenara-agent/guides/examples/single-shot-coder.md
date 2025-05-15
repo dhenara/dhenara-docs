@@ -28,11 +28,50 @@ The Single-Shot Coder has a simpler structure than the Autocoder:
 src/agents/singleshot_coder/
 ├── __init__.py
 ├── agent.py        # Main agent definition
-├── flow.py         # Flow configuration
+├── flows/          # Flow configurations
+│   ├── __init__.py
+│   └── implementation.py # Implementation flow
+├── types.py        # Data models
 └── handler.py      # Event handlers
 ```
 
-It reuses the implementation flow from the Autocoder agent but skips the planning phase.
+It focuses on a three-node structure:
+
+1. FolderAnalyzerNode - For gathering context from files and folders
+2. AIModelNode - For code generation based on the task and context
+3. FileOperationNode - For executing file operations from the generated implementation
+
+## Data Models
+
+The agent uses Pydantic models for structured data handling:
+
+```python
+from dhenara.agent.dsl.inbuilt.flow_nodes.defs.types import FileOperation
+from pydantic import BaseModel, Field
+
+class TaskImplementation(BaseModel):
+    """
+    Contains the concrete file operations to implement a specific task of the plan.
+    This is the output generated after analyzing the context specified in the TaskSpec.
+    """
+
+    task_id: str | None = Field(
+        default=None,
+        description=("ID of the corresponding TaskSpec that this implements if it was given in the inputs"),
+    )
+    file_operations: list[FileOperation] | None = Field(
+        default_factory=list,
+        description="Ordered list of file operations to execute for this implementation task",
+    )
+    execution_commands: list[dict] | None = Field(
+        None,
+        description="Optional shell commands to run after file operations (e.g., for build or setup)",
+    )
+    verification_commands: list[dict] | None = Field(
+        None,
+        description="Optional commands to verify the changes work as expected",
+    )
+```
 
 ## Agent Definition
 
@@ -41,81 +80,135 @@ The agent definition is straightforward, directly using the implementation flow:
 ```python
 from dhenara.agent.dsl import AgentDefinition
 
-from .flow import implementation_flow
+from .flows.implementation import implementation_flow
 
 agent = AgentDefinition()
 agent.flow(
-    "quick_coder",
+    "main_flow",
     implementation_flow,
 )
 ```
 
-## Flow Configuration
+## Implementation Flow
 
-Instead of generating a task specification dynamically through a planning phase, the Single-Shot Coder loads a
-predefined task specification from a file:
+The implementation flow consists of three key nodes:
 
 ```python
-import json
+from dhenara.agent.dsl import (
+    AIModelNode,
+    AIModelNodeSettings,
+    EventType,
+    FileOperationNode,
+    FileOperationNodeSettings,
+    FlowDefinition,
+    FolderAnalyzerNode,
+    FolderAnalyzerSettings,
+)
+from dhenara.ai.types import AIModelCallConfig, ObjectTemplate, Prompt
 
-from src.agents.autocoder.types import TaskSpecWithFolderAnalysisOps
-from ..autocoder.flows.implementation import implementation_flow
+from src.agents.autocoder.types import TaskImplementation
 
-# Load task background information
-def read_background():
-    with open("src/common/data/backgrounds/dad_docs_docusorus_1.md") as file:
-        return file.read()
+# Directory path for analysis
+global_data_directory = "$var{run_root}/global_data"
 
-# Load task description
-def read_description():
-    with open("src/common/live_prompts/singleshot_coder/task_description.md") as file:
-        return file.read()
+# Create a FlowDefinition
+implementation_flow = FlowDefinition()
 
-# Load and prepare task specification
-def read_task_spec_json():
-    with open("src/common/live_prompts/singleshot_coder/task_spec.json") as file:
-        spec_dict = json.load(file)
-        spec = TaskSpecWithFolderAnalysisOps(**spec_dict)
+# Task specification as a component variable
+implementation_flow.vars({
+    "task_spec": task_spec,  # Loaded from a file or defined programmatically
+})
 
-        # Update description with content from task_description.md
-        _task_description = read_description()
-        spec.description = _task_description
-        return spec
+# 1. Folder Analysis Node
+implementation_flow.node(
+    "dynamic_repo_analysis",
+    FolderAnalyzerNode(
+        settings=FolderAnalyzerSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}"),
+        ),
+    ),
+)
 
-# Load data
-task_background = read_background()
-task_spec = read_task_spec_json()
+# 2. Code Generation Node
+implementation_flow.node(
+    "code_generator",
+    AIModelNode(
+        pre_events=[EventType.node_input_required],
+        settings=AIModelNodeSettings(
+            models=["claude-3-7-sonnet", "gpt-4.1-preview", "gemini-2.0-flash"],
+            system_instructions=[
+                "You are a professional code implementation agent specialized in executing precise file operations.",
+                # Additional system instructions...
+            ],
+            prompt=Prompt.with_dad_text(
+                text=(
+                    "## Task Description\n"
+                    "$expr{task_spec.description}\n\n"
+                    "## Repository Context\n"
+                    "$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"
+                    "## Implementation Requirements\n"
+                    "1. Generate precise file operations that can be executed programmatically\n"
+                    # Additional requirements...
+                ),
+            ),
+            model_call_config=AIModelCallConfig(
+                structured_output=TaskImplementation,
+                max_output_tokens=64000,
+                reasoning=True,
+            ),
+        ),
+    ),
+)
 
-# Configure implementation flow
-implementation_flow.vars(
-    {
-        "task_background": task_background,
-        "task_spec": task_spec,
-    }
+# 3. File Operation Node
+implementation_flow.node(
+    "code_generator_file_ops",
+    FileOperationNode(
+        settings=FileOperationNodeSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(
+                expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+            ),
+            stage=True,
+            commit=True,
+            commit_message="$var{run_id}: Auto generated.",
+        ),
+    ),
 )
 ```
 
 ## Event Handler
 
-The event handler is also simplified, focusing only on handling input events for the code generator node:
+The event handler manages model selection and task inputs:
 
 ```python
 from dhenara.agent.dsl import FlowNodeTypeEnum, NodeInputRequiredEvent
-from dhenara.agent.utils.helpers.terminal import get_ai_model_node_input
+from dhenara.agent.utils.helpers.terminal import get_ai_model_node_input, get_folder_analyzer_node_input
 
-from ..autocoder.flows.defs import models
+from .flows.implementation import global_data_directory
 
-async def singleshot_autocoder_input_handler(event: NodeInputRequiredEvent):
+async def node_input_event_handler(event: NodeInputRequiredEvent):
+    node_input = None
+
     if event.node_type == FlowNodeTypeEnum.ai_model_call:
-        node_input = None
-
         if event.node_id == "code_generator":
             node_input = await get_ai_model_node_input(
                 node_def_settings=event.node_def_settings,
-                models=models,
             )
-        else:
-            print(f"WARNING: Unhandled ai_model_call input event for node {event.node_id}")
+            # For live input mode, uncomment the following:
+            # task_description = await async_input("Enter your query: ")
+            # node_input.prompt_variables = {"task_description": task_description}
+
+        event.input = node_input
+        event.handled = True
+
+    elif event.node_type == FlowNodeTypeEnum.folder_analyzer:
+        if event.node_id == "dynamic_repo_analysis":
+            node_input = await get_folder_analyzer_node_input(
+                node_def_settings=event.node_def_settings,
+                base_directory=global_data_directory,
+            )
 
         event.input = node_input
         event.handled = True
@@ -123,33 +216,57 @@ async def singleshot_autocoder_input_handler(event: NodeInputRequiredEvent):
 
 ## Task Specification
 
-The task specification is defined in a JSON file with this structure:
+The task specification can be defined in a JSON file with this structure:
 
 ```json
 {
   "order": 1,
   "task_id": "singleshot_task",
-  "description": "This will be replaced with the content from task_description.md",
+  "description": "Update the README file with relevant content",
   "required_context": [
     {
       "operation_type": "analyze_folder",
-      "path": "docs/dhenara-agent/examples",
-      "content_read_mode": "full"
+      "path": "some_repo/docs",
+      "content_read_mode": "none"
     },
     {
       "operation_type": "analyze_file",
-      "path": "docs/dhenara-agent/getting-started/quick-start.md"
+      "path": "some_repo/README.md",
+      "content_read_mode": "full"
     }
   ]
 }
 ```
 
-The `required_context` field specifies which files or folders should be analyzed to provide context for the
-implementation. This approach gives you precise control over what information is provided to the AI model.
+## Implementation Approaches
+
+The Single-Shot Coder supports three main implementation approaches:
+
+### 1. Basic Implementation
+
+The simplest approach with hardcoded task description and context files. Good for getting started and understanding the
+flow structure.
+
+### 2. Live Input Mode
+
+Enhances the basic implementation by accepting inputs at runtime:
+
+- Dynamic model selection through the terminal interface
+- Task description entered by the user during execution
+- Context files/folders specified at runtime
+
+### 3. Component Variables Mode
+
+The most flexible approach that uses component variables and structured task specifications:
+
+- Task specifications loaded from JSON files
+- Component-level variables accessible to all nodes
+- Support for complex context analysis operations
+- Better organization and reusability
 
 ## Running the Agent
 
-To run the Single-Shot Coder, use a runner script:
+To run the Single-Shot Coder:
 
 ```python
 from dhenara.agent.dsl.events import EventType
@@ -157,22 +274,21 @@ from dhenara.agent.run import RunContext
 from dhenara.agent.runner import AgentRunner
 
 from src.agents.singleshot_coder.agent import agent
-from src.agents.singleshot_coder.handler import singleshot_autocoder_input_handler
-from src.runners.defs import observability_settings, project_root
+from src.agents.singleshot_coder.handler import node_input_event_handler
+from src.runners.defs import project_root
 
 root_component_id = "singleshot_coder_root"
 agent.root_id = root_component_id
 
 run_context = RunContext(
     root_component_id=root_component_id,
-    observability_settings=observability_settings,
     project_root=project_root,
     run_root_subpath="agent_singleshot_coder",
 )
 
 run_context.register_event_handlers(
     handlers_map={
-        EventType.node_input_required: singleshot_autocoder_input_handler,
+        EventType.node_input_required: node_input_event_handler,
         # Additional event handlers...
     }
 )
@@ -180,22 +296,24 @@ run_context.register_event_handlers(
 runner = AgentRunner(agent, run_context)
 ```
 
-## Use Cases
-
-The Single-Shot Coder is ideal for:
-
-1. **Isolated Feature Development**: When adding a single feature or component
-2. **Bug Fixes**: Targeted fixes for specific issues
-3. **Documentation Updates**: Creating or updating documentation files
-4. **Configuration Changes**: Updating configuration files or settings
-5. **Small Refactoring Tasks**: Focused refactoring of limited scope
-
 ## Advantages over Full Autocoder
 
 - **Simplicity**: Fewer components and simpler flow
 - **Speed**: Faster execution by skipping the planning phase
 - **Precision**: Direct control over exactly which files are analyzed
 - **Predictability**: Pre-defined task specification ensures consistent behavior
+
+## Learn More
+
+For a step-by-step guide on building a Single-Shot Coder from scratch, see the
+[Single-Shot Coding Assistant tutorial](../tutorials/single-shot-coder/index.md), which walks through:
+
+- Setting up the project structure
+- Implementing each part of the flow
+- Handling events
+- Running the agent and understanding artifacts
+- Enhancing with live inputs
+- Using component variables
 
 ## Conclusion
 

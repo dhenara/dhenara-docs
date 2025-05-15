@@ -36,7 +36,45 @@ settings = ObservabilitySettings(
 configure_observability(settings)
 ```
 
-The `RunContext` automatically configures observability based on run parameters.
+The `RunContext` automatically configures observability based on run parameters. By default, when you use the
+`dhenara run agent` command, each run creates a unique directory under the `runs` folder with comprehensive artifacts
+including logs, traces, and metrics.
+
+## Run Directory Structure and Artifacts
+
+When you run an agent using the `dhenara run agent <agent_name>` command, DAD automatically creates a directory
+structure for observability artifacts. For example:
+
+```text
+run_20240514_225955_98cb96      # Unique run ID with timestamp
+├── .trace                      # Observability data
+│   ├── dad_metadata.json       # Metadata about the run
+│   ├── logs.jsonl              # Structured logs
+│   ├── metrics.jsonl           # Metrics data
+│   └── trace.jsonl             # Trace events
+├── autocoder_root              # Component hierarchy (your root component ID)
+│   └── main_flow               # Flow ID
+│       ├── dynamic_repo_analysis    # Node ID
+│       │   ├── outcome.json         # Node outcome
+│       │   └── result.json          # Complete node execution result
+│       ├── code_generator
+│       │   ├── outcome.json
+│       │   ├── result.json
+│       │   └── state.json           # AIModelNode state and prompt
+│       └── code_generator_file_ops
+│           ├── outcome.json
+│           └── result.json
+└── static_inputs
+```
+
+Each folder in the component hierarchy corresponds to the IDs defined in your agent definition:
+
+- Root component ID (defined in the runner)
+- Flow ID (defined in the agent)
+- Node ID (defined in the flow)
+
+This hierarchical structure is particularly valuable for troubleshooting, analyzing execution flows, and enabling the
+rerun functionality.
 
 ## Enabling and Disabling Tracing
 
@@ -77,6 +115,27 @@ if not is_tracing_disabled():
         span.set_attribute("key", "value")
 ```
 
+### Test Mode and Observability
+
+DAD integrates with the `dhenara-ai` package's test mode feature, which allows you to develop and test your agent flows
+without making actual API calls. This is useful for verifying your observability setup without incurring costs.
+
+In the single-shot-coder tutorial example:
+
+```python
+model_call_config=AIModelCallConfig(
+    structured_output=TaskImplementation,
+    test_mode=True,  # Enable test mode to avoid actual API calls
+    max_output_tokens=64000,
+    max_reasoning_tokens=4000,
+    reasoning=True,
+    timeout=1800.0,  # 30 minutes
+),
+```
+
+Even when using test mode, all observability features (traces, logs, metrics) continue to function, allowing you to
+validate your implementation's structure and flow without sending actual requests to AI providers.
+
 ### Enabling Tracing with Different Exporters
 
 DAD supports multiple exporters for sending trace data to different visualization and analysis systems:
@@ -105,6 +164,52 @@ settings = ObservabilitySettings(
 )
 
 configure_observability(settings)
+```
+
+## Analyzing Logs and Traces
+
+DAD provides structured logs and traces that are valuable for troubleshooting and understanding agent execution.
+
+### Analyzing Log Files
+
+All logs are stored in the `.trace/logs.jsonl` file in JSONL format. Here's how to effectively analyze them:
+
+```bash
+# View the last 10 log entries
+tail -10 runs/run_<run_id>/.trace/logs.jsonl
+
+# Search for errors (the most common debugging scenario)
+grep -i '"body": "ERROR' runs/run_<run_id>/.trace/logs.jsonl
+
+# Follow logs in real-time during execution
+tail -f runs/run_<run_id>/.trace/logs.jsonl
+```
+
+Common error patterns to look for include:
+
+- API initialization errors (credentials issues)
+- Node execution failures
+- Parsing or schema validation errors
+
+### Analyzing Node Artifacts
+
+Each node in your flow generates two key artifacts:
+
+1. **result.json**: Contains the complete node execution result with:
+   - Input: What was provided to the node
+   - Output: The direct output from the node execution
+   - Outcome: The processed result used by subsequent nodes
+   - Error information (if any)
+2. **outcome.json**: A convenience file containing just the outcome field extracted from result.json
+
+In AIModelNodes, you'll also find a **state.json** file containing the actual prompt sent to the AI provider, which is
+invaluable for debugging AI interactions.
+
+```python
+# When referencing node results in templates:
+"$expr{ $hier{node_id}.outcome.structured.some_field }"
+
+# This refers to the outcome field in result.json, not the separate outcome.json file
 ```
 
 ## Using Tracing Visualization Tools with Docker
@@ -276,6 +381,24 @@ run_dashboard("/path/to/trace.jsonl", port=8080)
 
 This will start a local web server and open a browser window with a simple trace viewer.
 
+## Rerunning Agents from Specific Points
+
+One major advantage of DAD's hierarchical artifact structure is the ability to rerun agents from specific points in the
+execution flow. This is particularly useful for debugging, optimizing prompts, or resuming after failures.
+
+```bash
+# Rerun from a specific node in a previous run
+dhenara run agent autocoder --previous-run-id run_20240514_225955_98cb96 --entry-point main_flow.code_generator
+```
+
+This command will:
+
+1. Load the state from the previous run
+2. Skip the execution of all nodes before `code_generator`
+3. Start execution from the specified node
+
+This feature saves time and costs, especially when working with large context models or complex flows.
+
 ## Core Observability Components
 
 ### 1. Tracing System
@@ -422,6 +545,24 @@ result = await runner.run()
 With this setup, you can view detailed traces of your agent's execution in the Jaeger UI, helping you understand its
 behavior, identify bottlenecks, and diagnose issues.
 
+## Troubleshooting Common Observability Issues
+
+### Missing Node Artifacts
+
+If you don't see artifacts for all nodes in your flow:
+
+1. Check for API credential errors in logs (`grep -i "body": "ERROR" runs/run_<run_id>/.trace/logs.jsonl`)
+2. Verify that event handlers are properly registered
+3. Ensure all required node settings are properly configured
+
+### AI Model Failures
+
+Look for these common patterns in logs and AIModelNode state.json files:
+
+1. **Content Length**: If you see `"finish_reason": "max_token"`, your context window is being exceeded
+2. **Schema Issues**: Check for `parse_error` fields in the response indicating the model didn't follow your schema
+3. **API Errors**: Look for HTTP error codes in the status field
+
 ## Best Practices
 
 1. **Hierarchical Context**: Ensure proper nesting of traces through the component hierarchy
@@ -432,6 +573,8 @@ behavior, identify bottlenecks, and diagnose issues.
 6. **Production Settings**: Consider disabling detailed tracing in production for performance-critical systems, or using
    sampling strategies
 7. **Cleanup**: Remember to stop Docker containers when you're done analyzing traces to free up resources
+8. **Test Mode First**: Use test_mode=True during initial development to validate flows without incurring API costs
+9. **Artifact Management**: Periodically clean up old run directories to free disk space
 
 By utilizing DAD's observability features, developers can gain deep insights into their agent systems, diagnose issues
 more effectively, and optimize performance with the help of powerful visualization tools.
