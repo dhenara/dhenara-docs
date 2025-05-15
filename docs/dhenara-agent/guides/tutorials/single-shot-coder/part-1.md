@@ -378,8 +378,6 @@ implementation_flow.node(
                 expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
             ),
             stage=True,
-            commit=True,
-            commit_message="$var{run_id}: Auto generated.",
         ),
     ),
 )
@@ -658,22 +656,334 @@ For an AIModelNode, there will be an extra file:
 - **state.json**: Contains the actual LLM API call parameters including the final prompt (after processing DAD templates
   if any). This is quite useful for debugging LLM API calls.
 
-# TODO:
-- analyse folder anaysis resul
-- disable test mode
-- explain ai mode results
-- explanf file ops results
+# Tutorial
 
+## Analysing Node artifacts results
 
-## Enhancing the Single-Shot Implementation
+Now let's go through the results of nodes.
 
-There are several ways to enhance this basic implementation:
+### FolderAnalyzerNode
+FolderAnalyzerNode has a wide range of settings.
 
-1. **Accept task description from user input**: Modify the handler to prompt the user for a task description
-2. **Add error handling**: Implement error checking for AI model responses
-3. **Support multiple task types**: Add capability to handle different kinds of coding tasks
+```python
+class FolderAnalyzerSettings:
+    base_directory: str
+    use_relative_paths: bool
+    allowed_directories: list[str]
+    operations: list[FolderAnalysisOperation]
+    operations_template: ObjectTemplate
+    fail_fast: bool
+
+# Whereas each operation is as below
+class FolderAnalysisOperation(FileSystemAnalysisOperation):
+    operation_type: Literal[ "analyze_folder", "analyze_file", "find_files", "get_structure" ]
+    path: str
+    content_read_mode: Literal["none", "preview", "full", "structure"]
+    additional_gitignore_paths: list[str]
+```
+
+Open the *outcome.json* file in `runs/run_<run_id>/autocoder_root/main_flow/dynamic_repo_analysis` and make sure the outcome is as what you expect.
+For example, if the content mode is *none*, you will see a the directory structure traversed downwards without any file content. Also make sure that no unwanted files are getting added there. By default this respects all the `.gitignore` files in the path it's traversing, but still make sure that any unexpected files are mentioned in the result.
+
+### AIModelNode Node
+As we have run this node in test_mode, this will not have any valid outcome. But for AIModelNode nodes, there is an additional *state.json* file. Open this file and make sure the API call parameters are as you expect (except test_mode).
+Open the *outcome.json* file in `runs/run_<run_id>/autocoder_root/main_flow/code_generator/state.json` and analyze the parameters.
+
+```json
+{
+  "ai_model": "claude-3-7-sonnet",
+  "api": "anthropic",
+  "model_call_config": {
+    "streaming": false,
+    "max_output_tokens": 64000,
+    "reasoning": true,
+    "max_reasoning_tokens": 4000,
+    "options": {},
+    "structured_output": {....},
+    "metadata": {},
+    "timeout": 1800.0,
+    "retries": 3,
+    "retry_delay": 1.0,
+    "max_retry_delay": 10.0,
+    "test_mode": true
+  },
+  "prompt": "## Task Description\nUp....",
+  "context": [],
+  "instructions": [
+    "You ... conventions."
+  ]
+}
+```
+
+If you inspect the prompt, the template expression `"$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"` is properly rendered with the folder analysis node outcome as a string.
+
+### FileOperationNode
+We will not analyze this now, as this node has a dependency on its previous AIModelNode, and it was in test_mode.
+
+Once you are happy with the node results/state, it's time to disable the *test_mode* and make actual API calls.
+
+## Run in Live mode
+In your flow inside `src/agents/autocoder/flows/implementation.py` disable the *test_mode* inside `AIModelNode`.
+
+```python
+             model_call_config=AIModelCallConfig(
+                structured_output=TaskImplementation,
+                test_mode=False, # Disable Test Mode, or delete this line as its disabled by default
+                max_output_tokens=64000,
+                max_reasoning_tokens=4000,
+                reasoning=True,
+                timeout=1800.0,  # 30 minutes
+            ),
+```
+
+and again run the flow.
+
+```bash
+dhenara run agent autocoder
+```
+
+This time, after the node dynamic_repo_analysis got completed, there is a slight delay before showing other node status. It's because the AIModelNode is making an API call and waiting for its results.
+
+:::note
+
+DAD currently does not support streaming, but we will add it soon. The `dhenara-ai` package has a lot of cool features for streaming, and we will integrate it to DAD soon.
+
+:::
+
+Once the execution is completed, again go through the results.
+
+## Final Results
+If the execution was successfully completed, you should get the new/updated files in your repos under `runs/global_data`. The first thing you could check is if something happened 🙂.
+
+In our case, we were just asking it to update a readme file. So we will do below:
+
+```bash
+$ cd dev_agents/runs/global_data/dhenara_docs
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+$
+```
+
+Yes, the files are generated for us.
+
+```bash
+diff --git a/README.md b/README.md
+index e36d60d..fbd5a9f 100644
+--- a/README.md
++++ b/README.md
+@@ -1,5 +1,96 @@
+-# Dhenara AI Documentation
++# Dhenara Documentation
+
+-This repository contains the documentation for the Dhenara AI & Dhenara Agent frameworks.
++Welcome to the official documentation repository for Dhenara products! This repository contains comprehensive documentation for the Dhenara ecosystem.
+
+-Visit [Dhenara Docs](https://docs.dhenara.com/) to view the documentation.
++## What is Dhenara?
++
++Dhenara provides a suite of open-source tools for working with AI models and building sophisticated AI agents:
++
++### Dhenara-AI
+
+...
+
+```
+
+You got what you want. But still let's analyze the node results in live mode so that you understand the framework better.
+
+The FolderAnalyserNode result is exactly same as previous, so we will skip it now.
+
+:::warning
+
+Make sure you are looking into the correct (latest) run directory.
+
+:::
+
+### AIModelNode Node
+In the `runs/run_<run_id>/autocoder_root/main_flow/code_generator/outcome.json`, you should see the *structured* output in the schema we requested to the model via TaskImplementation
+
+```
+{
+  "structured": {
+    "task_id": null,
+    "file_operations": [
+      {
+        "type": "create_file",
+        "path": "dhenara_docs/README.md",
+        "paths": null,
+        "content": "# Dhenara Documentation\n\nWelcome to ... additional examples.\n",
+        "edits": null,
+        "dry_run": false,
+        "source": null,
+        "destination": null,
+        "search_config": null
+      }
+    ],
+    "execution_commands": null,
+    "verification_commands": null
+  },
+  "files": []
+}
+```
+
+If you still don't see a proper `structured` outcome, then there are some issues and you will NOT see successful file updates.
+To see what happened, look into the `result.json` file in the AIModelNode artifacts.
+
+```json
+{
+  "executable_type": "flow_node",
+  "node_identifier": "code_generator",
+  "execution_status": "completed",
+  "output": {
+    "data": {
+      "response": {
+        "status": {
+          "status": "response_received_success",
+          "api_provider": "anthropic",
+          "model": "claude-3-7-sonnet",
+          "message": "Output generated",
+          "code": "success",
+          "http_status_code": 200
+        },
+        "chat_response": {
+          "model": "claude-3-7-sonnet-latest",
+          "provider": "anthropic",
+          "api_provider": "anthropic",
+          "usage": {
+            "total_tokens": 11911,
+            "prompt_tokens": 10388,
+            "completion_tokens": 1523
+          },
+          "usage_charge": {
+            "cost": 0.054009
+          },
+          "choices": [
+            {
+              "index": 0,
+              "finish_reason": "tool_use",
+              "contents": [
+                {
+                  "index": 0,
+                  "metadata": {
+                    "signature": "Er...C"
+                  },
+                  "storage_metadata": {},
+                  "custom_metadata": {},
+                  "type": "reasoning",
+                  "role": "assistant",
+                  "thinking_text": "Based on the task description, I need to update the README file with relevant content...."
+                },
+                {
+                  "index": 1,
+                  "metadata": {},
+                  "storage_metadata": {},
+                  "custom_metadata": {},
+                  "type": "text",
+                  "role": "assistant",
+                  "text": "Looking at the repository context, I need to create a README.md file that provides an overview of the Dhenara documentation repository. Let me implement this task."
+                },
+                {
+                  "index": 2,
+                  "metadata": {},
+                  "storage_metadata": {},
+                  "custom_metadata": {},
+                  "type": "structured_output",
+                  "role": "assistant",
+                  "structured_output": {
+                    "config": "EDITED: You will see the config we requested",
+                    "structured_data": {
+                      "task_id": null,
+                      "file_operations": [
+                        {
+                          "type": "create_file",
+                          "path": "dhenara_docs/README.md",
+                          "paths": null,
+                          "content": "# Dhenara Documentation\n\nWelcome to ... examples.\n",
+                          "edits": null,
+                          "dry_run": false,
+                          "source": null,
+                          "destination": null,
+                          "search_config": null
+                        }
+                      ],
+                      "execution_commands": null,
+                      "verification_commands": null
+                    }
+                  }
+                }
+              ],
+              "metadata": {}
+            }
+          ],
+          "metadata": {
+            "streaming": false,
+            "duration_seconds": 0,
+            "provider_metadata": {
+              "id": "msg_018etqD3RAH7n3qcVSaFjbvR"
+            }
+          }
+        }
+      }
+    },
+    "metadata": {}
+  },
+  "outcome": "EDITED: You will see the same outcome as in `outcome.json` file",
+  "created_at": "2025-05-15T10:07:20.260995"
+}
+```
+
+#### Troubleshooting
+
+If you don't see a *structured* in any of the response content/choices, the LLM was not responding with the correct structure you requested. Some possible scenarios are:
+
+- LLM Context Window reached while generation. You will see it in `"finish_reason": "max_token"`. You will need to reduce the input tokens by reading fewer files or increase output tokens in the *AIModelCallConfig*.
+- LLM didn't generate the correct schema we requested. Here inside `structured_output` in the result, you will see the `structured_data` as null, but there will be a `parse_error` which describes the parsing error. One quick try you could give here is to copy the raw_data and parse error, paste it in a chatbot and ask it to correct it, and then modify structured_data field in `result.json` and rerun agent from this node.
+
+### FileOperationNode
+
+As you have seen a successful *outcome* in the *dynamic_repo_analysis* node, the FileOperationNode setting will correctly pick the operations from operation_template.
+
+```python
+# 3. File Operation Node
+implementation_flow.node(
+    "code_generator_file_ops",
+    FileOperationNode(
+        settings=FileOperationNodeSettings(
+            base_directory=global_data_directory,
+            operations_template=ObjectTemplate(  #NOTE: we had given the operations as a DAD template as below
+                expression="$expr{ $hier{code_generator}.outcome.structured.file_operations }",
+            ),
+            stage=True,
+        ),
+    ),
+)
+```
+
+And the outcome of file operations is in `runs/run_<run_id>/autocoder_root/main_flow/code_generator_file_ops/outcome.json`
+
+```json
+{
+  "base_directory": "path/to/dev_agents/runs/global_data",
+  "results": [
+    {
+      "type": "create_file",
+      "path": "dhenara_docs/README.md",
+      "success": true
+    }
+  ]
+}
+```
+
+Hurray, you have successfully implemented your first CLI agent using DAD. In the next part, we will enhance this further by avoiding hard-coded inputs in this flow.
 
 ## What's Next?
 
-In [Part 2: Planning Flow](./part-2.md), we'll enhance our coding assistant by adding a planning capability. This will
-enable it to break down complex tasks into smaller, manageable steps before implementation.
+In [Part 2: Planning Flow](./part-2.md), we'll enhance our coding assistant by avoiding hard coded inputs and taking live inputs on run.
