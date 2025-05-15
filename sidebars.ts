@@ -200,8 +200,10 @@ const sidebars: SidebarsConfig = {
               items: [
                 'dhenara-agent/guides/tutorials/single-shot-coder/part-1',
                 'dhenara-agent/guides/tutorials/single-shot-coder/part-2',
+                'dhenara-agent/guides/tutorials/single-shot-coder/part-3',
               ],
             },
+            /*
             {
               type: 'category',
               label: 'Enhanced Command-Line Coding Assistant',
@@ -218,6 +220,7 @@ const sidebars: SidebarsConfig = {
                 'dhenara-agent/guides/tutorials/command-line-coder/part-4',
               ],
             },
+            */
           ],
         },
         // Examples

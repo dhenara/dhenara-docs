@@ -30,16 +30,13 @@ Before starting this tutorial, make sure you have:
 
 ## Tutorial Structure
 
-This tutorial is divided into four parts, each building on the previous one:
+This tutorial is divided into three parts, each building on the previous one:
+- Bringup
+- Live Inputs
+- Coomponet Variales
 
-TODO
+The final code of this tutorial can be found in [DAD Tutorials](https://github.com/dhenara/dad_tutorials)
 
-Each part includes:
-
-- Explanation of the concepts being introduced
-- Step-by-step instructions for implementation
-- Complete code examples
-- Tips and best practices
 
 ## Let's Get Started!
 

@@ -1,4 +1,8 @@
-# Part 2
+---
+title: Part 1- Live Inputs
+---
+
+# Part 2: Live Inputs
 
 If you look into the flow in part 1, we were hard coding the _task_description_ inside the flow, which is a bit weird.
 You don't want to edit your source code every time when you run the agent.
