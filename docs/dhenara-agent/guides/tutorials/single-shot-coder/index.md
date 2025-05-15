@@ -10,14 +10,14 @@ implement changes with precision.
 
 ## What We'll Build
 
-We'll create a _single-shot_ command-line coding assistant that progressively evolves through four stages:
+We'll create a _single-shot_ command-line coding assistant that progressively evolves through three stages:
 
-1. **Single-Shot Implementation**: A basic agent that can handle standalone coding tasks
+1. **Part 1: Bringup** - A basic implementation that can handle standalone coding tasks
+2. **Part 2: Live Inputs** - Enhanced to accept inputs at runtime
+3. **Part 3: Component Variables** - Using component variables for better organization and reusability
 
-TODO: Update
-
-By the end of this tutorial, you'll have a fully functional coding assistant that take a coding task and _implement_ it
-using in the DAD framework.
+By the end of this tutorial, you'll have a fully functional coding assistant that can take a coding task and _implement_ it
+using the DAD framework.
 
 ## Prerequisites
 
@@ -31,12 +31,11 @@ Before starting this tutorial, make sure you have:
 ## Tutorial Structure
 
 This tutorial is divided into three parts, each building on the previous one:
-- Bringup
-- Live Inputs
-- Coomponet Variales
+- [Part 1: Bringup](./part-1.md) - Setting up the foundational implementation
+- [Part 2: Live Inputs](./part-2.md) - Adding runtime input capabilities
+- [Part 3: Component Variables](./part-3.md) - Using flow-level variables for better organization
 
 The final code of this tutorial can be found in [DAD Tutorials](https://github.com/dhenara/dad_tutorials)
-
 
 ## Let's Get Started!
 

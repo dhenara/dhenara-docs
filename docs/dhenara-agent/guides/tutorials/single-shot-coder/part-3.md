@@ -4,18 +4,45 @@ title: Part 3- Component Variables
 
 # Part 3: Component Variables
 
-In part 2, you were able to feed live inputs to nodes. But When you want to do multiple folder analysis operations, entering them one by one might be a bit tedious. An easy
-workaround here is to save them in a JSON file, and then load it. But it requires an additional fitting, the
-`component variables`. We will see this detail here
+In Part 2, we implemented live inputs for our agent, allowing us to specify the task description and context files at runtime. While this is a significant improvement, entering multiple folder analysis operations one by one can be tedious, especially when dealing with complex projects that require analyzing numerous files for context.
 
-## Component Variables
-Components are nothing but Flows and Agents. You can add component level variable which will be availabel for all nodes in that flow.
-This is very useful feature when you want to reuse the flows acrosss agents. Eg, by adding component level varialbes, you can use the same implentaion flow to feed output of a plannder flow in a more enhanced CLI agent descibed in the next tutorial
+In this part, we'll enhance our implementation by using **component variables** and structured task specifications loaded from files. This approach provides greater flexibility and reusability to our agent.
 
-## Final Code
-The final code of this tutorial can be found in [DAD Tutorials](https://github.com/dhenara/dad_tutorials)
+## What are Component Variables?
 
-`src/agents/autocoder/types.py`:
+In the Dhenara Agent DSL (DAD), components are high-level constructs like Flows and Agents. Component variables are variables defined at the component level that are accessible to all nodes within that component. This is a powerful feature for several reasons:
+
+1. **Shared Configuration**: Multiple nodes can access the same data without duplicating it
+2. **Flow Reusability**: The same flow can be used in different agents with different variable values
+3. **Clean Separation**: You can separate complex configurations from your flow logic
+
+For our implementation flow, we'll use component variables to store task specifications, making it easier to handle complex tasks and creating more maintainable code.
+
+## Task Specification Structure
+
+Before we implement component variables, let's understand the task specification structure we'll be using. We'll define a `TaskSpec` type that contains:
+
+1. An order number for execution sequencing
+2. A unique task ID
+3. A detailed description of what the task should accomplish
+4. A list of required context files/folders that the LLM needs to analyze to implement the task
+
+This structured approach allows us to define complex tasks in a JSON file, which we can load into our flow as a component variable.
+
+## Implementing Component Variables
+
+Let's enhance our implementation by adding component variables to our flow. We'll make the following changes:
+
+1. Expand our types to include `TaskSpec` and `TaskSpecWithFolderAnalysisOps`
+2. Create a function to load the task specification from a JSON file
+3. Add the task specification as a component variable to our flow
+4. Update the FolderAnalyzerNode to use operations from the task specification
+5. Update the AIModelNode to use the task description from the specification
+
+### Step 1: Update the Types
+
+First, let's update our `types.py` file to include the task specification types:
+
 ```python
 from dhenara.agent.dsl.inbuilt.flow_nodes.defs.types import (
     FileOperation,
@@ -90,10 +117,11 @@ class TaskImplementation(BaseModel):
         None,
         description="Optional commands to verify the changes work as expected",
     )
-
 ```
 
-`src/agents/autocoder/flows/implementation.py`:
+### Step 2: Update the Implementation Flow
+
+Next, let's update our implementation flow to use component variables:
 
 ```python
 # ruff: noqa: E501
@@ -237,10 +265,12 @@ implementation_flow.node(
         ),
     ),
 )
-
 ```
 
-`src/agents/autocoder/handler.py`:
+### Step 3: Update the Handler
+
+Finally, let's update our handler to work with our new component variables approach:
+
 ```python
 from dhenara.agent.dsl import (
     FlowNodeTypeEnum,
@@ -276,4 +306,102 @@ async def node_input_event_handler(event: NodeInputRequiredEvent):
         event.handled = True
 ```
 
+## Creating the JSON Task Specification
 
+To make our component variables approach work, we need to create two files:
+
+1. A Markdown file for the task description
+2. A JSON file for the task specification
+
+Let's create these files in the `src/common/live_prompts/autocoder/` directory:
+
+```markdown
+# task_description.md
+Create a readme file
+```
+
+```json
+# task_spec.json
+{
+    "order": 1,
+    "task_id": "singleshot_task",
+    "description": "No description as it should be read from file",
+    "required_context": [
+        {
+            "operation_type": "analyze_folder",
+            "path": "dhenara_docs/docs",
+            "content_read_mode": "none",
+            "additional_gitignore_paths": null
+        },
+        {
+            "operation_type": "analyze_file",
+            "path": "dhenara_docs/sidebars.ts",
+            "content_read_mode": "full"
+        }
+    ]
+}
+```
+
+## Key Differences and Improvements
+
+Let's understand the key improvements in this approach compared to the previous parts:
+
+1. **Component Variables**:
+   - We added `implementation_flow.vars({"task_spec": task_spec})` to define a component-level variable
+   - All nodes in the flow can access this variable using `$expr{task_spec...}` expressions
+
+2. **Structured Task Definition**:
+   - We defined a proper `TaskSpec` data model with Pydantic
+   - The task specification can now be loaded from a JSON file
+
+3. **Dynamic Context Analysis**:
+   - The FolderAnalyzerNode now uses `operations_template=ObjectTemplate(expression="$expr{task_spec.required_context}")` to dynamically get operations from our task specification
+   - We no longer need user input for each analysis operation
+
+4. **Prompt Template**:
+   - The AIModelNode prompt now uses `$expr{task_spec.task_id}` and `$expr{task_spec.description}` to reference the task information
+
+5. **Handler Simplification**:
+   - We've commented out the code to manually get the task description through user input
+   - The handler is now simpler because most configuration comes from the component variables
+
+## Running the Enhanced Agent
+
+To run our agent with component variables:
+
+1. Make sure you've created the necessary directory structure:
+   ```bash
+   mkdir -p src/common/live_prompts/autocoder
+   ```
+
+2. Create the task description and specification files:
+   ```bash
+   echo "Create a readme file" > src/common/live_prompts/autocoder/task_description.md
+   ```
+   And create the JSON file with the content shown above.
+
+3. Run the agent:
+   ```bash
+   dhenara run agent autocoder
+   ```
+
+## Benefits of Component Variables
+
+Using component variables provides several benefits:
+
+1. **Reduced Code Duplication**: You define configuration once and reference it throughout the flow
+2. **Cleaner Flow Definition**: Your flow focuses on the structure rather than detailed configurations
+3. **Easier Maintenance**: Changes to configuration are centralized
+4. **Flow Reusability**: The same flow can be used with different variable values
+5. **Better Organization**: Logical separation between flow structure and configuration
+
+## What's Next?
+
+Now that we've built a fully functional single-shot coding assistant with component variables, you can explore more advanced features:
+
+1. **Multiple Flows**: Create additional flows for different purposes, like planning or verification
+2. **Flow Composition**: Compose flows together to create more complex agents
+3. **Advanced Event Handling**: Implement more sophisticated event handlers
+4. **Custom Nodes**: Create your own custom nodes to extend the functionality
+
+The complete code for this tutorial can be found in the [DAD Tutorials repository](https://github.com/dhenara/dad_tutorials).
