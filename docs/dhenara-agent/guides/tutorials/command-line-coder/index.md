@@ -35,8 +35,7 @@ This tutorial is divided into four parts, each building on the previous one:
 
 1. [**Single-Shot Implementation Flow**](./part-1.md): Build a basic agent that handles direct coding tasks
 2. [**Planning Flow**](./part-2.md): Add planning capabilities to break down complex tasks
-3. [**Enhanced Implementation Flow**](./part-3.md): Improve the implementation flow with better context
-   handling
+3. [**Enhanced Implementation Flow**](./part-3.md): Improve the implementation flow with better context handling
 4. [**Coordinator Flow**](./part-4.md): Create a coordinator to manage the planning and implementation
 
 Each part includes:

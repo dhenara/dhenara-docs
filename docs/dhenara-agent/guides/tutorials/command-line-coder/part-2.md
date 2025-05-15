@@ -347,5 +347,5 @@ implementation flow to:
 2. Analyze the required context
 3. Implement the specific task
 
-In [Part 3: Enhanced Implementation Flow](./part-3.md), we'll update our implementation flow to handle
-these requirements and work with the output from our planner.
+In [Part 3: Enhanced Implementation Flow](./part-3.md), we'll update our implementation flow to handle these
+requirements and work with the output from our planner.

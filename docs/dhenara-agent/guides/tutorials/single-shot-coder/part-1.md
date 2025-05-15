@@ -663,6 +663,7 @@ For an AIModelNode, there will be an extra file:
 Now let's go through the results of nodes.
 
 ### FolderAnalyzerNode
+
 FolderAnalyzerNode has a wide range of settings.
 
 ```python
@@ -682,12 +683,18 @@ class FolderAnalysisOperation(FileSystemAnalysisOperation):
     additional_gitignore_paths: list[str]
 ```
 
-Open the *outcome.json* file in `runs/run_<run_id>/autocoder_root/main_flow/dynamic_repo_analysis` and make sure the outcome is as what you expect.
-For example, if the content mode is *none*, you will see a the directory structure traversed downwards without any file content. Also make sure that no unwanted files are getting added there. By default this respects all the `.gitignore` files in the path it's traversing, but still make sure that any unexpected files are mentioned in the result.
+Open the _outcome.json_ file in `runs/run_<run_id>/autocoder_root/main_flow/dynamic_repo_analysis` and make sure the
+outcome is as what you expect. For example, if the content mode is _none_, you will see a the directory structure
+traversed downwards without any file content. Also make sure that no unwanted files are getting added there. By default
+this respects all the `.gitignore` files in the path it's traversing, but still make sure that any unexpected files are
+mentioned in the result.
 
 ### AIModelNode Node
-As we have run this node in test_mode, this will not have any valid outcome. But for AIModelNode nodes, there is an additional *state.json* file. Open this file and make sure the API call parameters are as you expect (except test_mode).
-Open the *outcome.json* file in `runs/run_<run_id>/autocoder_root/main_flow/code_generator/state.json` and analyze the parameters.
+
+As we have run this node in test*mode, this will not have any valid outcome. But for AIModelNode nodes, there is an
+additional *state.json* file. Open this file and make sure the API call parameters are as you expect (except test_mode).
+Open the *outcome.json* file in `runs/run*<run_id>/autocoder_root/main_flow/code_generator/state.json` and analyze the
+parameters.
 
 ```json
 {
@@ -715,15 +722,18 @@ Open the *outcome.json* file in `runs/run_<run_id>/autocoder_root/main_flow/code
 }
 ```
 
-If you inspect the prompt, the template expression `"$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"` is properly rendered with the folder analysis node outcome as a string.
+If you inspect the prompt, the template expression `"$expr{$hier{dynamic_repo_analysis}.outcome.results}\n\n"` is
+properly rendered with the folder analysis node outcome as a string.
 
 ### FileOperationNode
+
 We will not analyze this now, as this node has a dependency on its previous AIModelNode, and it was in test_mode.
 
-Once you are happy with the node results/state, it's time to disable the *test_mode* and make actual API calls.
+Once you are happy with the node results/state, it's time to disable the _test_mode_ and make actual API calls.
 
 ## Run in Live mode
-In your flow inside `src/agents/autocoder/flows/implementation.py` disable the *test_mode* inside `AIModelNode`.
+
+In your flow inside `src/agents/autocoder/flows/implementation.py` disable the _test_mode_ inside `AIModelNode`.
 
 ```python
              model_call_config=AIModelCallConfig(
@@ -742,18 +752,22 @@ and again run the flow.
 dhenara run agent autocoder
 ```
 
-This time, after the node dynamic_repo_analysis got completed, there is a slight delay before showing other node status. It's because the AIModelNode is making an API call and waiting for its results.
+This time, after the node dynamic_repo_analysis got completed, there is a slight delay before showing other node status.
+It's because the AIModelNode is making an API call and waiting for its results.
 
 :::note
 
-DAD currently does not support streaming, but we will add it soon. The `dhenara-ai` package has a lot of cool features for streaming, and we will integrate it to DAD soon.
+DAD currently does not support streaming, but we will add it soon. The `dhenara-ai` package has a lot of cool features
+for streaming, and we will integrate it to DAD soon.
 
 :::
 
 Once the execution is completed, again go through the results.
 
 ## Final Results
-If the execution was successfully completed, you should get the new/updated files in your repos under `runs/global_data`. The first thing you could check is if something happened 🙂.
+
+If the execution was successfully completed, you should get the new/updated files in your repos under
+`runs/global_data`. The first thing you could check is if something happened 🙂.
 
 In our case, we were just asking it to update a readme file. So we will do below:
 
@@ -797,7 +811,8 @@ index e36d60d..fbd5a9f 100644
 
 ```
 
-You got what you want. But still let's analyze the node results in live mode so that you understand the framework better.
+You got what you want. But still let's analyze the node results in live mode so that you understand the framework
+better.
 
 The FolderAnalyserNode result is exactly same as previous, so we will skip it now.
 
@@ -808,7 +823,9 @@ Make sure you are looking into the correct (latest) run directory.
 :::
 
 ### AIModelNode Node
-In the `runs/run_<run_id>/autocoder_root/main_flow/code_generator/outcome.json`, you should see the *structured* output in the schema we requested to the model via TaskImplementation
+
+In the `runs/run_<run_id>/autocoder_root/main_flow/code_generator/outcome.json`, you should see the _structured_ output
+in the schema we requested to the model via TaskImplementation
 
 ```
 {
@@ -834,8 +851,8 @@ In the `runs/run_<run_id>/autocoder_root/main_flow/code_generator/outcome.json`,
 }
 ```
 
-If you still don't see a proper `structured` outcome, then there are some issues and you will NOT see successful file updates.
-To see what happened, look into the `result.json` file in the AIModelNode artifacts.
+If you still don't see a proper `structured` outcome, then there are some issues and you will NOT see successful file
+updates. To see what happened, look into the `result.json` file in the AIModelNode artifacts.
 
 ```json
 {
@@ -942,14 +959,20 @@ To see what happened, look into the `result.json` file in the AIModelNode artifa
 
 #### Troubleshooting
 
-If you don't see a *structured* in any of the response content/choices, the LLM was not responding with the correct structure you requested. Some possible scenarios are:
+If you don't see a _structured_ in any of the response content/choices, the LLM was not responding with the correct
+structure you requested. Some possible scenarios are:
 
-- LLM Context Window reached while generation. You will see it in `"finish_reason": "max_token"`. You will need to reduce the input tokens by reading fewer files or increase output tokens in the *AIModelCallConfig*.
-- LLM didn't generate the correct schema we requested. Here inside `structured_output` in the result, you will see the `structured_data` as null, but there will be a `parse_error` which describes the parsing error. One quick try you could give here is to copy the raw_data and parse error, paste it in a chatbot and ask it to correct it, and then modify structured_data field in `result.json` and rerun agent from this node.
+- LLM Context Window reached while generation. You will see it in `"finish_reason": "max_token"`. You will need to
+  reduce the input tokens by reading fewer files or increase output tokens in the _AIModelCallConfig_.
+- LLM didn't generate the correct schema we requested. Here inside `structured_output` in the result, you will see the
+  `structured_data` as null, but there will be a `parse_error` which describes the parsing error. One quick try you
+  could give here is to copy the raw_data and parse error, paste it in a chatbot and ask it to correct it, and then
+  modify structured_data field in `result.json` and rerun agent from this node.
 
 ### FileOperationNode
 
-As you have seen a successful *outcome* in the *dynamic_repo_analysis* node, the FileOperationNode setting will correctly pick the operations from operation_template.
+As you have seen a successful _outcome_ in the _dynamic_repo_analysis_ node, the FileOperationNode setting will
+correctly pick the operations from operation_template.
 
 ```python
 # 3. File Operation Node
@@ -967,7 +990,8 @@ implementation_flow.node(
 )
 ```
 
-And the outcome of file operations is in `runs/run_<run_id>/autocoder_root/main_flow/code_generator_file_ops/outcome.json`
+And the outcome of file operations is in
+`runs/run_<run_id>/autocoder_root/main_flow/code_generator_file_ops/outcome.json`
 
 ```json
 {
@@ -982,8 +1006,10 @@ And the outcome of file operations is in `runs/run_<run_id>/autocoder_root/main_
 }
 ```
 
-Hurray, you have successfully implemented your first CLI agent using DAD. In the next part, we will enhance this further by avoiding hard-coded inputs in this flow.
+Hurray, you have successfully implemented your first CLI agent using DAD. In the next part, we will enhance this further
+by avoiding hard-coded inputs in this flow.
 
 ## What's Next?
 
-In [Part 2: Planning Flow](./part-2.md), we'll enhance our coding assistant by avoiding hard coded inputs and taking live inputs on run.
+In [Part 2: Planning Flow](./part-2.md), we'll enhance our coding assistant by avoiding hard coded inputs and taking
+live inputs on run.

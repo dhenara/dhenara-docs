@@ -4,17 +4,20 @@ sidebar_position: 1
 
 # Single-Shot Coding Assistant
 
-In this tutorial, you'll learn how to build a simple  command-line coding assistant using the Dhenara Agent DSL (DAD) framework.  This assistant will be able to generate code based on user requirements, analyze existing codebases, and implement changes with precision.
+In this tutorial, you'll learn how to build a simple command-line coding assistant using the Dhenara Agent DSL (DAD)
+framework. This assistant will be able to generate code based on user requirements, analyze existing codebases, and
+implement changes with precision.
 
 ## What We'll Build
 
-We'll create a  *single-shot* command-line coding assistant that progressively evolves through four stages:
+We'll create a _single-shot_ command-line coding assistant that progressively evolves through four stages:
 
 1. **Single-Shot Implementation**: A basic agent that can handle standalone coding tasks
 
 TODO: Update
 
-By the end of this tutorial, you'll have a fully functional coding assistant that take a coding task and *implement* it using in the DAD framework.
+By the end of this tutorial, you'll have a fully functional coding assistant that take a coding task and _implement_ it
+using in the DAD framework.
 
 ## Prerequisites
 

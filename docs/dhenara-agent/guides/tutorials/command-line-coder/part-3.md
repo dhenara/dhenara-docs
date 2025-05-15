@@ -241,5 +241,5 @@ can:
 3. Run the implementation flow for each task
 4. Handle errors and track progress
 
-In [Part 4: Coordinator Flow](./part-4.md), we'll bring everything together to create our complete command-line
-coding assistant.
+In [Part 4: Coordinator Flow](./part-4.md), we'll bring everything together to create our complete command-line coding
+assistant.
