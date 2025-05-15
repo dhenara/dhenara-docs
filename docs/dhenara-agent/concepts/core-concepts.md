@@ -457,4 +457,4 @@ Now that you understand the core concepts of DAD, you can:
 - Learn about specific [Node Types](../concepts/components/nodes) and their capabilities
 - Understand how to use [Flows](../concepts/components/flows) and [Agents](../concepts/components/agents)
 - Dive deeper into the [Templating System](../concepts/templating-system) and [Event System](../concepts/event-system)
-- Try the [Single-Shot Coder Tutorial]( ../guides/tutorials/single-shot-coder/index.md) to build a practical agent
+- Try the [Single-Shot Coder Tutorial](../guides/tutorials/single-shot-coder/index.md) to build a practical agent

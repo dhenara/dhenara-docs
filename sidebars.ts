@@ -159,6 +159,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'dhenara-agent/concepts/templating-system',
+        'dhenara-agent/concepts/flow-control',
         'dhenara-agent/concepts/execution-context',
         'dhenara-agent/concepts/observability',
         'dhenara-agent/concepts/run-system',
