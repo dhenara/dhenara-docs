@@ -171,6 +171,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Guides',
       collapsed: false,
+      collapsible: true,
       link: {
         type: 'doc',
         id: 'dhenara-agent/guides/tutorials/index',
@@ -180,6 +181,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Tutorials',
           collapsed: true,
+          collapsible: true,
           link: {
             type: 'doc',
             id: 'dhenara-agent/guides/tutorials/index',
@@ -188,17 +190,32 @@ const sidebars: SidebarsConfig = {
             // Tutorials
             {
               type: 'category',
-              label: 'Command-Line Coding Assistant',
+              label: 'Single Shot Command-Line Coding Assistant',
               link: {
                 type: 'doc',
                 id: 'dhenara-agent/guides/tutorials/command-line-coder/index',
               },
               collapsed: true,
+              collapsible: true,
               items: [
-                'dhenara-agent/guides/tutorials/command-line-coder/single-shot',
-                'dhenara-agent/guides/tutorials/command-line-coder/planning',
-                'dhenara-agent/guides/tutorials/command-line-coder/enhanced-implementation',
-                'dhenara-agent/guides/tutorials/command-line-coder/coordination',
+                'dhenara-agent/guides/tutorials/single-shot-coder/part-1',
+                'dhenara-agent/guides/tutorials/single-shot-coder/part-2',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Enhanced Command-Line Coding Assistant',
+              link: {
+                type: 'doc',
+                id: 'dhenara-agent/guides/tutorials/command-line-coder/index',
+              },
+              collapsed: true,
+              collapsible: true,
+              items: [
+                'dhenara-agent/guides/tutorials/command-line-coder/part-1',
+                'dhenara-agent/guides/tutorials/command-line-coder/part-2',
+                'dhenara-agent/guides/tutorials/command-line-coder/part-3',
+                'dhenara-agent/guides/tutorials/command-line-coder/part-4',
               ],
             },
           ],
@@ -208,6 +225,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Examples',
           collapsed: true,
+          collapsible: true,
           link: {
             type: 'doc',
             id: 'dhenara-agent/guides/examples/index',
@@ -227,6 +245,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Architecture',
       collapsed: false,
+      collapsible: true,
       items: [
         'dhenara-agent/architecture/overview',
         'dhenara-agent/architecture/component-model',

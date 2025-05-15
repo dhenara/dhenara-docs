@@ -142,6 +142,4 @@ There are several ways to enhance this basic implementation:
 3. **Support multiple task types**: Add capability to handle different kinds of coding tasks
 
 ## What's Next?
-
-In [Part 2: Planning Flow](./planning.md), we'll enhance our coding assistant by adding a planning capability. This will
-enable it to break down complex tasks into smaller, manageable steps before implementation.
+ TODO

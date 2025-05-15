@@ -33,11 +33,11 @@ Before starting this tutorial, make sure you have:
 
 This tutorial is divided into four parts, each building on the previous one:
 
-1. [**Single-Shot Implementation Flow**](./single-shot.md): Build a basic agent that handles direct coding tasks
-2. [**Planning Flow**](./planning.md): Add planning capabilities to break down complex tasks
-3. [**Enhanced Implementation Flow**](./enhanced-implementation.md): Improve the implementation flow with better context
+1. [**Single-Shot Implementation Flow**](./part-1.md): Build a basic agent that handles direct coding tasks
+2. [**Planning Flow**](./part-2.md): Add planning capabilities to break down complex tasks
+3. [**Enhanced Implementation Flow**](./part-3.md): Improve the implementation flow with better context
    handling
-4. [**Coordinator Flow**](./coordination.md): Create a coordinator to manage the planning and implementation
+4. [**Coordinator Flow**](./part-4.md): Create a coordinator to manage the planning and implementation
 
 Each part includes:
 
@@ -48,4 +48,4 @@ Each part includes:
 
 ## Let's Get Started!
 
-Start with [Part 1: Single-Shot Implementation Flow](./single-shot.md) to build the foundation of your coding assistant.
+Start with [Part 1: Single-Shot Implementation Flow](./part-1.md) to build the foundation of your coding assistant.

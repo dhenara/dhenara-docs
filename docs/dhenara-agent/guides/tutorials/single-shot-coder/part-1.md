@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+title: Part 1- Implementation Flow
 ---
 
 # Part 1: Single-Shot Implementation Flow
@@ -658,6 +658,13 @@ For an AIModelNode, there will be an extra file:
 - **state.json**: Contains the actual LLM API call parameters including the final prompt (after processing DAD templates
   if any). This is quite useful for debugging LLM API calls.
 
+# TODO:
+- analyse folder anaysis resul
+- disable test mode
+- explain ai mode results
+- explanf file ops results
+
+
 ## Enhancing the Single-Shot Implementation
 
 There are several ways to enhance this basic implementation:
@@ -668,5 +675,5 @@ There are several ways to enhance this basic implementation:
 
 ## What's Next?
 
-In [Part 2: Planning Flow](./planning.md), we'll enhance our coding assistant by adding a planning capability. This will
+In [Part 2: Planning Flow](./part-2.md), we'll enhance our coding assistant by adding a planning capability. This will
 enable it to break down complex tasks into smaller, manageable steps before implementation.
