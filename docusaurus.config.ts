@@ -40,30 +40,15 @@ const config: Config = {
         theme: {
           customCss: './src/css/custom.css',
         },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+          ignorePatterns: ['/tags/**', '/private/**'],
+          filename: 'sitemap.xml',
+        },
       } satisfies Preset.Options,
     ],
   ],
-
-  //plugins: [
-  //  [
-  //    '@docusaurus/plugin-content-docs',
-  //    {
-  //      id: 'dhenara-ai',
-  //      path: 'docs/dhenara-ai',
-  //      routeBasePath: 'dhenara-ai',
-  //      sidebarPath: './sidebars.ts',
-  //    },
-  //  ],
-  //  [
-  //    '@docusaurus/plugin-content-docs',
-  //    {
-  //      id: 'dhenara-agent',
-  //      path: 'docs/dhenara-agent',
-  //      routeBasePath: 'dhenara-agent',
-  //      sidebarPath: './sidebars.ts',
-  //    },
-  //  ],
-  //],
 
   themeConfig: {
     // Replace with your project's social card
