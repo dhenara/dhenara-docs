@@ -6,6 +6,9 @@ Dhenara Agent DSL (DAD) is a powerful open-source framework for creating, orches
 provides a type-safe, expressive Domain-Specific Language that makes building complex AI agent workflows as
 straightforward as writing code.
 
+![CLI Agent created with DAD](/img/cli_agent.gif)
+
+
 ## Key Features
 
 #### Component-Based Architecture
