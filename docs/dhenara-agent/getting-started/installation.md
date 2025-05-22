@@ -6,7 +6,7 @@
 python3 -m venv .venv
 source .venv/bin/activate
 pip install dhenara-agent
-dhenara --help
+dad --help
 ```
 
 ## Prerequisites
@@ -75,13 +75,13 @@ Verify your installation by running a simple CLI command:
 ```bash
 # Make sure your virtualenv is activated
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-dhenara --help
+dad --help
 ```
 
 You should see the available CLI commands:
 
 ```
-(.venv) $ dhenara --help
+(.venv) $ dad --help
 Usage: dhenara [OPTIONS] COMMAND [ARGS]...
 
   Dhenara Agent DSL (DAD) development toolkit.
@@ -98,7 +98,7 @@ Commands:
 
 ## Setting Up API Keys
 
-Most DAD agents use AI models that require API keys. After creating a project with `dhenara startproject`, you'll need
+Most DAD agents use AI models that require API keys. After creating a project with `dad startproject`, you'll need
 to configure these keys in `.dhenara/.secrets/.credentials.yaml`:
 
 ```yaml

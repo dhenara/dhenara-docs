@@ -401,7 +401,7 @@ To run our agent with component variables:
 
 3. Run the agent:
    ```bash
-   dhenara run agent autocoder
+   dad agent run autocoder
    ```
 
 ## Benefits of Component Variables

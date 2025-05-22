@@ -28,7 +28,7 @@ pip install dhenara-agent
 Once installed, you can access the CLI through the `dhenara-ai` command:
 
 ```bash
-dhenara --help
+dad --help
 ```
 
 This will display all available commands and general usage information.

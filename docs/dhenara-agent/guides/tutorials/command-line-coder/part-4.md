@@ -164,7 +164,7 @@ if __name__ == "__main__":
 Now you can run your complete coding assistant:
 
 ```bash
-dhenara run agent planner_coder
+dad agent run planner_coder
 ```
 
 When you run this command, the following will happen:

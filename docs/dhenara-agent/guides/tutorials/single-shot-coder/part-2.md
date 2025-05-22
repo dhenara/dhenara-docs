@@ -67,7 +67,7 @@ menu to select the models. If you want to change the models to a subset of model
 Now if you run this agent, you will see a prompt to select a model.
 
 ```bash
-(.venv) $ dhenara run agent autocoder
+(.venv) $ dad agent run autocoder
 ✓ Node dynamic_repo_analysis execution completed
 
 === AI Model Selection ===
@@ -218,7 +218,7 @@ you are free to write your own version too.
 Now when you run, you will see a prompt to enter operations:
 
 ```bash
-(.venv) $ dhenara run agent autocoder
+(.venv) $ dad agent run autocoder
 
 === Repository Analysis Configuration ===
 
@@ -233,7 +233,7 @@ Enter number:
 And a lot of further controls on operations too:
 
 ```bash
-(.venv) $ dhenara run agent autocoder
+(.venv) $ dad agent run autocoder
 
 === Repository Analysis Configuration ===
 

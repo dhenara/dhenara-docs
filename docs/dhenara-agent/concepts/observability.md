@@ -37,12 +37,12 @@ configure_observability(settings)
 ```
 
 The `RunContext` automatically configures observability based on run parameters. By default, when you use the
-`dhenara run agent` command, each run creates a unique directory under the `runs` folder with comprehensive artifacts
+`dad agent run` command, each run creates a unique directory under the `runs` folder with comprehensive artifacts
 including logs, traces, and metrics.
 
 ## Run Directory Structure and Artifacts
 
-When you run an agent using the `dhenara run agent <agent_name>` command, DAD automatically creates a directory
+When you run an agent using the `dad agent run <agent_name>` command, DAD automatically creates a directory
 structure for observability artifacts. For example:
 
 ```text
@@ -388,7 +388,7 @@ execution flow. This is particularly useful for debugging, optimizing prompts, o
 
 ```bash
 # Rerun from a specific node in a previous run
-dhenara run agent autocoder --previous-run-id run_20240514_225955_98cb96 --entry-point main_flow.code_generator
+dad agent run autocoder --previous-run-id run_20240514_225955_98cb96 --entry-point main_flow.code_generator
 ```
 
 This command will:

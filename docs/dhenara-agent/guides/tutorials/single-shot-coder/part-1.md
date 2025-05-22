@@ -24,7 +24,7 @@ Let's start by setting up our project structure:
 python3 -m venv .venv
 source .venv/bin/activate
 
-(.venv) $ dhenara startproject dev_agents
+(.venv) $ dad startproject dev_agents
 
 Initializing Git.
 ✅ Project 'dev_agents' created successfully!
@@ -33,7 +33,7 @@ Initializing Git.
 
 Next steps:
   1. cd dev_agents
-  2. dhenara create agent <agent_name>
+  2. dad agent create <agent_name>
 (.venv) $
 ```
 
@@ -41,11 +41,11 @@ Next steps:
 
 ```bash
 (.venv) $ cd dev_agents
-(.venv) $ dhenara create agent autocoder
+(.venv) $ dad agent create autocoder
 ✅ Agent 'autocoder' created successfully!
   - Identifier: autocoder
   - Location: /Users/ajithjose/Work/web_development/django/project_repos/20_agents/demos/dev_agents/src/agents/autocoder
-  - Command to run:  dhenara run agent autocoder
+  - Command to run:  dad agent run autocoder
 (.venv) $
 ```
 
@@ -184,7 +184,7 @@ know your repo better.
 We will do this by using a `FolderAnalyzerNode` in our flow. In order to read selected files/folders of your project,
 let's copy it in a directory inside our DAD project. The best place to do it is inside our `runs` directory. This is a
 directory which is **not** tracked under DAD's git repo; it's our artifacts directory. This will be created when you run
-an agent for the first time by using the `dhenara run agent` command, but in order to copy/clone your actual project,
+an agent for the first time by using the `dad agent run` command, but in order to copy/clone your actual project,
 let's create it right now and copy your project there.
 
 ```bash
@@ -412,7 +412,7 @@ agent.flow(
 
 Now we have defined the flow and added it to the agent. Next we need to setup the runtime parameters before running the
 agent. For now, you don't need to update anything in runners, as the pre-defined runner that was generated with the
-`dhenara create agent` command works for us as is. It will be in the path `src/runners/autocoder.py`.
+`dad agent create` command works for us as is. It will be in the path `src/runners/autocoder.py`.
 
 Here's what it contains for reference:
 
@@ -457,7 +457,7 @@ run_context.register_event_handlers(
 runner = AgentRunner(agent, run_context)
 
 # Use dhenara cli to run this as in an isolated context
-#  --  dhenara run agent <agent_name>
+#  --  dad agent run <agent_name>
 
 ```
 
@@ -467,13 +467,13 @@ Let's run this agent now. Remember that we have set `test_mode=True` so the actu
 we still want to make sure that we are sending the right context to the LLM.
 
 ```bash
-dhenara run agent autocoder
+dad agent run autocoder
 ```
 
 This will show you a message like below:
 
 ```bash
-(.venv) $ dhenara run agent autocoder
+(.venv) $ dad agent run autocoder
 ✓ Node dynamic_repo_analysis execution completed
 ✓ autocoder_root execution completed
 Agent standard run completed successfully. Run ID: run_20250514_225955_98cb96
@@ -536,11 +536,11 @@ to search for `"body": "ERROR`. The first error message will look like:
 Once you update the credentials correctly, run the agent again:
 
 ```bash
-dhenara run agent autocoder
+dad agent run autocoder
 ```
 
 ```bash
-(.venv) $ dhenara run agent autocoder
+(.venv) $ dad agent run autocoder
 ✓ Node dynamic_repo_analysis execution completed
 ✓ Node code_generator execution completed
 ✓ Node code_generator_file_ops execution completed
@@ -601,8 +601,8 @@ hierarchy. We have kept this hierarchy for 2 reasons:
 Here's the help output for the run command:
 
 ```bash
-(.venv) $ dhenara run agent  --help
-Usage: dhenara run agent [OPTIONS] IDENTIFIER
+(.venv) $ dad agent run  --help
+Usage: dad agent run [OPTIONS] IDENTIFIER
 
 Options:
   --project-root TEXT     Root directory of the project repo
@@ -749,7 +749,7 @@ In your flow inside `src/agents/autocoder/flows/implementation.py` disable the _
 and again run the flow.
 
 ```bash
-dhenara run agent autocoder
+dad agent run autocoder
 ```
 
 This time, after the node dynamic_repo_analysis got completed, there is a slight delay before showing other node status.

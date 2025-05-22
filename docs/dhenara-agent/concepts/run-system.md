@@ -166,7 +166,7 @@ run_context.setup_run()
 You can also use the command line to perform a re-run:
 
 ```bash
-dhenara run agent autocoder --previous-run-id run_20231015_123456 --entry-point autocoder_root.main_flow.code_generator
+dad agent run autocoder --previous-run-id run_20231015_123456 --entry-point autocoder_root.main_flow.code_generator
 ```
 
 This enables debugging, experimentation, and incremental development of agent workflows.

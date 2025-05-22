@@ -14,7 +14,7 @@ Make sure you have installed `dhenara-agent` as described in the
 python3 -m venv .venv
 source .venv/bin/activate
 pip install dhenara-agent
-dhenara --help
+dad --help
 ```
 
 ## Start a project
@@ -22,7 +22,7 @@ dhenara --help
 Start a new project using the CLI with a project name. We'll use _dev_agents_ as the project name in this example.
 
 ```bash
-dhenara startproject dev_agents
+dad startproject dev_agents
 ```
 
 This will create a git repository with the following folder structure:
@@ -67,7 +67,7 @@ Next, let's create an agent. We'll name it _chatbot_:
 
 ```bash
 cd dev_agents  # Go inside the project repo
-dhenara create agent chatbot
+dad agent create chatbot
 ```
 
 This will create a _chatbot_ agent directory inside _agents_, and a _chatbot.py_ runner inside the _runners_ directory:
@@ -225,7 +225,7 @@ run_context.register_event_handlers(
 runner = AgentRunner(agent, run_context)
 
 # Use dhenara cli to run this as in an isolated context
-#  --  dhenara run agent <agent_name>
+#  --  dad agent run <agent_name>
 
 ```
 
@@ -235,7 +235,7 @@ Make sure you have configured API keys. (You can run in test mode without API ke
 AIModelNode configurations.)
 
 ```bash
-dhenara run agent chatbot
+dad agent run chatbot
 ```
 
 You will be prompted to select an AI model, and then to enter your query:

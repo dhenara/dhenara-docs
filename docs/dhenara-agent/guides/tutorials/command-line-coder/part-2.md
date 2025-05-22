@@ -28,7 +28,7 @@ Planning offers several advantages for a coding assistant:
 Let's create a new agent that builds on our single-shot implementation but adds planning capabilities:
 
 ```bash
-dhenara create agent planner_coder
+dad agent create planner_coder
 ```
 
 ## Understanding the Plan Structure
@@ -321,7 +321,7 @@ agent.flow(
 Now you can run your planner agent:
 
 ```bash
-dhenara run agent planner_coder
+dad agent run planner_coder
 ```
 
 When you run this, you'll be prompted for a task description. The agent will then analyze the codebase and generate a

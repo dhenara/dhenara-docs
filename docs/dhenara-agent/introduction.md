@@ -137,7 +137,7 @@ main_flow.node(
 )
 ```
 
-When you run this agent with `dhenara run agent chatbot`, you'll be prompted to select a model and enter your query. The
+When you run this agent with `dad agent run chatbot`, you'll be prompted to select a model and enter your query. The
 system will handle execution, save all artifacts, and provide comprehensive tracing—all with minimal code.
 
 ## See DAD in Action

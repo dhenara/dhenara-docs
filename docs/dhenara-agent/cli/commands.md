@@ -27,7 +27,7 @@ DAD CLI commands are organized into several categories:
 Creates a new DAD project with the necessary directory structure and configuration files.
 
 ```bash
-dhenara startproject [OPTIONS] PROJECT_NAME
+dad startproject [OPTIONS] PROJECT_NAME
 ```
 
 **Arguments:**
@@ -42,7 +42,7 @@ dhenara startproject [OPTIONS] PROJECT_NAME
 **Example:**
 
 ```bash
-dhenara startproject my-agent-project --directory ~/projects
+dad startproject my-agent-project --directory ~/projects
 ```
 
 **Output:**
@@ -55,17 +55,17 @@ Initializing Git.
 
 Next steps:
   1. cd my-agent-project
-  2. dhenara create agent <agent_name>
+  2. dad agent create <agent_name>
 ```
 
 ## Agent Commands
 
-### `create agent`
+### `agent create`
 
 Creates a new agent within an existing DAD project.
 
 ```bash
-dhenara create agent [OPTIONS] IDENTIFIER [NAME]
+dad agent create [OPTIONS] IDENTIFIER [NAME]
 ```
 
 **Arguments:**
@@ -81,7 +81,7 @@ dhenara create agent [OPTIONS] IDENTIFIER [NAME]
 **Example:**
 
 ```bash
-dhenara create agent autocoder "Code Generation Assistant"
+dad agent create autocoder "Code Generation Assistant"
 ```
 
 **Output:**
@@ -90,15 +90,15 @@ dhenara create agent autocoder "Code Generation Assistant"
 ✅ Agent 'autocoder' created successfully!
   - Identifier: autocoder
   - Location: /path/to/project/src/agents/autocoder
-  - Command to run: dhenara run agent autocoder
+  - Command to run: dad agent run autocoder
 ```
 
-### `run agent`
+### `agent run`
 
 Executes an agent in an isolated environment.
 
 ```bash
-dhenara run agent [OPTIONS] IDENTIFIER
+dad agent run [OPTIONS] IDENTIFIER
 ```
 
 **Arguments:**
@@ -115,13 +115,13 @@ dhenara run agent [OPTIONS] IDENTIFIER
 **Example:**
 
 ```bash
-dhenara run agent autocoder
+dad agent run autocoder
 ```
 
 **With Resumption:**
 
 ```bash
-dhenara run agent autocoder --previous-run-id run_20240515_121100_f36578 --entry-point main_flow.code_generator
+dad agent run autocoder --previous-run-id run_20240515_121100_f36578 --entry-point main_flow.code_generator
 ```
 
 **Output:**
@@ -218,7 +218,7 @@ dhenara outputs checkout run_20240515_233729_f3cd51 --output-dir ./analysis
 Runs a specialized implementation flow for code generation and changes.
 
 ```bash
-dhenara run agent implementation [OPTIONS] TASK_FILE
+dad agent run implementation [OPTIONS] TASK_FILE
 ```
 
 **Arguments:**
@@ -234,7 +234,7 @@ dhenara run agent implementation [OPTIONS] TASK_FILE
 **Example:**
 
 ```bash
-dhenara run agent implementation tasks/feature-123.md --model gpt-4.1
+dad agent run implementation tasks/feature-123.md --model gpt-4.1
 ```
 
 ## Run Artifacts Structure
@@ -316,7 +316,7 @@ The pattern typically includes:
 For any command, you can append `--help` to see detailed information about its usage:
 
 ```bash
-dhenara run agent --help
+dad agent run --help
 ```
 
 This will display all available options, arguments, and a brief description of what the command does.

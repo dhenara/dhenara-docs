@@ -222,7 +222,7 @@ run_context.register_event_handlers({
 
 # Create and run the agent
 runner = AgentRunner(agent, run_context)
-# Run using: dhenara run agent <agent_name>
+# Run using: dad agent run <agent_name>
 ```
 
 The run context provides the execution environment for the agent, including event handling and artifacts storage.
