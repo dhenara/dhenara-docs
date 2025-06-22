@@ -200,3 +200,8 @@
     height 0.2s ease,
     opacity 0.2s ease;
 }
+
+/* footer background */
+.footer {
+  background: linear-gradient(135deg, #161615 0%, #140d01 100%) !important;
+}

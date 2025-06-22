@@ -82,17 +82,17 @@ You should see the available CLI commands:
 
 ```
 (.venv) $ dad --help
-Usage: dhenara [OPTIONS] COMMAND [ARGS]...
+Usage: dad [OPTIONS] COMMAND [ARGS]...
 
   Dhenara Agent DSL (DAD) development toolkit.
 
 Options:
-  --help  Show this message and exit.
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 
 Commands:
-  create        Create new Dhenara components.
-  run           Run DAD components.
-  startproject  Create a new agent project with folder structure.
+  agent         Agent-related commands.
+  startproject  Create a DAD project with folder structure.
 (.venv) $
 ```
 
