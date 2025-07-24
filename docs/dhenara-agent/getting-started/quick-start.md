@@ -313,8 +313,6 @@ Let's examine how our flow works step by step:
 
 This simple chatbot demonstrates the foundational concepts of DAD. To build more sophisticated agents:
 
-- Explore [Tutorials](../guides/tutorials/single-shot-coder) for more complex implementations
-- Learn about [Component Variables](../guides/tutorials/single-shot-coder/part-3) for better organization
 - Check out the [Examples](../guides/examples) to see what you can build
 - Understand [Core Concepts](../concepts/core-concepts) in more depth
 - Explore [Node Types](../concepts/components/nodes) for additional functionality

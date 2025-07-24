@@ -175,9 +175,11 @@ const sidebars: SidebarsConfig = {
       collapsible: true,
       link: {
         type: 'doc',
-        id: 'dhenara-agent/guides/tutorials/index',
+        //id: 'dhenara-agent/guides/tutorials/index',
+        id: 'dhenara-agent/guides/examples/index',
       },
       items: [
+        /*
         {
           type: 'category',
           label: 'Tutorials',
@@ -204,26 +206,27 @@ const sidebars: SidebarsConfig = {
                 'dhenara-agent/guides/tutorials/single-shot-coder/part-3',
               ],
             },
-            /*
-            {
-              type: 'category',
-              label: 'Enhanced Command-Line Coding Assistant',
-              link: {
-                type: 'doc',
-                id: 'dhenara-agent/guides/tutorials/command-line-coder/index',
-              },
-              collapsed: true,
-              collapsible: true,
-              items: [
-                'dhenara-agent/guides/tutorials/command-line-coder/part-1',
-                'dhenara-agent/guides/tutorials/command-line-coder/part-2',
-                'dhenara-agent/guides/tutorials/command-line-coder/part-3',
-                'dhenara-agent/guides/tutorials/command-line-coder/part-4',
-              ],
-            },
-            */
+
+            //{
+            //  type: 'category',
+            //  label: 'Enhanced Command-Line Coding Assistant',
+            //  link: {
+            //    type: 'doc',
+            //    id: 'dhenara-agent/guides/tutorials/command-line-coder/index',
+            //  },
+            //  collapsed: true,
+            //  collapsible: true,
+            //  items: [
+            //    'dhenara-agent/guides/tutorials/command-line-coder/part-1',
+            //    'dhenara-agent/guides/tutorials/command-line-coder/part-2',
+            //    'dhenara-agent/guides/tutorials/command-line-coder/part-3',
+            //    'dhenara-agent/guides/tutorials/command-line-coder/part-4',
+            //  ],
+            //},
           ],
         },
+        */
+
         // Examples
         {
           type: 'category',
@@ -236,8 +239,8 @@ const sidebars: SidebarsConfig = {
           },
           items: [
             'dhenara-agent/guides/examples/simple-chatbot',
-            'dhenara-agent/guides/examples/auto-coder',
-            'dhenara-agent/guides/examples/single-shot-coder',
+            //'dhenara-agent/guides/examples/auto-coder',
+            //'dhenara-agent/guides/examples/single-shot-coder',
             'dhenara-agent/guides/examples/image-agent',
           ],
         },

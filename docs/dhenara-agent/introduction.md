@@ -143,7 +143,7 @@ system will handle execution, save all artifacts, and provide comprehensive trac
 ## See DAD in Action
 
 Explore our [Getting Started guide](./getting-started/installation.md) and check out the
-[Single-Shot Coding Assistant tutorial](./guides/tutorials/single-shot-coder/index.md) to see DAD's power in a practical
+[Examples](./guides/examples/index.md) to see DAD's power in a practical
 application.
 
 ## Join the Community

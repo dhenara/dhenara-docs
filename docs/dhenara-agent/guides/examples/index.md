@@ -14,9 +14,6 @@ various use cases:
 
 - [Simple Chatbot](./simple-chatbot.md): Build on the Quick Start guide with a basic question-answering agent that
   responds to user queries.
-- [Single-Shot Coder](./single-shot-coder.md): A simplified code implementation agent for focused, one-time tasks.
-- [Code Generation Agent](./auto-coder.md): Learn how to create an agent that can analyze code repositories and
-  implement code changes.
 - [Image Generation Agent](./image-agent.md): Create an agent that generates images based on text prompts.
 
 ## Getting Started with Examples

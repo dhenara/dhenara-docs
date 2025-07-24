@@ -120,7 +120,6 @@ if not is_tracing_disabled():
 DAD integrates with the `dhenara-ai` package's test mode feature, which allows you to develop and test your agent flows
 without making actual API calls. This is useful for verifying your observability setup without incurring costs.
 
-In the single-shot-coder tutorial example:
 
 ```python
 model_call_config=AIModelCallConfig(

@@ -52,7 +52,7 @@ agent.
 
 ## Single-Flow Agent Pattern
 
-The simplest agent pattern uses a single flow, as shown in the single-shot-coder tutorial:
+The simplest agent pattern uses a single flow.
 
 ```python
 from dhenara.agent.dsl import AgentDefinition
@@ -271,7 +271,7 @@ agent.flow(
 )
 ```
 
-This pattern, demonstrated in the single-shot-coder tutorial, is effective for straightforward coding tasks.
+This pattern, is effective for straightforward coding tasks.
 
 ### Multi-Stage Processing Agent
 
