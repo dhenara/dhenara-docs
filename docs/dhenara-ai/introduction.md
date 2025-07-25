@@ -109,6 +109,7 @@ elif response.stream_generator:
                 end="",
                 flush=True,
             )
+
 ```
 
 ## Next Steps
