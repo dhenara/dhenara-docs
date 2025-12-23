@@ -94,7 +94,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/dhenara/dhenara-agent',
+          href: 'https://github.com/dhenara/dhenara-ai',
           label: 'GitHub',
           position: 'right',
         },
