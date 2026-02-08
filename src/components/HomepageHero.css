@@ -49,11 +49,18 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
-.cube-1, .cube-2, .cube-3 {
+.cube-1,
+.cube-2,
+.cube-3 {
   position: absolute;
   width: 100px;
   height: 100px;
@@ -66,8 +73,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotateY(0deg) rotateX(0deg); }
-  100% { transform: rotateY(360deg) rotateX(360deg); }
+  0% {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+  100% {
+    transform: rotateY(360deg) rotateX(360deg);
+  }
 }
 
 .cube-1 {
@@ -117,6 +128,18 @@
   flex-wrap: wrap;
 }
 
+.hero-deprecated-link {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.hero-deprecated-link a {
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .button--primary {
   background-color: white;
   color: var(--ifm-color-primary-darkest);
@@ -149,18 +172,18 @@
   .hero-banner .container {
     flex-direction: column;
   }
-  
+
   .hero-content {
     max-width: 100%;
     padding-right: 0;
     text-align: center;
     margin-bottom: 3rem;
   }
-  
+
   .hero-buttons {
     justify-content: center;
   }
-  
+
   .hero-graphic {
     display: none;
   }

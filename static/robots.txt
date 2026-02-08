@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /dhenara-agent/
+
+Sitemap: https://docs.dhenara.com/sitemap.xml

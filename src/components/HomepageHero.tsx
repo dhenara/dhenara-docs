@@ -12,19 +12,18 @@ export default function HomepageHero(): JSX.Element {
       <div className="container">
         <div className="hero-content">
           <h1 className="hero-title">Dhenara Documentation</h1>
-          <p className="hero-subtitle">
-            Build powerful AI applications with Dhenara's open-source frameworks
-          </p>
+          <p className="hero-subtitle">Build powerful AI applications with Dhenara's open-source frameworks</p>
           <div className="hero-buttons">
-            <Link
-              className="button button--primary button--lg"
-              to="/dhenara-agent/getting-started/installation"
-            >
+            <Link className="button button--primary button--lg" to="/dhenara-ai/getting-started/installation">
               Get Started
             </Link>
-            <Link className="button button--secondary button--lg" to="/dhenara-agent/introduction">
-              Explore Agents
+            <Link className="button button--secondary button--lg" to="/dhenara-ai/introduction">
+              Explore Dhenara AI
             </Link>
+          </div>
+          <div className="hero-deprecated-link">
+            Looking for the old agent framework?{' '}
+            <Link to="/dhenara-agent/introduction">Agent DSL docs (Deprecated)</Link>
           </div>
         </div>
         <div className="hero-graphic">

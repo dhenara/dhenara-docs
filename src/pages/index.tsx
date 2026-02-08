@@ -9,7 +9,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Documentation for Dhenara AI and Dhenara Agent DSL"
+      description="Documentation for Dhenara AI (active) and Dhenara Agent DSL (deprecated)"
     >
       <HomepageContent />
     </Layout>

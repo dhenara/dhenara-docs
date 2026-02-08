@@ -1,5 +1,13 @@
 # Installation
 
+:::caution Deprecated
+
+This page describes the legacy Agent DSL package (`dhenara-agent`). It is no longer actively developed.
+
+For new projects, install **Dhenara AI** instead: https://docs.dhenara.com/dhenara-ai/getting-started/installation
+
+:::
+
 ## Quick Install
 
 ```bash

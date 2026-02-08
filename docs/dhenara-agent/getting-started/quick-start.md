@@ -4,6 +4,14 @@ sidebar_position: 2
 
 # Quick Start
 
+:::caution Deprecated
+
+This Quick Start is for the legacy Agent DSL package (`dhenara-agent`). It is no longer actively developed.
+
+If you’re starting fresh, use **Dhenara AI** instead: https://docs.dhenara.com/dhenara-ai/introduction
+
+:::
+
 This guide will help you create and run your first agent using Dhenara Agent DSL (DAD). You'll build a simple
 question-answering agent that can respond to user queries using an AI model.
 

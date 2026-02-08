@@ -32,8 +32,8 @@ const dhenaraiFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        Access multiple AI providers through a consistent interface. Seamlessly switch between
-        models without code changes using our lightweight yet powerful package.
+        Access multiple AI providers through a consistent interface. Seamlessly switch between models without code
+        changes using our lightweight yet powerful package.
       </>
     ),
   },
@@ -56,8 +56,8 @@ const dhenaraiFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        First-class support for streaming responses with accumulated results, making real-time
-        applications simple to build.
+        First-class support for streaming responses with accumulated results, making real-time applications simple to
+        build.
       </>
     ),
   },
@@ -84,8 +84,8 @@ const dhenaraiFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        Integrated token usage and cost tracking across all providers, with comprehensive analytics
-        designed for both experimental and production applications.
+        Integrated token usage and cost tracking across all providers, with comprehensive analytics designed for both
+        experimental and production applications.
       </>
     ),
   },
@@ -115,8 +115,8 @@ const dhenaraDadFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        Build sophisticated agent workflows by composing reusable components with a clean,
-        programming language-like approach.
+        Build sophisticated agent workflows by composing reusable components with a clean, programming language-like
+        approach.
       </>
     ),
   },
@@ -144,8 +144,8 @@ const dhenaraDadFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        Free, Built-in Opentelemetry OpenTelemetry-based logging, tracing, and metrics collection
-        for all agent activities, without subscriptions and payments.
+        Free, Built-in Opentelemetry OpenTelemetry-based logging, tracing, and metrics collection for all agent
+        activities, without subscriptions and payments.
       </>
     ),
   },
@@ -171,8 +171,8 @@ const dhenaraDadFeatures: FeatureItem[] = [
     ),
     description: (
       <>
-        Create sophisticated prompts and operations with dynamic content using variable
-        substitution, conditional expressions, and hierarchical references.
+        Create sophisticated prompts and operations with dynamic content using variable substitution, conditional
+        expressions, and hierarchical references.
       </>
     ),
   },
@@ -196,9 +196,7 @@ export default function HomepageFeatures(): JSX.Element {
           <div className="col col--6 product-section">
             <div className="product-header">
               <h2>Dhenara AI</h2>
-              <p>
-                Open-source Python package for streamlined LLM integration across multiple providers
-              </p>
+              <p>Open-source Python package for streamlined LLM integration across multiple providers</p>
             </div>
             <div className="features-grid">
               {dhenaraiFeatures.map((feature, idx) => (
@@ -208,11 +206,8 @@ export default function HomepageFeatures(): JSX.Element {
           </div>
           <div className="col col--6 product-section">
             <div className="product-header">
-              <h2>Dhenara Agent DSL</h2>
-              <p>
-                Open-source Python framework for building and orchestrating sophisticated AI agent
-                workflows
-              </p>
+              <h2>Agent DSL (Deprecated)</h2>
+              <p>Archived documentation for the legacy Dhenara Agent DSL (DAD).</p>
             </div>
             <div className="features-grid">
               {dhenaraDadFeatures.map((feature, idx) => (

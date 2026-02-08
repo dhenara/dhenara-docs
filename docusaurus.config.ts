@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Dhenara Documentation',
-  tagline: "Build powerful AI applications with Dhenara's open-source frameworks",
+  tagline: 'Build AI applications with Dhenara AI (Agent DSL docs archived)',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -43,7 +43,8 @@ const config: Config = {
         sitemap: {
           changefreq: 'weekly',
           priority: 0.5,
-          ignorePatterns: ['/tags/**', '/private/**'],
+          // Keep deprecated docs accessible, but don't promote them via the sitemap.
+          ignorePatterns: ['/tags/**', '/private/**', '/dhenara-agent/**'],
           filename: 'sitemap.xml',
         },
       } satisfies Preset.Options,
@@ -71,7 +72,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'dhenaraAgentSidebar',
           position: 'left',
-          label: 'Agent DSL',
+          label: 'Agent DSL (Deprecated)',
         },
         //{
         //  type: 'dropdown',
@@ -131,7 +132,7 @@ const config: Config = {
               to: '/dhenara-ai/introduction',
             },
             {
-              label: 'Agent DSL',
+              label: 'Agent DSL (Deprecated)',
               to: '/dhenara-agent/introduction',
             },
             //{

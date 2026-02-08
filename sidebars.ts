@@ -136,7 +136,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Getting Started',
-      collapsed: false,
+      collapsed: true,
       items: ['dhenara-agent/getting-started/installation', 'dhenara-agent/getting-started/quick-start'],
     },
 
@@ -144,13 +144,13 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Concepts',
-      collapsed: false,
+      collapsed: true,
       items: [
         'dhenara-agent/concepts/core-concepts',
         {
           type: 'category',
           label: 'Components',
-          collapsed: false,
+          collapsed: true,
           items: [
             'dhenara-agent/concepts/components/nodes',
             'dhenara-agent/concepts/components/flows',
@@ -171,7 +171,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Guides',
-      collapsed: false,
+      collapsed: true,
       collapsible: true,
       link: {
         type: 'doc',
@@ -251,7 +251,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Architecture',
-      collapsed: false,
+      collapsed: true,
       collapsible: true,
       items: [
         'dhenara-agent/architecture/overview',

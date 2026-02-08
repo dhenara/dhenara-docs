@@ -8,16 +8,13 @@ export default function HomepageFooterCTA(): JSX.Element {
       <div className="container">
         <div className="footer-cta-content">
           <h2>Ready to Build with Dhenara?</h2>
-          <p>Start creating powerful AI applications today with our comprehensive frameworks.</p>
+          <p>Start with Dhenara AI. Legacy Agent DSL docs remain available for existing users.</p>
           <div className="footer-cta-buttons">
-            <Link className="button button--primary button--lg" to="/dhenara-agent/introduction">
-              Discover Dhenara Agents
-            </Link>
-            <Link
-              className="button button--outline button--secondary button--lg"
-              to="/dhenara-ai/introduction"
-            >
+            <Link className="button button--primary button--lg" to="/dhenara-ai/introduction">
               Explore Dhenara AI
+            </Link>
+            <Link className="button button--outline button--secondary button--lg" to="/dhenara-agent/introduction">
+              Agent DSL Docs (Deprecated)
             </Link>
           </div>
         </div>

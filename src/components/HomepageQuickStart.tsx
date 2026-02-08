@@ -10,21 +10,21 @@ export default function HomepageQuickStart(): JSX.Element {
           <div className="col col--6 quickstart-content">
             <h2>Get Started Quickly</h2>
             <p>
-              Dhenara makes it easy to build AI-powered applications. Follow our quick start guides to get up and
-              running in minutes.
+              Dhenara makes it easy to build AI-powered applications. Start with Dhenara AI for provider-agnostic model
+              interactions.
             </p>
             <div className="quickstart-links">
-              <Link className="quickstart-card" to="/dhenara-agent/getting-started/installation">
-                <div className="quickstart-card-content">
-                  <h3>Dhenara Agent Installation</h3>
-                  <p>Install the agent framework for complex workflows. This also includes AI package.</p>
-                </div>
-                <div className="quickstart-arrow">→</div>
-              </Link>
               <Link className="quickstart-card" to="/dhenara-ai/getting-started/installation">
                 <div className="quickstart-card-content">
                   <h3>Dhenara AI Installation</h3>
-                  <p>Set up the core AI package for model interactions</p>
+                  <p>Recommended: set up the core AI package for model interactions.</p>
+                </div>
+                <div className="quickstart-arrow">→</div>
+              </Link>
+              <Link className="quickstart-card" to="/dhenara-agent/getting-started/installation">
+                <div className="quickstart-card-content">
+                  <h3>Agent DSL Installation (Deprecated)</h3>
+                  <p>Legacy agent framework docs for existing users (no longer actively developed).</p>
                 </div>
                 <div className="quickstart-arrow">→</div>
               </Link>
@@ -37,14 +37,14 @@ export default function HomepageQuickStart(): JSX.Element {
             <div className="code-block">
               <pre>
                 <code>
-                  # Install Agent package for both
-                  <br />
-                  pip install dhenara-agent
-                  <br />
-                  <br />
-                  # Or install core AI package for simple applications
+                  # Recommended for most applications
                   <br />
                   pip install dhenara-ai
+                  <br />
+                  <br />
+                  # Legacy (deprecated): Agent DSL framework
+                  <br />
+                  pip install dhenara-agent
                 </code>
               </pre>
             </div>

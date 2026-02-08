@@ -1,5 +1,14 @@
 # Introduction
 
+:::caution Deprecated
+
+Dhenara Agent DSL (DAD) is no longer actively developed.
+
+- For new projects, start with **Dhenara AI**: https://docs.dhenara.com/dhenara-ai/introduction
+- Existing users may continue using Agent DSL as-is.
+
+:::
+
 ## What is Dhenara Agent DSL?
 
 Dhenara Agent DSL (DAD) is a powerful open-source framework for creating, orchestrating, and managing AI agents. It
