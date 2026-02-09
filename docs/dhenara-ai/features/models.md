@@ -54,8 +54,8 @@ foundation model for a different provider:
 ```python
 from dhenara.ai import AIModelClient
 from dhenara.ai.types import AIModelEndpoint
-from dhenara.ai.types.external_api import AIModelAPIProviderEnum
-from dhenara.ai.types.genai import AIModelAPI, ChatModelCostData
+from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum
+from dhenara.ai.types.genai.ai_model import ChatModelCostData
 from dhenara.ai.types.genai.foundation_models.anthropic.chat import Claude35Sonnet
 
 # Initialize API configuration for Amazon Bedrock
@@ -171,33 +171,8 @@ ChatModelCostData(
 Dhenara includes a rich collection of pre-configured foundation models. But remember that you can always create your own
 Models, the functional part is independent from the FoundationModel collection.
 
-### Text Generation
+To see the full list of available foundation models, check the [Foundation Models](https://github.com/dhenara/dhenara-ai/tree/master/src/dhenara/ai/types/genai/foundation_models) directory in the codebase.
 
-- GPT-4o
-- GPT-4o-mini
-- O1
-- O1-mini
-- O3-mini
-
-- Gemini 2 Flash
-- Gemini 2 Flash Lite
-- Gemini 1.5 Flash
-- Gemini 1.5 Pro
-
-- Claude 3.7 Sonnet
-- Claude 3.5 Sonnet
-- Claude 3.5 Haiku
-- Claude 3 Opus
-
-- DeepSeek-R1
-
-### Image Generation
-
-- DALL-E 2
-- DALL-E 3
-
-- Imagen 3
-- Imagen 3 Fast
 
 ## Conclusion
 

@@ -8,28 +8,13 @@ Dhenara is designed with strong type safety principles at its core, ensuring rob
 working with AI models. This page explains our approach to type safety and unified response formats, and how this
 benefits your development workflow.
 
-## Type Safety with Pydantic Models
+## Type Safety with Pydantic
 
-### Comprehensive Type Validation
+Dhenara uses Pydantic models throughout the library for both requests and responses. This gives you:
 
-Dhenara uses Pydantic models throughout the library to enforce strict type validation, helping you catch errors early in
-the development process instead of at runtime.
-
-```python
-from dhenara.ai.types.genai import ChatResponse, ChatResponseUsage
-
-# All models are properly typed and validated
-response = ChatResponse(
-    model="gpt-4",
-    provider=AIModelProviderEnum.OPEN_AI,
-    usage=ChatResponseUsage(
-        total_tokens=100,
-        prompt_tokens=50,
-        completion_tokens=50
-    ),
-    choices=[...]
-)
-```
+- Strong runtime validation
+- Autocomplete/type hints in your IDE
+- A consistent response shape across providers
 
 ### Key Benefits of Dhenara's Type System
 
@@ -39,17 +24,9 @@ response = ChatResponse(
 - **IDE Support**: Get autocompletion and type hints in your IDE, making development faster and more efficient.
 - **Runtime Safety**: Prevent unexpected errors from propagating through your application.
 
-### Type-Safe Enumerations
+### Enumerations
 
-Dhenara uses enumerations for all categorical values, providing compile-time and runtime validation:
-
-```python
-from dhenara.ai.types.external_api import AIModelProviderEnum
-
-# Use strongly typed enumerations
-provider = AIModelProviderEnum.OPEN_AI  # Safe, validated at runtime
-provider = "some_random_string"  # Error! Caught by type checking
-```
+Provider/model “enums” are real types (not stringly-typed constants), which keeps configs consistent.
 
 ## Unified Response Data Format
 
@@ -61,11 +38,14 @@ between models or use multiple models in the same application.
 Whether you're using OpenAI, Google AI, Anthropic, or any other provider, the response structure remains consistent:
 
 ```python
-# The format is the same whether using OpenAI, Google AI, Anthropic, etc.
-response = chat_client.generate(prompt=prompt)
-if response.chat_response:
-    # Access data the same way regardless of the provider
-    text = response.chat_response.choices[0].contents[0].text
+response = client.generate(prompt="Say hello")
+chat = response.chat_response
+
+if chat:
+    print(chat.text())
+    print(chat.reasoning())
+    print(chat.structured())
+    print(chat.tools())
 ```
 
 ### Unified Content Items
@@ -77,16 +57,19 @@ All AI model responses are normalized into standardized content item types:
 - `ChatResponseToolCallContentItem` - For tool/function calls
 - `ImageResponseContentItem` - For generated images
 
-This means you can easily process responses without worrying about provider-specific formats:
+This means you can process responses without worrying about provider-specific formats:
 
 ```python
-# Works with any provider
-for choice in response.chat_response.choices:
-    for content in choice.contents:
-        if content.type == "text":
-            print(content.text)
-        elif content.type == "reasoning":
-            print(f"Reasoning: {content.thinking_text}")
+from dhenara.ai.types.genai.dhenara.response import ChatResponseContentItemType
+
+chat = response.chat_response
+if chat:
+    for choice in chat.choices:
+        for content in choice.contents or []:
+            if content.type == ChatResponseContentItemType.TEXT:
+                print(content.get_text())
+            elif content.type == ChatResponseContentItemType.REASONING:
+                print("Reasoning:", content.get_text())
 ```
 
 ### Standardized Streaming Support
@@ -94,14 +77,19 @@ for choice in response.chat_response.choices:
 Dhenara's streaming implementation works the same way across all providers:
 
 ```python
-async with client as c:
-    response = await c.generate_async(prompt=prompt)
-    async for chunk, _ in response.async_stream_generator:
-        # Process streaming chunks consistently regardless of provider
-        if chunk and chunk.data:
-            for delta in chunk.data.choice_deltas:
-                for content_delta in delta.content_deltas:
-                    print(content_delta.get_text_delta(), end="")
+from dhenara.ai.types.shared import SSEEventType, SSEResponse
+
+response = client.generate(prompt="Stream a short poem")
+for chunk, final_response in response.stream_generator:
+    if isinstance(chunk, SSEResponse) and chunk.event == SSEEventType.TOKEN_STREAM:
+        for choice_delta in chunk.data.choice_deltas:
+            for content_delta in choice_delta.content_deltas or []:
+                text = content_delta.get_text_delta()
+                if text:
+                    print(text, end="", flush=True)
+
+if final_response and final_response.chat_response:
+    print("\n\nFinal:", final_response.chat_response.text())
 ```
 
 ### Unified Usage and Cost Tracking
@@ -119,69 +107,7 @@ if response.chat_response.usage:
         print(f"Cost: ${response.chat_response.usage_charge.cost}")
 ```
 
-## Comparison with Other Libraries
+## Practical takeaway
 
-### Versus LangChain
-
-While LangChain provides a wide range of integrations, it often lacks strict type safety:
-
-| Feature             | Dhenara                                          | LangChain                                                    |
-| ------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
-| **Type Safety**     | Strong typing with Pydantic models throughout    | Mixed, often relies on dictionaries or loosely typed objects |
-| **Response Format** | Unified response structure across all providers  | Different response formats for different providers           |
-| **Error Handling**  | Structured error types with detailed information | Often passes through provider-specific errors                |
-| **Usage Tracking**  | Consistent usage and cost tracking               | Varies by integration                                        |
-| **IDE Support**     | Full autocompletion and type hints               | Limited due to looser typing                                 |
-
-### Versus Direct Provider SDKs
-
-Using provider SDKs directly can be challenging when working with multiple AI models:
-
-| Feature                          | Dhenara                          | Direct Provider SDKs                   |
-| -------------------------------- | -------------------------------- | -------------------------------------- |
-| **Cross-Provider Compatibility** | Same code works across providers | Need different code for each provider  |
-| **Response Structure**           | Normalized, consistent structure | Different structures for each provider |
-| **Learning Curve**               | Learn once, use everywhere       | Learn each provider's unique API       |
-| **Type Safety**                  | Consistent type checking         | Varies by provider                     |
-
-## Benefits for Development Teams
-
-Having a type-safe, unified API across providers offers significant advantages for teams:
-
-1. **Reduced Cognitive Load**: Developers don't need to context-switch between different provider APIs
-2. **Code Reusability**: Write code that works with any supported AI model
-3. **Easy Provider Switching**: Compare models or switch providers without rewriting application code
-4. **Safer Refactoring**: Type checking catches issues when changing code
-5. **Better Collaboration**: Clear interfaces make it easier for team members to work together
-
-## Example: Working with Different Providers
-
-```python
-from dhenara.ai import AIModelClient
-from dhenara.ai.types.external_api import OpenAiMessageRoleEnum
-
-# Function that works with any provider
-async def get_completion(client, question):
-    prompt = {
-        "role": OpenAiMessageRoleEnum.USER,
-        "content": question
-    }
-
-    response = await client.generate_async(prompt=prompt)
-
-    # Same access pattern regardless of the underlying provider
-    if response.chat_response:
-        return response.chat_response.choices[0].contents[0].text
-    return None
-
-# Works with OpenAI
-async with AIModelClient(openai_endpoint) as client:
-    answer = await get_completion(client, "What is machine learning?")
-
-# Works with Anthropic without changing access code
-async with AIModelClient(anthropic_endpoint) as client:
-    answer = await get_completion(client, "What is machine learning?")
-```
-
-The type safety and unified response format in Dhenara make it an ideal choice for teams building production
-applications with AI, where predictability, reliability, and maintainability are crucial.
+You can write one set of response-handling code, then switch providers/models by changing the endpoint — not the rest of
+your app.

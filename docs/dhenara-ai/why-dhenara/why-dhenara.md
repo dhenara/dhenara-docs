@@ -41,25 +41,35 @@ Dhenara addresses common challenges developers face when building AI-powered app
 Dhenara is designed to be easy to learn and implement in your projects:
 
 ```python
-from dhenara.ai import AIModelClient, AIModelCallConfig
-from dhenara.ai.types import ConversationNode
+import os
 
-# Create a client with your model endpoint
-client = AIModelClient(my_endpoint)
+from dhenara.ai import AIModelClient
+from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum, AIModelCallConfig, AIModelEndpoint
+from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
 
-# Generate a response
-response = client.generate(
-    prompt={"role": "user", "content": "Hello, how can you help me?"}
+api = AIModelAPI(
+    provider=AIModelAPIProviderEnum.ANTHROPIC,
+    api_key=os.environ["ANTHROPIC_API_KEY"],
+)
+endpoint = AIModelEndpoint(api=api, ai_model=ClaudeSonnet45)
+
+client = AIModelClient(
+    model_endpoint=endpoint,
+    config=AIModelCallConfig(max_output_tokens=200),
+    is_async=False,
 )
 
-# Store in conversation history
-conversation = [
-    ConversationNode(
-        user_query="Hello, how can you help me?",
-        response=response.chat_response,
-        timestamp=datetime.now().isoformat()
-    )
-]
+# Generate a response
+response = client.generate(prompt="Hello! What can you help me with?")
+
+assert response.chat_response
+print(response.chat_response.text())
+
+# For multi-turn chat: append the assistant message back into history
+history = []
+assistant_message = response.chat_response.to_message_item()
+if assistant_message:
+    history.append(assistant_message)
 ```
 
 ## Learn More

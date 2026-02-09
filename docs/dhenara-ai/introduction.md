@@ -54,61 +54,36 @@ work with models from OpenAI, Google AI, Anthropic, and other providers.
 Here's a simple example of using Dhenara to interact with an AI model:
 
 ```python
+import os
+
 from dhenara.ai import AIModelClient
-from dhenara.ai.types import AIModelCallConfig, AIModelEndpoint
-from dhenara.ai.types.external_api import AIModelAPIProviderEnum
-from dhenara.ai.types.genai import AIModelAPI
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import Claude37Sonnet
+from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum, AIModelCallConfig, AIModelEndpoint
+from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
 
 # Create an API
 api = AIModelAPI(
     provider=AIModelAPIProviderEnum.ANTHROPIC,
-    api_key="your_api_key",
+  api_key=os.environ["ANTHROPIC_API_KEY"],
 )
 
 # Create an endpoint using a pre-configured model
 model_endpoint = AIModelEndpoint(
     api=api,
-    ai_model=Claude37Sonnet,
-)
-
-# Configure the api call
-config = AIModelCallConfig(
-    max_output_tokens=16000,
-    reasoning=True,  # Thinking/reasoning mode
-    max_reasoning_tokens=8000,
-    streaming=False,
+    ai_model=ClaudeSonnet45,
 )
 
 # Create the client
 client = AIModelClient(
     model_endpoint=model_endpoint,
-    config=config,
+  config=AIModelCallConfig(max_output_tokens=300),
     is_async=False,
 )
 
-# Create a prompt
-prompt = {
-    "role": "user",
-    "content": "Explain quantum computing in simple terms",
-}
-
 # Generate a response
-response = client.generate(prompt=prompt)
+response = client.generate(prompt="Explain quantum computing in simple terms")
 
-# If not streaming
-if response.chat_response:
-    print(response.chat_response.choices[0].contents[0].get_text())
-
-# If streaming
-elif response.stream_generator:
-    for chunk, _ in response.stream_generator:
-        if chunk:
-            print(
-                chunk.data.choice_deltas[0].content_deltas[0].get_text_delta(),
-                end="",
-                flush=True,
-            )
+assert response.chat_response
+print(response.chat_response.text())
 
 ```
 

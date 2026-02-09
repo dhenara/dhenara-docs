@@ -10,7 +10,7 @@ framework for your AI applications.
 | **Architecture**            | Clean, direct architecture with minimal abstraction layers | Multiple layers of abstraction (chains, memory, callbacks) |
 | **Type Safety**             | Strong typing throughout with Pydantic validation          | Limited type safety, particularly across providers         |
 | **Cross-Provider Support**  | Seamless provider switching with unified API               | Provider switching requires manual memory synchronization  |
-| **Conversation Management** | Direct, explicit control with `ConversationNode`           | Complex memory systems with varying implementations        |
+| **Conversation Management** | Explicit message history (`MessageItem`) + `to_message_item()` | Complex memory systems with varying implementations     |
 | **Streaming**               | Simplified streaming with automatic consolidation          | Multiple callback systems for streaming                    |
 | **Usage Tracking**          | Built-in cost and token tracking across providers          | Limited or manual cost tracking                            |
 | **Test Mode**               | Built-in test mode for rapid development                   | Requires manual mocking                                    |
@@ -22,19 +22,23 @@ framework for your AI applications.
 
 ### 1. Simplified Architecture
 
-Dhenara uses a more straightforward approach to managing conversation context. The `ConversationNode` structure directly
-captures all necessary information without the additional layers of abstraction that LangChain introduces with its
-chains, memory types, and callbacks.
+Dhenara uses a straightforward approach to multi-turn chat: keep an explicit list of message items, and append the
+assistant message returned by the model back into that list.
 
 ```python
-# Dhenara's clean approach
-node = ConversationNode(
-    user_query=query,
-    attached_files=[],
-    response=response.chat_response,
-    timestamp=datetime.datetime.now().isoformat(),
-)
-conversation_nodes.append(node)
+from dhenara.ai.types.genai.dhenara.request import MessageItem, Prompt
+
+messages: list[MessageItem] = []
+messages.append(Prompt.with_text("Hello! What can you help me with?"))
+
+response = client.generate(messages=messages)
+chat = response.chat_response
+if not chat:
+    raise RuntimeError("No chat_response returned")
+
+assistant_message = chat.to_message_item()
+if assistant_message:
+    messages.append(assistant_message)
 ```
 
 ### 2. Strong Typing and Validation
@@ -42,24 +46,22 @@ conversation_nodes.append(node)
 Dhenara leverages Pydantic models throughout the library, ensuring that data structures are properly validated at
 runtime. This helps catch mistakes early and provides better IDE support with type hints.
 
-Every response follows a consistent pattern:
+Every response follows a consistent pattern and comes with helpful accessors:
 
 ```python
-# Consistent response structure
-chat_response = ChatResponse(
-    model="gpt-4o",
-    provider=AIModelProviderEnum.OPEN_AI,
-    usage=ChatResponseUsage(...),
-    usage_charge=UsageCharge(...),
-    choices=[...],
-    metadata={...}
-)
+chat = response.chat_response
+if not chat:
+    raise RuntimeError("No chat_response returned")
+
+print(chat.text())
+print(chat.usage)
+print(chat.usage_charge)
 ```
 
 ### 3. Cross-Provider Flexibility
 
-Dhenara's implementation allows seamless switching between providers (OpenAI, Anthropic, Google) while maintaining
-conversation context. The `PromptFormatter` automatically handles the conversion between different provider formats.
+Dhenara's Messages API is provider-agnostic. If you keep history as `MessageItem` objects and append
+`ChatResponse.to_message_item()`, you can switch endpoints/providers between turns without rewriting your state.
 
 ```python
 # Effortlessly switch models between turns
@@ -82,12 +84,17 @@ Streaming is handled through a unified interface that works consistently across 
 
 ```python
 # Streaming with Dhenara
-config = AIModelCallConfig(streaming=True)
-client = AIModelClient(model_endpoint, config)
+response = client.generate(
+    prompt="Stream a short explanation of quantum computing.",
+)
 
-async for chunk, final_response in client.generate_async(...):
-    # Process each chunk as it arrives
-    print(chunk.data.choice_deltas[0].content_deltas[0].text_delta)
+for chunk, final_response in response.stream_generator:
+    if chunk is not None:
+        # Process each chunk as it arrives
+        pass
+
+    if final_response is not None:
+        print(final_response.chat_response.text())
 ```
 
 ### 6. Test Mode for Rapid Development

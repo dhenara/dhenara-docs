@@ -15,13 +15,14 @@ you get consistent usage data whether you're calling OpenAI, Google AI, Anthropi
 
 ```python
 # Example response with usage data
-response = client.generate(prompt={"role": "user", "content": "Hello world"})
+response = client.generate(prompt="Hello world")
 
 # Access usage data in a consistent format
 if response.chat_response and response.chat_response.usage:
     print(f"Total tokens: {response.chat_response.usage.total_tokens}")
     print(f"Prompt tokens: {response.chat_response.usage.prompt_tokens}")
     print(f"Completion tokens: {response.chat_response.usage.completion_tokens}")
+    print(f"Reasoning tokens: {response.chat_response.usage.reasoning_tokens}")
 ```
 
 For chat-based models, usage information includes:
@@ -50,6 +51,7 @@ pricing.
 # The cost is automatically calculated with each response
 if response.chat_response and response.chat_response.usage_charge:
     print(f"Cost for this call: ${response.chat_response.usage_charge.cost}")
+    print(f"Charge (optional): {response.chat_response.usage_charge.charge}")
 ```
 
 ### How Cost Calculation Works
@@ -83,15 +85,18 @@ provider cost. This is particularly valuable if you're:
 
 ```python
 # Example of configuring a cost multiplier for a model endpoint
+from dhenara.ai.types import AIModelEndpoint
+from dhenara.ai.types.genai.ai_model import ChatModelCostData
+
 model_endpoint = AIModelEndpoint(
     api=my_api,
     ai_model=my_model,
     # Add a 20% margin to the base cost
     cost_data=ChatModelCostData(
-        input_token_cost_per_million=0.5,  # Base provider cost
-        output_token_cost_per_million=1.5,  # Base provider cost
-        cost_multiplier_percentage=20      # Your margin
-    )
+        input_token_cost_per_million=0.5,
+        output_token_cost_per_million=1.5,
+        cost_multiplier_percentage=20,
+    ),
 )
 
 # When using this endpoint, responses will include both raw cost and the calculated charge
@@ -135,7 +140,7 @@ when:
 You can control usage and cost tracking through configuration:
 
 ```python
-# In your configuration file
+# In your configuration file (or set via env and import settings)
 ENABLE_USAGE_TRACKING = True
 ENABLE_COST_TRACKING = True
 ```

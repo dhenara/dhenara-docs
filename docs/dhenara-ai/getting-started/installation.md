@@ -8,7 +8,9 @@ Dhenara is available on PyPI and can be installed using pip.
 
 ## Requirements
 
-- Python 3.10 or higher
+- Python 3.13
+
+	Dhenara currently targets Python 3.13 to keep typing, providers, and structured-output support consistent.
 
 ## Basic Installation
 
@@ -40,8 +42,10 @@ pip install dhenara-ai
 
 ```bash
 git clone https://github.com/dhenara/dhenara-ai.git
-cd dhenara
-pip install -e .
+cd dhenara-ai
+
+# If the repo is a monorepo, install the package directory
+pip install -e packages/dhenara_ai
 ```
 
 ## Provider-specific Dependencies
@@ -84,9 +88,9 @@ Different AI providers have specific requirements:
 You can verify your installation with:
 
 ```python
-import dhenara
+import dhenara.ai as dai
 
-print(f"Dhenara version: {dhenara.ai.__version__}")
+print(f"Dhenara version: {dai.__version__}")
 ```
 
 ## Troubleshooting

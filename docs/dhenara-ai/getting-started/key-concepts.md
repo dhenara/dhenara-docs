@@ -29,6 +29,9 @@ This separation lets you:
 Represents credentials and configuration for a specific AI provider:
 
 ```python
+# Imports used throughout the docs
+from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum
+
 # Create API configurations for different providers
 openai_api = AIModelAPI(
     provider=AIModelAPIProviderEnum.OPEN_AI,
@@ -65,15 +68,21 @@ DeepSeek's R1 and more.
 Connects a specific model with an API configuration:
 
 ```python
+# Foundation models (optional convenience constants)
+from dhenara.ai.types.genai.foundation_models.openai.chat import GPT52
+from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
+
+from dhenara.ai.types import AIModelEndpoint
+
 # Connect models with API providers
 gpt4o_endpoint = AIModelEndpoint(
     api=openai_api,
-    ai_model=GPT4o,
+    ai_model=GPT52,
 )
 
 claude_endpoint = AIModelEndpoint(
     api=anthropic_api,
-    ai_model=Claude37Sonnet,
+    ai_model=ClaudeSonnet45,
 )
 ```
 
@@ -81,9 +90,9 @@ The same model can be used with different API providers:
 
 ```python
 # Using Claude through different API providers
-claude_direct = AIModelEndpoint(api=anthropic_api, ai_model=Claude37Sonnet)
-claude_on_bedrock = AIModelEndpoint(api=bedrock_api, ai_model=Claude37Sonnet)
-claude_on_vertex = AIModelEndpoint(api=vertex_ai_api, ai_model=Claude37Sonnet)
+claude_direct = AIModelEndpoint(api=anthropic_api, ai_model=ClaudeSonnet45)
+claude_on_bedrock = AIModelEndpoint(api=bedrock_api, ai_model=ClaudeSonnet45)
+claude_on_vertex = AIModelEndpoint(api=vertex_ai_api, ai_model=ClaudeSonnet45)
 ```
 
 ### AIModelClient
@@ -99,6 +108,9 @@ The main interface for generating content. It handles:
 Available in both synchronous and asynchronous modes:
 
 ```python
+# Client
+from dhenara.ai import AIModelClient
+
 # Synchronous client
 client = AIModelClient(
     model_endpoint=endpoint,
@@ -119,6 +131,8 @@ async_client = AIModelClient(
 Controls the behavior of individual API calls:
 
 ```python
+from dhenara.ai.types import AIModelCallConfig
+
 # Text Generation
 call_config = AIModelCallConfig(
     max_output_tokens=4000,  # Limit response length

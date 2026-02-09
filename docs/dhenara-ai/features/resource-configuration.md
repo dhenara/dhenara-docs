@@ -2,46 +2,26 @@
 title: Resource Configuration
 ---
 
-# Resource Configuration
+# ResourceConfig
 
-The `ResourceConfig` class provides a centralized way to manage all AI Models and API credentials in Dhenara AI. This
-page explains how to use this powerful feature to simplify your application's resource management.
+`ResourceConfig` is the “single place” to keep credentials, APIs, and model endpoints. It’s useful when you:
 
-## Overview
+- Use multiple providers/models
+- Want a consistent credentials file format
+- Want to select endpoints by model name (and optionally provider)
 
-When working with multiple AI models and providers, managing credentials and configurations can be challenging. The
-`ResourceConfig` class offers an elegant solution by:
-
-1. Loading credentials from standardized configuration files
-2. Automatically initializing API clients with the correct credentials
-3. Creating model endpoints by matching models with compatible APIs
-4. Providing a query interface to retrieve resources by attributes
-
-## Getting Started
-
-### Creating a Configuration
-
-The simplest way to get started is by creating a credentials template and then loading it:
-
-Also, you can copy a generated
-[template from GitHub](https://github.com/dhenara/dhenara/blob/master/src/dhenara/ai/types/resource/credentials.yaml).
-(Below command will generate the same file)
+## 1) Create a credentials template
 
 ```python
 from dhenara.ai.types import ResourceConfig
 
-# Create a template credentials file
-ResourceConfig.create_credentials_template("my_credentials.yaml")
-
-# Now edit my_credentials.yaml with your actual API keys
-
-# Load the configuration
-config = ResourceConfig()
-config.load_from_file("my_credentials.yaml", init_endpoints=True)
+ResourceConfig.create_credentials_template("credentials.yaml")
+print("Edit credentials.yaml with your keys")
 ```
 
-The generated credentials template will include all supported providers with placeholders for API keys and other
-required credentials:
+The template contains all supported providers. Keep only what you use.
+
+Example shape:
 
 ```yaml
 # Dhenara AI Provider Credentials
@@ -50,215 +30,69 @@ required credentials:
 openai:
   api_key: <YOUR_OPENAI_API_KEY>
 
+anthropic:
+  api_key: <YOUR_ANTHROPIC_API_KEY>
+
 google_gemini_api:
   api_key: <YOUR_GOOGLE_GEMINI_API_API_KEY>
 
-anthropic:
-  api_key: <YOUR_ANTHROPIC_API_KEY>
-# Additional providers...
+amazon_bedrock:
+  credentials:
+    access_key_id: <YOUR_AMAZON_BEDROCK_ACCESS_KEY_ID>
+    secret_access_key: <YOUR_AMAZON_BEDROCK_SECRET_ACCESS_KEY>
+  config:
+    region: <YOUR_AMAZON_BEDROCK_REGION>
 ```
 
-### Accessing Resources
-
-Once loaded, you can access AI model endpoints using different methods:
+## 2) Load and initialize endpoints
 
 ```python
-# Get an API by provider name
-anthropic_api = resource_config.get_api(AIModelAPIProviderEnum.ANTHROPIC)
+from dhenara.ai.types import ResourceConfig
 
-# Get an endpoint by model name
-model_endpoint = resource_config.get_model_endpoint(model_name="claude-3-5-haiku")
+rc = ResourceConfig()
+rc.load_from_file(credentials_file="credentials.yaml", init_endpoints=True)
 
-# Use the endpoint with AIModelClient
+print("APIs:", [api.provider for api in rc.model_apis])
+print("Endpoints:", len(rc.model_endpoints))
+```
+
+With `init_endpoints=True`, Dhenara tries to create endpoints for compatible foundation models.
+
+## 3) Pick an endpoint and call the model
+
+```python
 from dhenara.ai import AIModelClient
-client = AIModelClient(endpoint)
+
+endpoint = rc.get_model_endpoint(model_name="gpt-5.2")
+if not endpoint:
+    raise RuntimeError("No matching endpoint. Check credentials and provider availability.")
+
+client = AIModelClient(model_endpoint=endpoint, is_async=False)
+response = client.generate(prompt="Write a 1-sentence tagline for a developer tool")
+
+print(response.chat_response.text())
 ```
 
-For more advanced queries, you can use the resource query interface:
+## 4) Multi-turn using ResourceConfig + Messages API
 
 ```python
-from dhenara.ai.types import ResourceConfigItem, ResourceConfigItemTypeEnum
+from dhenara.ai.types.genai.dhenara.request import MessageItem, Prompt
 
-# Get an endpoint by model name and specific API provider
-resource_item = ResourceConfigItem(
-    item_type=ResourceConfigItemTypeEnum.ai_model_endpoint,
-    query={"model_name": "gpt-4o", "api_provider": "openai"}
-)
+endpoint = rc.get_model_endpoint(model_name="gpt-4o-mini")
+client = AIModelClient(model_endpoint=endpoint, is_async=False)
 
-# Retrieve the endpoint
-endpoint = config.get_resource(resource_item)
+messages: list[MessageItem] = []
 
-# Use the endpoint with AIModelClient
-from dhenara.ai import AIModelClient
-client = AIModelClient(endpoint)
+for q in ["Give me 3 startup name ideas", "Now pick the best one and explain why"]:
+    messages.append(Prompt(role="user", text=q))
+    r = client.generate(messages=messages)
+    chat = r.chat_response
+    print(chat.text())
+    messages.append(chat.to_message_item())
 ```
 
-## Multi-Turn Conversations using Resource Config
-
-Let's see how to use ResourceConfig in a practical multi-turn conversation example. We will modify the
-[Multi-Turn Conversations Example](multi-turn-conversations.md#real-world-usage) using ResourceConfig:
-
-```python
-import datetime
-import random
-
-from dhenara.ai import AIModelClient
-from dhenara.ai.providers.common.prompt_formatter import PromptFormatter
-from dhenara.ai.types import AIModelCallConfig, AIModelEndpoint, ResourceConfig
-from dhenara.ai.types.conversation._node import ConversationNode
-from dhenara.ai.types.external_api import AIModelAPIProviderEnum
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import Claude35Haiku, Claude37Sonnet
-from dhenara.ai.types.genai.foundation_models.google.chat import Gemini20Flash, Gemini20FlashLite
-from dhenara.ai.types.genai.foundation_models.openai.chat import GPT4oMini, O3Mini
-
-# Initialize resource config with credentials
-resource_config = ResourceConfig()
-resource_config.load_from_file(
-    credentials_file="~/.dhenara_credentials.yaml",  # Path to your credentials file
-    init_endpoints=False,  # Do not automatically create endpoints for all foundation models
-)
-
-# Manually set up endpoints
-anthropic_api = resource_config.get_api(AIModelAPIProviderEnum.ANTHROPIC)
-openai_api = resource_config.get_api(AIModelAPIProviderEnum.OPEN_AI)
-google_api = resource_config.get_api(AIModelAPIProviderEnum.GOOGLE_AI)
-
-# Create various model endpoints
-resource_config.model_endpoints = [
-    AIModelEndpoint(api=anthropic_api, ai_model=Claude37Sonnet),
-    AIModelEndpoint(api=anthropic_api, ai_model=Claude35Haiku),
-    AIModelEndpoint(api=openai_api, ai_model=O3Mini),
-    AIModelEndpoint(api=openai_api, ai_model=GPT4oMini),
-    AIModelEndpoint(api=google_api, ai_model=Gemini20Flash),
-    AIModelEndpoint(api=google_api, ai_model=Gemini20FlashLite),
-]
-
-
-def get_context(previous_nodes: list[ConversationNode], destination_model: Any) -> list[Any]:
-    """Process previous conversation nodes into context for the next turn."""
-    context = []
-
-    for node in previous_nodes:
-        prompts = PromptFormatter.format_conversion_node_as_prompts(
-            model=destination_model,
-            user_query=node.user_query,
-            attached_files=node.attached_files,
-            previous_response=node.response,
-        )
-        context.extend(prompts)
-
-    return context
-
-
-def handle_conversation_turn(
-    user_query: str,
-    instructions: list[str],
-    endpoint: AIModelEndpoint,
-    conversation_nodes: list[ConversationNode],
-) -> ConversationNode:
-    """Process a single conversation turn with the specified model and query."""
-
-    client = AIModelClient(
-        model_endpoint=endpoint,
-        config=AIModelCallConfig(
-            max_output_tokens=1000,
-            streaming=False,
-        ),
-        is_async=False,
-    )
-
-    # Format the user query
-    prompt = PromptFormatter.format_conversion_node_as_prompts(
-        model=endpoint.ai_model,
-        user_query=user_query,
-        attached_files=[],
-        previous_response=[],
-    )[0]
-
-    # Get context from previous turns (if any)
-    context = get_context(conversation_nodes, endpoint.ai_model) if conversation_nodes else []
-
-    # Generate response
-    response = client.generate(
-        prompt=prompt,
-        context=context,
-        instructions=instructions,
-    )
-
-    # Create conversation node
-    node = ConversationNode(
-        user_query=user_query,
-        attached_files=[],
-        response=response.chat_response,
-        timestamp=datetime.datetime.now().isoformat(),
-    )
-
-    return node
-
-
-def run_multi_turn_conversation():
-    multi_turn_queries = [
-        "Tell me a short story about a robot learning to paint.",
-        "Continue the story but add a twist where the robot discovers something unexpected.",
-        "Conclude the story with an inspiring ending.",
-    ]
-
-    # Instructions for each turn
-    instructions_by_turn = [
-        ["Be creative and engaging."],
-        ["Build upon the previous story seamlessly."],
-        ["Bring the story to a satisfying conclusion."],
-    ]
-
-    # Store conversation history
-    conversation_nodes = []
-
-    # Process each turn
-    for i, query in enumerate(multi_turn_queries):
-        # Choose a random model endpoint
-        model_endpoint = random.choice(resource_config.model_endpoints)
-        # OR use a specific model
-        # model_endpoint = resource_config.get_model_endpoint(model_name=Claude35Haiku.model_name)
-
-        print(f"🔄 Turn {i + 1} with {model_endpoint.ai_model.model_name} from {model_endpoint.api.provider}\n")
-
-        node = handle_conversation_turn(
-            user_query=query,
-            instructions=instructions_by_turn[i],
-            endpoint=model_endpoint,
-            conversation_nodes=conversation_nodes,
-        )
-
-        # Display the conversation
-        print(f"User: {query}")
-        print(f"Model: {model_endpoint.ai_model.model_name}\n")
-        print(f"Model Response:\n {node.response.choices[0].contents[0].get_text()}\n")
-        print("-" * 80)
-
-        # Update conversation history for next turn
-        conversation_nodes.append(node)
-
-
-if __name__ == "__main__":
-    run_multi_turn_conversation()
-```
-
-## Additional Features
-
-### Loading Custom Models
-
-You can load specific models into a ResourceConfig:
-
-```python
-from dhenara.ai.types.genai.foundation_models.openai.chat import GPT4o, O3Mini
-
-# Initialize with only specific models
-resource_config = ResourceConfig()
-resource_config.load_from_file(
-    credentials_file="credentials.yaml",
-    models=[GPT4o, O3Mini],
-    init_endpoints=True
-)
+If you need more control (query by provider, custom resource queries, explicit model lists), use
+`ResourceConfigItem` and `get_resource()`.
 ```
 
 ### Creating Custom Credentials Templates

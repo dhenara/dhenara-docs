@@ -25,7 +25,8 @@ Dhenara addresses these challenges with a built-in streaming management system t
 
 ```python
 from dhenara.ai import AIModelClient
-from dhenara.ai.types import AIModelCallConfig
+from dhenara.ai.types import AIModelCallConfig, ChatResponseChunk
+from dhenara.ai.types.shared import SSEErrorResponse, SSEEventType, SSEResponse
 
 # Create client with streaming enabled
 client = AIModelClient(
@@ -34,20 +35,26 @@ client = AIModelClient(
 )
 
 # Generate a response with streaming
-response = await client.generate_async(
-    prompt={"role": "user", "content": "Tell me a story about a robot learning to paint."}
+response = client.generate(
+    prompt="Tell me a story about a robot learning to paint.",
 )
 
-# You get BOTH stream chunks AND the final complete response
-async for chunk, final_response in response.async_stream_generator:
+# You get BOTH stream chunks AND the final consolidated response
+for chunk, final_response in response.stream_generator:
     if chunk:
-        # Process streaming chunk
-        print(chunk.data.choice_deltas[0].content_deltas[0].text_delta, end="")
+        if isinstance(chunk, SSEErrorResponse):
+            raise RuntimeError(f"Stream error: {chunk.data.error_code}: {chunk.data.message}")
 
-    if final_response:
-        # Process the complete, consolidated response
-        print("\n\nFINAL COMPLETE RESPONSE:")
-        print(final_response.chat_response.choices[0].contents[0].text)
+        if isinstance(chunk, SSEResponse) and chunk.event == SSEEventType.TOKEN_STREAM:
+            data: ChatResponseChunk = chunk.data
+            for choice_delta in data.choice_deltas:
+                for content_delta in choice_delta.content_deltas or []:
+                    text = content_delta.get_text_delta()
+                    if text:
+                        print(text, end="", flush=True)
+
+    if final_response and final_response.chat_response:
+        print("\n\nFINAL:\n", final_response.chat_response.text())
 ```
 
 ### Key Streaming Benefits

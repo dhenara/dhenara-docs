@@ -17,8 +17,8 @@ saving costs and enabling development in environments without API access.
 Enable test mode by setting the `test_mode` parameter to `True` in your `AIModelCallConfig`:
 
 ```python
-from dhenara import AIModelClient, AIModelCallConfig
-from dhenara.ai.types.shared.platform import PlatformEnvTypeEnum
+from dhenara.ai import AIModelClient
+from dhenara.ai.types import AIModelCallConfig
 
 # Create a client with test mode enabled
 client = AIModelClient(
@@ -29,7 +29,7 @@ client = AIModelClient(
 
 # Use the client normally - no actual API calls will be made
 response = client.generate(
-    prompt={"role": "user", "content": "Tell me about machine learning"},
+    prompt="Tell me about machine learning",
     instructions=["You are a helpful AI assistant"]
 )
 ```
@@ -82,13 +82,13 @@ context:
 # Using the sync client with a context manager
 with sync_client as client:
     response = client.generate(
-        prompt={"role": "user", "content": "What is machine learning?"}
+        prompt="What is machine learning?"
     )
-    print(response.chat_response.choices[0].contents[0].text)
+    print(response.chat_response.text())
 
 # Or without a context manager
 response = sync_client.generate(
-    prompt={"role": "user", "content": "What is machine learning?"}
+    prompt="What is machine learning?"
 )
 ```
 
@@ -103,9 +103,9 @@ async def get_response():
     # Using the async client with a context manager
     async with async_client as client:
         response = await client.generate_async(
-            prompt={"role": "user", "content": "What is machine learning?"}
+            prompt="What is machine learning?"
         )
-        return response.chat_response.choices[0].contents[0].text
+        return response.chat_response.text()
 
 # Run the async function
 response_text = asyncio.run(get_response())

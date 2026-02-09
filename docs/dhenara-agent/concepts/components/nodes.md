@@ -26,7 +26,7 @@ DAD includes several built-in node types for common operations:
 
 ### AIModelNode
 
-The `AIModelNode` makes calls to AI models (like GPT-4, Claude) to process prompts and generate responses.
+The `AIModelNode` makes calls to AI models (like GPT, Claude) to process prompts and generate responses.
 
 ```python
 from dhenara.agent.dsl import AIModelNode, AIModelNodeSettings
