@@ -4,13 +4,13 @@ title: Installation
 
 # Installing Dhenara
 
-Dhenara is available on PyPI and can be installed using pip.
+Dhenara is available on PyPI and can be installed using `pip` or `uv`.
 
 ## Requirements
 
 - Python 3.13
 
-	Dhenara currently targets Python 3.13 to keep typing, providers, and structured-output support consistent.
+  Dhenara currently targets Python 3.13 to keep typing, providers, and structured-output support consistent.
 
 ## Basic Installation
 
@@ -19,6 +19,35 @@ pip install dhenara-ai
 ```
 
 This installs the core Dhenara library with support for all available AI model providers.
+
+## Using `uv` (Recommended)
+
+`uv` supports two common workflows:
+
+### A) You have a project (`pyproject.toml`)
+
+```bash
+# (optional) create a new project
+uv init
+
+# add dependency to pyproject.toml
+uv add dhenara-ai
+
+# create/update .venv and install from the lockfile
+uv sync
+```
+
+Run without activating the venv:
+
+```bash
+uv run python -c "import dhenara.ai as dai; print(dai.__version__)"
+```
+
+### B) You just want a quick install into an existing venv
+
+```bash
+uv pip install dhenara-ai
+```
 
 ## Using a Virtual Environment (Recommended)
 
@@ -38,14 +67,32 @@ source .venv/bin/activate
 pip install dhenara-ai
 ```
 
+Using `uv`:
+
+```bash
+# Create a virtual environment (creates .venv)
+uv venv
+
+# Option 1: activate + use normal python/pip
+source .venv/bin/activate
+pip install dhenara-ai
+
+# Option 2: don't activate; run/install via uv
+uv pip install dhenara-ai
+uv run python -c "import dhenara.ai as dai; print(dai.__version__)"
+```
+
 ## Installing from Source
 
 ```bash
 git clone https://github.com/dhenara/dhenara-ai.git
 cd dhenara-ai
 
-# If the repo is a monorepo, install the package directory
-pip install -e packages/dhenara_ai
+# Editable install
+pip install -e .
+
+# Or with uv
+uv sync --all-extras
 ```
 
 ## Provider-specific Dependencies

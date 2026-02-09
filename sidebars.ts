@@ -68,6 +68,20 @@ const sidebars: SidebarsConfig = {
       ],
     },
 
+    {
+      type: 'category',
+      label: 'Guides',
+      collapsed: false,
+      items: [
+        'dhenara-ai/guides/advanced-recipes',
+        'dhenara-ai/guides/runnable-examples',
+        'dhenara-ai/guides/prompt-formatter',
+        'dhenara-ai/guides/structured-output',
+        'dhenara-ai/guides/tools-and-function-calling',
+        'dhenara-ai/guides/artifacts-and-debugging',
+      ],
+    },
+
     /*
     {
       type: 'category',

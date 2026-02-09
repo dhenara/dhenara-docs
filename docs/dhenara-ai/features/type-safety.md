@@ -54,6 +54,7 @@ All AI model responses are normalized into standardized content item types:
 
 - `ChatResponseTextContentItem` - For standard text responses
 - `ChatResponseReasoningContentItem` - For model reasoning/thinking
+- `ChatResponseStructuredOutputContentItem` - For structured JSON outputs (validated)
 - `ChatResponseToolCallContentItem` - For tool/function calls
 - `ImageResponseContentItem` - For generated images
 
@@ -111,3 +112,12 @@ if response.chat_response.usage:
 
 You can write one set of response-handling code, then switch providers/models by changing the endpoint — not the rest of
 your app.
+
+## Next steps
+
+If you want the “full recipe” patterns (multi-turn, streaming, validation loops, debugging), these guides are the best
+place to start:
+
+- [Structured Output (Pydantic)](/dhenara-ai/guides/structured-output)
+- [Tools & Function Calling](/dhenara-ai/guides/tools-and-function-calling)
+- [Artifacts & Debugging](/dhenara-ai/guides/artifacts-and-debugging)

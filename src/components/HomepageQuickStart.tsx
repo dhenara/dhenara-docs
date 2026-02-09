@@ -11,7 +11,7 @@ export default function HomepageQuickStart(): JSX.Element {
             <h2>Get Started Quickly</h2>
             <p>
               Dhenara makes it easy to build AI-powered applications. Start with Dhenara AI for provider-agnostic model
-              interactions.
+              interactions — then jump into the advanced recipes.
             </p>
             <div className="quickstart-links">
               <Link className="quickstart-card" to="/dhenara-ai/getting-started/installation">
@@ -21,13 +21,18 @@ export default function HomepageQuickStart(): JSX.Element {
                 </div>
                 <div className="quickstart-arrow">→</div>
               </Link>
-              <Link className="quickstart-card" to="/dhenara-agent/getting-started/installation">
+              <Link className="quickstart-card" to="/dhenara-ai/guides/advanced-recipes">
                 <div className="quickstart-card-content">
-                  <h3>Agent DSL Installation (Deprecated)</h3>
-                  <p>Legacy agent framework docs for existing users (no longer actively developed).</p>
+                  <h3>Advanced Recipes</h3>
+                  <p>Streaming + structured output + tools + artifacts — the “good stuff”.</p>
                 </div>
                 <div className="quickstart-arrow">→</div>
               </Link>
+            </div>
+
+            <div style={{ marginTop: '0.75rem', opacity: 0.8 }}>
+              <Link to="/dhenara-agent/getting-started/installation">Agent DSL (Deprecated)</Link>
+              {' — legacy docs for existing users.'}
             </div>
           </div>
           <div className="col col--6 quickstart-code">
@@ -42,7 +47,7 @@ export default function HomepageQuickStart(): JSX.Element {
                   pip install dhenara-ai
                   <br />
                   <br />
-                  # Legacy (deprecated): Agent DSL framework
+                  # Optional (deprecated): Agent DSL framework
                   <br />
                   pip install dhenara-agent
                 </code>

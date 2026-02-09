@@ -89,6 +89,62 @@ const dhenaraiFeatures: FeatureItem[] = [
       </>
     ),
   },
+  {
+    title: 'Structured Output + Tools',
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M8 6h13" />
+        <path d="M8 12h13" />
+        <path d="M8 18h13" />
+        <path d="M3 6h.01" />
+        <path d="M3 12h.01" />
+        <path d="M3 18h.01" />
+      </svg>
+    ),
+    description: (
+      <>
+        Get typed, validated outputs (Pydantic) and provider-agnostic tool calling without rewriting your app for each
+        provider.
+      </>
+    ),
+  },
+  {
+    title: 'Artifacts for Debugging',
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M10 2h4" />
+        <path d="M12 14v7" />
+        <path d="M8 21h8" />
+        <path d="M12 2a7 7 0 0 1 7 7c0 2.2-1 4-2.6 5.3-.6.5-1.4.7-2.2.7H9.8c-.8 0-1.6-.2-2.2-.7C6 13 5 11.2 5 9a7 7 0 0 1 7-7z" />
+      </svg>
+    ),
+    description: (
+      <>
+        Capture normalized requests/responses and optional Python logs per call. Diagnose provider differences and
+        validation failures fast.
+      </>
+    ),
+  },
 ];
 
 const dhenaraDadFeatures: FeatureItem[] = [
