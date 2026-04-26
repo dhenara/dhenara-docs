@@ -6,7 +6,7 @@ title: 'Streaming'
 
 This example shows how to consume streaming responses.
 
-For the full runnable script (with richer console rendering), see `packages/dhenara_ai/examples/02_text_streaming.py`.
+For the full runnable script (with richer console rendering), see `examples/02_text_streaming.py`.
 
 ```python
 import os

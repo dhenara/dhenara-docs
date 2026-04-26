@@ -2,9 +2,9 @@
 title: Quick Start
 ---
 
-# Quick Start with Dhenara
+# Quick Start with Dhenara AI
 
-This guide will help you get up and running with Dhenara quickly. We'll create a simple application that interacts with an AI model to generate text.
+This guide gets you from installation to the first successful model call using the public `ResourceConfig` flow.
 
 ## Setup
 
@@ -14,56 +14,60 @@ First, make sure you have Dhenara installed:
 pip install dhenara-ai
 ```
 
-You'll need API credentials for at least one of the supported AI providers. For this example, we'll use Anthropic.
+Then create a secret directory and place `dai_credentials.yaml` inside it. For a minimal Anthropic-only quick start:
+
+```bash
+mkdir -p /path/to/secrets
+export DAI_SECRET_CONFIG_DIR=/path/to/secrets
+```
+
+```yaml title="/path/to/secrets/dai_credentials.yaml"
+anthropic:
+  api_key: <YOUR_ANTHROPIC_API_KEY>
+```
+
+If you prefer, you can skip `DAI_SECRET_CONFIG_DIR` and pass an explicit credentials file path to
+`ResourceConfig.load_from_file()` instead.
 
 ## Basic Text Generation
 
 ```python
 from dhenara.ai import AIModelClient
-from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum, AIModelCallConfig, AIModelEndpoint
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
+from dhenara.ai.types import AIModelAPIProviderEnum, AIModelCallConfig, ResourceConfig
 
-# 1. Create an API
-# This can be used to create multiple model endpoints for the same API provider
-api = AIModelAPI(
-    provider=AIModelAPIProviderEnum.ANTHROPIC,
-    api_key="your_api_key",  # TODO: replace
+resource_config = ResourceConfig()
+resource_config.load_from_file(credentials_file=None, init_endpoints=True)
+
+endpoint = resource_config.get_model_endpoint(
+    model_name="claude-haiku-4-5",
+    api_provider=AIModelAPIProviderEnum.ANTHROPIC,
 )
+if endpoint is None:
+    raise RuntimeError("No Anthropic endpoint configured for claude-haiku-4-5")
 
-# 2. Select or create an AI model
-# You can either use the foundation models as it is, or create your own models
-model = ClaudeSonnet45
-
-# Create the model endpoint
-model_endpoint = AIModelEndpoint(api=api, ai_model=model)
-
-# Create the client
 client = AIModelClient(
-    model_endpoint=model_endpoint,
+    model_endpoint=endpoint,
     config=AIModelCallConfig(
         max_output_tokens=1024,
         reasoning=False,
         streaming=False,
     ),
-    is_async=False,  # Sync mode/ async mode
+    is_async=False,
 )
-
 
 response = client.generate(
     prompt="What are three ways to improve productivity?",
-    context=[],  # Optional history/context. Will show this on another example
     instructions=[
-        "Be specific and actionable.",  # Optional instructions
+        "Be specific and actionable.",
     ],
 )
 
-print(response.chat_response.text())
-
-if response.chat_response.usage:
-    print("Tokens:", response.chat_response.usage)
-if response.chat_response.usage_charge:
-    print("Cost:", response.chat_response.usage_charge)
+if response.chat_response:
+    print(response.chat_response.text())
 ```
+
+`load_from_file(credentials_file=None, init_endpoints=True)` tells Dhenara AI to discover
+`dai_credentials.yaml` from `DAI_SECRET_CONFIG_DIR` and initialize all compatible foundation-model endpoints.
 
 ## Enable reasoning (optional)
 
@@ -71,11 +75,11 @@ If your chosen model supports reasoning/thinking, set `reasoning=True`.
 
 ```python
 client = AIModelClient(
-    model_endpoint=model_endpoint,
+    model_endpoint=endpoint,
     config=AIModelCallConfig(
         reasoning=True,
         reasoning_effort="medium",  # optional; normalized across providers
-        max_reasoning_tokens=2000,   # optional; ignored by some providers
+        max_reasoning_tokens=2000,  # optional; ignored by some providers
         max_output_tokens=1024,
     ),
     is_async=False,
@@ -92,16 +96,19 @@ print("Reasoning (if exposed by provider):\n", response.chat_response.reasoning(
 ```python
 import asyncio
 
+
 async def main():
-    async_client = AIModelClient(model_endpoint=model_endpoint, is_async=True)
+    async_client = AIModelClient(model_endpoint=endpoint, is_async=True)
     async with async_client as c:
         response = await c.generate_async(prompt="Give me 3 meal prep ideas")
         print(response.chat_response.text())
+
 
 asyncio.run(main())
 ```
 
 ## Next Steps
+
 - Explore [Multi-turn conversations](../features/multi-turn-conversations)
 - Learn about [Features](../features/features-overview)
 - Look at a [streaming sample](../samples/text-gen/streaming)

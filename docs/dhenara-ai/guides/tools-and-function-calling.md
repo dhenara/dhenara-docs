@@ -126,6 +126,6 @@ If you enable reasoning and tools together, ensure you preserve the full assista
 
 ## See runnable examples
 
-- `packages/dhenara_ai/examples/16_multi_turn_with_tools_and_messages_api.py`
-- `packages/dhenara_ai/examples/18_streaming_multi_turn_with_tools_and_structured_output.py`
-- `packages/dhenara_ai/examples/20_fn_calling.py`
+- `examples/16_multi_turn_with_tools_and_messages_api.py`
+- `examples/18_streaming_multi_turn_with_tools_and_structured_output.py`
+- `examples/20_fn_calling.py`

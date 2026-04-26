@@ -10,9 +10,9 @@ sidebar_position: 1
 
 # Introduction
 
-Dhenara-AI is a powerful, flexible, and truly open-source Python framework for interacting with AI models from various
-providers. Similar to LangChain but with a focus on simplicity and performance, Dhenara provides a unified interface to
-work with models from OpenAI, Google AI, Anthropic, and other providers.
+Dhenara AI is an open source Python package for calling multiple LLM providers through one typed interface. It keeps
+the integration surface small: provider credentials, model selection, prompt and message formatting, streaming, tool
+use, reasoning, and structured output all flow through the same core client types.
 
 ## Why Dhenara?
 
@@ -24,8 +24,8 @@ work with models from OpenAI, Google AI, Anthropic, and other providers.
 - **Streaming**: First-class support for streaming responses along with accumulated responses similar to non-streaming
   responses
 - **Async Support**: Both synchronous and asynchronous interfaces for maximum flexibility
-- **Centralized Resource Management**: Configure all AI models and API credentials in one place with a simple YAML
-  configuration
+- **Centralized Resource Management**: Keep provider credentials, APIs, and model endpoints in one place with
+  `ResourceConfig`
 - **Credential Security**: Keep sensitive API keys and credentials separate from application code
 - **Dynamic Model Selection**: Switch between models and providers at runtime without reconfiguration
 - **Provider Abstraction**: Interact with foundation models regardless of which provider is serving them
@@ -39,9 +39,10 @@ work with models from OpenAI, Google AI, Anthropic, and other providers.
 ## Key Features
 
 - **Open Source and Extensible**: Transparently designed codebase that encourages community contributions and extensions
-- **Multiple Model Providers**: Support for OpenAI, Google AI, Anthropic, and DeepSeek
-- **Multiple API Providers**: Support for Vertex AI, Amazon Bedrock, Microsoft Azure AI along with OpenAI, Google AI &
-  Anthropic
+- **Multiple Model Families**: Work with OpenAI, Google, Anthropic, and other packaged model definitions through one
+  response shape
+- **Multiple API Providers**: Support for direct OpenAI, Google Gemini Developer API, Anthropic, Google Vertex AI,
+  Amazon Bedrock, and Microsoft OpenAI-compatible endpoints
 - **Text and Image Generation**: Generate text or images through the same interface
 - **Streaming Support**: Stream responses for better user experience
 - **Accumulated Streaming Response**: Process stream responses in the same way you do with non-streaming
@@ -51,41 +52,40 @@ work with models from OpenAI, Google AI, Anthropic, and other providers.
 
 ## Example Usage
 
-Here's a simple example of using Dhenara to interact with an AI model:
+Here's a simple example using the public `ResourceConfig` credential flow:
 
 ```python
-import os
-
 from dhenara.ai import AIModelClient
-from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum, AIModelCallConfig, AIModelEndpoint
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
+from dhenara.ai.types import AIModelAPIProviderEnum, AIModelCallConfig, ResourceConfig
 
-# Create an API
-api = AIModelAPI(
-    provider=AIModelAPIProviderEnum.ANTHROPIC,
-  api_key=os.environ["ANTHROPIC_API_KEY"],
+resource_config = ResourceConfig()
+resource_config.load_from_file(credentials_file=None, init_endpoints=True)
+
+endpoint = resource_config.get_model_endpoint(
+    model_name="claude-haiku-4-5",
+    api_provider=AIModelAPIProviderEnum.ANTHROPIC,
 )
+if endpoint is None:
+    raise RuntimeError("No Anthropic endpoint configured for claude-haiku-4-5")
 
-# Create an endpoint using a pre-configured model
-model_endpoint = AIModelEndpoint(
-    api=api,
-    ai_model=ClaudeSonnet45,
-)
-
-# Create the client
 client = AIModelClient(
-    model_endpoint=model_endpoint,
-  config=AIModelCallConfig(max_output_tokens=300),
+    model_endpoint=endpoint,
+    config=AIModelCallConfig(max_output_tokens=300),
     is_async=False,
 )
 
-# Generate a response
-response = client.generate(prompt="Explain quantum computing in simple terms")
+response = client.generate(
+    prompt="Explain quantum computing in simple terms.",
+    instructions=["Keep the answer under 120 words."],
+)
 
 assert response.chat_response
 print(response.chat_response.text())
-
 ```
+
+When `credentials_file=None`, `ResourceConfig.load_from_file(...)` resolves
+`$DAI_SECRET_CONFIG_DIR/dai_credentials.yaml` and falls back to `/run/secrets/dai/dai_credentials.yaml` if the
+environment variable is unset.
 
 ## Next Steps
 

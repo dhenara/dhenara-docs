@@ -75,5 +75,5 @@ ArtifactConfig(
 
 ## See runnable examples
 
-- `packages/dhenara_ai/examples/16_multi_turn_with_tools_and_messages_api.py`
-- `packages/dhenara_ai/examples/19_streaming_multi_turn_structured_thinking.py`
+- `examples/16_multi_turn_with_tools_and_messages_api.py`
+- `examples/19_streaming_multi_turn_structured_thinking.py`

@@ -2,9 +2,9 @@
 title: Installation
 ---
 
-# Installing Dhenara
+# Installing Dhenara AI
 
-Dhenara is available on PyPI and can be installed using `pip` or `uv`.
+Dhenara AI is available on PyPI and can be installed using `pip` or `uv`.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Dhenara is available on PyPI and can be installed using `pip` or `uv`.
 pip install dhenara-ai
 ```
 
-This installs the core Dhenara library with support for all available AI model providers.
+This installs the public `dhenara-ai` package with its provider integrations and typed client surfaces.
 
 ## Using `uv` (Recommended)
 
@@ -123,12 +123,25 @@ pip install "dhenara-ai[dev]"
 Different AI providers have specific requirements:
 
 - **OpenAI**: Requires an OpenAI API key
-- **Google Gemini AI**: Requires a Gemini API key or service account credentials
+- **Google Gemini Developer API**: Requires a Gemini API key under the `google_gemini_api` provider block
 - **Google Vertex AI**: Requires service account credentials
 - **Anthropic**: Requires an Anthropic API key
-- **Microsoft Azure**: Requires Azure OpenAI or Azure AI services credentials
+- **Microsoft OpenAI**: Requires an API key plus an Azure OpenAI or Microsoft Foundry OpenAI v1 endpoint
 - **Amazon Bedrock**: Requires AWS credentials with Bedrock access
-- **DeepSeek**: Accessible via Azure AI services
+
+For Microsoft-hosted OpenAI-compatible deployments, use the `microsoft_openai` provider block. The older
+`microsoft_azure_ai` text-generation surface is not the recommended public setup.
+
+## Credential Discovery
+
+The recommended public setup uses `ResourceConfig` and one of these two flows:
+
+1. Pass an explicit credentials file path to `ResourceConfig.load_from_file()`.
+2. Set `DAI_SECRET_CONFIG_DIR` and place `dai_credentials.yaml` inside that directory.
+
+If `DAI_SECRET_CONFIG_DIR` is unset, Dhenara AI falls back to `/run/secrets/dai/dai_credentials.yaml`.
+
+See [Resource Configuration](../features/resource-configuration) for the current credentials-file shape.
 
 ## Verifying Installation
 

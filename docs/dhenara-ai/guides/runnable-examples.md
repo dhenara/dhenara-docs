@@ -8,16 +8,16 @@ The fastest way to *feel* Dhenara’s “goodness” is to run the examples and 
 
 All scripts live in:
 
-- `packages/dhenara_ai/examples/`
+- `examples/`
 
-The GitHub links in this page point to the canonical `dhenara-ai` repo, where the same examples live at `examples/`.
+The GitHub links in this page point to the canonical `dhenara-ai` repository.
 
 ## How to run
 
-From the repo root:
+From the `dhenara-ai` repository root:
 
 ```bash
-cd packages/dhenara_ai
+export DAI_SECRET_CONFIG_DIR=/path/to/secrets
 
 # If you're using pip, create/activate a venv and install the package first.
 # Example (macOS/Linux):
@@ -26,19 +26,21 @@ cd packages/dhenara_ai
 #   pip install -e .
 
 # run an example
-python examples/19_streaming_multi_turn_structured_thinking.py
+python examples/14_multi_turn_with_messages_api.py
 ```
 
 If you use `uv`, the simplest workflow is to sync the repo once and then run everything via `uv run` (no manual activation needed):
 
 ```bash
-cd packages/dhenara_ai
+export DAI_SECRET_CONFIG_DIR=/path/to/secrets
 
 uv sync
-uv run python examples/19_streaming_multi_turn_structured_thinking.py
+uv run python examples/14_multi_turn_with_messages_api.py
 ```
 
-Most examples use the shared config helpers under `packages/dhenara_ai/examples/include/`.
+Most examples use the shared config helpers under `examples/include/`. The default shared example set prefers direct
+provider endpoints discovered from `DAI_SECRET_CONFIG_DIR`, which keeps the quickstart flow provider-agnostic and easy
+to run locally.
 
 ## What to run (recommended order)
 

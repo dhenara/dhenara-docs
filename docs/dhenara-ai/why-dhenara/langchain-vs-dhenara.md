@@ -232,19 +232,20 @@ Dhenara introduces a centralized resource management system that dramatically si
 and providers:
 
 ```python
-# Load all credentials and initialize endpoints in one line
+# Load credentials from an explicit file path or let Dhenara discover
+# $DAI_SECRET_CONFIG_DIR/dai_credentials.yaml.
 resource_config = ResourceConfig()
-resource_config.load_from_file("credentials.yaml", init_endpoints=True)
+resource_config.load_from_file(None, init_endpoints=True)
 
 # Get any model by name, regardless of provider
-claude_endpoint = resource_config.get_model_endpoint("claude-3-5-haiku")
-gpt4_endpoint = resource_config.get_model_endpoint("gpt-4o")
+claude_endpoint = resource_config.get_model_endpoint("claude-haiku-4-5")
+gpt_endpoint = resource_config.get_model_endpoint("gpt-5.4-nano")
 
 # Or use a more specific query when needed
 gemini_endpoint = resource_config.get_resource(
     ResourceConfigItem(
         item_type=ResourceConfigItemTypeEnum.ai_model_endpoint,
-        query={"model_name": "gemini-1.5-flash", "api_provider": "google_gemini_api"}
+        query={"model_name": "gemini-2.5-flash", "api_provider": "google_gemini_api"}
     )
 )
 ```

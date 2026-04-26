@@ -11,7 +11,7 @@ fundamental components and how they work together.
 
 Dhenara is built on principles of simplicity, flexibility, and separation of concerns. The architecture separates:
 
-1. **API Providers** - The services that expose AI model APIs (OpenAI, Anthropic, Amazon Bedrock, Microsoft Azure etc.)
+1. **API Providers** - The services that expose AI model APIs (OpenAI, Anthropic, Google Gemini Developer API, Google Vertex AI, Amazon Bedrock, Microsoft OpenAI, etc.)
 2. **Models** - The specific AI models with their capabilities and parameters
 3. **Endpoints** - The combination of an API provider and a specific model
 4. **Clients** - The interface you use to interact with endpoints
@@ -58,10 +58,10 @@ Predefined models with appropriate settings and capabilities:
 - Context window sizes
 - Cost information
 - Provider-specific parameters
-- Model Options ( This is very useful when you deal with image generation )
+- Model options (useful when you work with image generation)
 
-Dhenara includes foundation models for popular services like OpenAI's GPT models, Google's Gemini, Anthropic's Claude,
-DeepSeek's R1 and more.
+Dhenara includes foundation models for common OpenAI GPT models, Google's Gemini family, Anthropic Claude models, and
+other packaged public model definitions.
 
 ### AIModelEndpoint
 
@@ -69,30 +69,42 @@ Connects a specific model with an API configuration:
 
 ```python
 # Foundation models (optional convenience constants)
-from dhenara.ai.types.genai.foundation_models.openai.chat import GPT52
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
+from dhenara.ai.types.genai.foundation_models.openai.chat import GPT54Nano
+from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeHaiku45
 
 from dhenara.ai.types import AIModelEndpoint
 
 # Connect models with API providers
-gpt4o_endpoint = AIModelEndpoint(
+gpt54_endpoint = AIModelEndpoint(
     api=openai_api,
-    ai_model=GPT52,
+    ai_model=GPT54Nano,
 )
 
 claude_endpoint = AIModelEndpoint(
     api=anthropic_api,
-    ai_model=ClaudeSonnet45,
+    ai_model=ClaudeHaiku45,
 )
 ```
 
-The same model can be used with different API providers:
+Compatible model families can sometimes be served through different API providers. Hosted providers may require a
+provider-specific model identifier, so cloning is the usual pattern:
 
 ```python
-# Using Claude through different API providers
-claude_direct = AIModelEndpoint(api=anthropic_api, ai_model=ClaudeSonnet45)
-claude_on_bedrock = AIModelEndpoint(api=bedrock_api, ai_model=ClaudeSonnet45)
-claude_on_vertex = AIModelEndpoint(api=vertex_ai_api, ai_model=ClaudeSonnet45)
+bedrock_api = AIModelAPI(
+    provider=AIModelAPIProviderEnum.AMAZON_BEDROCK,
+    credentials={
+        "access_key_id": "your_access_key_id",
+        "secret_access_key": "your_secret_access_key",
+    },
+    config={"region": "your_region"},
+)
+
+claude_direct = AIModelEndpoint(api=anthropic_api, ai_model=ClaudeHaiku45)
+
+bedrock_claude = ClaudeHaiku45.clone(model_name="provider-specific-bedrock-model-id")
+bedrock_claude.metadata["version_suffix"] = None
+
+claude_on_bedrock = AIModelEndpoint(api=bedrock_api, ai_model=bedrock_claude)
 ```
 
 ### AIModelClient
@@ -145,8 +157,8 @@ call_config = AIModelCallConfig(
 )
 
 
-#Image call config for Dalle3
-call_config=AIModelCallConfig(
+# Image call config for DALL-E 3
+call_config = AIModelCallConfig(
     options={
         "quality": "standard",
         "size": "1024x1024",

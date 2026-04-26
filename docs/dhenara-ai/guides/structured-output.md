@@ -83,6 +83,6 @@ if final and final.chat_response:
 
 If you want the full “production recipe” (streaming + multi-turn + structured output + validation per turn, and optional reasoning), these scripts are the canonical source:
 
-- `packages/dhenara_ai/examples/21_structed_output.py`
-- `packages/dhenara_ai/examples/17_multi_turn_with_structured_output_and_messages_api.py`
-- `packages/dhenara_ai/examples/19_streaming_multi_turn_structured_thinking.py`
+- `examples/21_structed_output.py`
+- `examples/17_multi_turn_with_structured_output_and_messages_api.py`
+- `examples/19_streaming_multi_turn_structured_thinking.py`

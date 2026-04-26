@@ -42,4 +42,4 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-For a richer async example (including console rendering), see the `packages/dhenara_ai/examples/` directory.
+For a richer async example (including console rendering), see the `examples/` directory.

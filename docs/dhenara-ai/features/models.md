@@ -7,9 +7,8 @@ title: Foundation Models
 Foundation models are the building blocks of AI in the Dhenara framework. These pre-configured models encapsulate the
 capabilities of various AI providers and enable consistent interactions regardless of the underlying API differences.
 
-Before proceeding further, please note that, you are **not** dependent on the Foundation Model in the package. We will
-update this library as and when new models are published, but you can always create your own FoundationModel objects or
-even custom AIModel objects and use them in the same manner as described below.
+You are not locked to the packaged foundation-model list. The library ships useful defaults, but you can always create
+your own `FoundationModel` or `AIModel` objects and use them with the same client APIs.
 
 ## Understanding Foundation Models
 
@@ -38,7 +37,7 @@ for model in ALL_CHAT_MODELS:
     print(f"Model: {model.display_name}, Provider: {model.provider}")
 
 # Get a specific foundation model by name
-claude_model = FoundationModelFns.get_foundation_model("claude-3-7-sonnet")
+claude_model = FoundationModelFns.get_foundation_model("claude-haiku-4-5")
 ```
 
 ## Cross-Provider Model Compatibility
@@ -46,17 +45,17 @@ claude_model = FoundationModelFns.get_foundation_model("claude-3-7-sonnet")
 One of the most powerful features of Dhenara's foundation model system is the ability to use the same model across
 different API providers through model cloning and customization.
 
-### Example: Using Claude 3.5 on Amazon Bedrock
+### Example: Adapting a Claude model for Amazon Bedrock
 
-Anthropic's Claude models can be accessed through Anthropic's direct API or via Amazon Bedrock. Here's how to adapt a
-foundation model for a different provider:
+Anthropic's Claude models can be accessed through Anthropic's direct API or via Amazon Bedrock. Hosted providers can
+use different model identifiers, so the usual pattern is to clone the foundation model and replace `model_name`.
 
 ```python
 from dhenara.ai import AIModelClient
 from dhenara.ai.types import AIModelEndpoint
 from dhenara.ai.types import AIModelAPI, AIModelAPIProviderEnum
 from dhenara.ai.types.genai.ai_model import ChatModelCostData
-from dhenara.ai.types.genai.foundation_models.anthropic.chat import Claude35Sonnet
+from dhenara.ai.types.genai.foundation_models.anthropic.chat import ClaudeSonnet45
 
 # Initialize API configuration for Amazon Bedrock
 bedrock_api = AIModelAPI(
@@ -69,15 +68,15 @@ bedrock_api = AIModelAPI(
 )
 
 # Clone the foundation model and customize for Amazon Bedrock
-bedrock_claude35_sonnet = Claude35Sonnet.clone(
-    # Use the Bedrock-specific model name
-    model_name="us.anthropic.claude-3-7-sonnet-20241022-v2:0",
+bedrock_claude_sonnet = ClaudeSonnet45.clone(
+    # Use the current Bedrock model identifier for your account and region
+    model_name="provider-specific-bedrock-model-id",
 )
 # NOTE: Remove the version suffix used by Anthropic's direct API
-bedrock_claude35_sonnet.metadata["version_suffix"] = None
+bedrock_claude_sonnet.metadata["version_suffix"] = None
 
 # Optionally override cost data for accurate usage tracking
-bedrock_claude35_sonnet.cost_data = ChatModelCostData(
+bedrock_claude_sonnet.cost_data = ChatModelCostData(
     input_token_cost_per_million=3.0,
     output_token_cost_per_million=15.0,
 )
@@ -85,7 +84,7 @@ bedrock_claude35_sonnet.cost_data = ChatModelCostData(
 # Create a model endpoint connecting the model with the API
 model_endpoint = AIModelEndpoint(
     api=bedrock_api,
-    ai_model=bedrock_claude35_sonnet,
+    ai_model=bedrock_claude_sonnet,
 )
 
 # Create the client and use it
@@ -168,10 +167,10 @@ ChatModelCostData(
 
 ## Readily Available Foundation Models
 
-Dhenara includes a rich collection of pre-configured foundation models. But remember that you can always create your own
-Models, the functional part is independent from the FoundationModel collection.
+Dhenara includes a rich collection of pre-configured foundation models. But you can always create your own models; the
+functional client path is independent from the packaged foundation-model collection.
 
-To see the full list of available foundation models, check the [Foundation Models](https://github.com/dhenara/dhenara-ai/tree/master/src/dhenara/ai/types/genai/foundation_models) directory in the codebase.
+To see the full list of packaged foundation models, check the [Foundation Models](https://github.com/dhenara/dhenara-ai/tree/master/src/dhenara/ai/types/genai/foundation_models) directory in the codebase.
 
 
 ## Conclusion
